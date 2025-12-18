@@ -1,3 +1,0 @@
-Step 1: Put script on data/script folder (edit content if necessary)
-
-Step 2: Restart OT server, and it should work. :)
