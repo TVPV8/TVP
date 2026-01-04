@@ -30,8 +30,15 @@ bool Database::connect()
 	bool reconnect = true;
 	mysql_options(handle, MYSQL_OPT_RECONNECT, &reconnect);
 
-	bool use_ssl = g_config.getBoolean(ConfigManager::MYSQL_USE_SSL);
-	mysql_options(handle, MYSQL_OPT_SSL_VERIFY_SERVER_CERT, &use_ssl);
+	// MariaDB explicit SSL settings
+#ifdef MARIADB_VERSION_ID
+	bool ssl_enforce = false;
+	bool ssl_verify = false;
+
+	mysql_options(handle, MYSQL_OPT_SSL_ENFORCE, &ssl_enforce);
+	mysql_options(handle, MYSQL_OPT_SSL_VERIFY_SERVER_CERT, &ssl_verify);
+	mysql_ssl_set(handle, nullptr, nullptr, nullptr, nullptr, nullptr);
+#endif
 
 	// connects to database
 	if (!mysql_real_connect(handle, g_config.getString(ConfigManager::MYSQL_HOST).c_str(), g_config.getString(ConfigManager::MYSQL_USER).c_str(), g_config.getString(ConfigManager::MYSQL_PASS).c_str(), g_config.getString(ConfigManager::MYSQL_DB).c_str(), g_config.getNumber(ConfigManager::SQL_PORT), g_config.getString(ConfigManager::MYSQL_SOCK).c_str(), 0)) {

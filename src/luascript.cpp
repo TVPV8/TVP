@@ -3166,7 +3166,7 @@ int LuaScriptInterface::luaGetIPNumberFromString(lua_State* L)
 {
 	//getIPNumberFromString(string)
 	boost::system::error_code ec;
-	auto ip = boost::asio::ip::address_v4::from_string(getString(L, 1), ec);
+	auto ip = boost::asio::ip::make_address_v4(getString(L, 1), ec);
 	if (ec) {
 		lua_pushnumber(L, 0);
 	} else {

@@ -66,7 +66,7 @@ if(POLICY CMP0167)
   cmake_policy(SET CMP0167 NEW)
 endif()
 
-find_package(Boost 1.66.0 REQUIRED COMPONENTS date_time system filesystem iostreams)
+find_package(Boost 1.71.0 REQUIRED COMPONENTS date_time system filesystem iostreams)
 
 include_directories(${Boost_INCLUDE_DIRS} ${Crypto++_INCLUDE_DIR} ${LUA_INCLUDE_DIR} ${MYSQL_INCLUDE_DIR} ${PUGIXML_INCLUDE_DIR})
 target_link_libraries(tvp PRIVATE
@@ -81,6 +81,8 @@ target_link_libraries(tvp PRIVATE
         ${MYSQL_CLIENT_LIBS}
         ${PUGIXML_LIBRARIES}
         )
+
+target_link_options(tvp PUBLIC -flto=auto)
 
 ### INTERPROCEDURAL_OPTIMIZATION ###
 cmake_policy(SET CMP0069 NEW)
