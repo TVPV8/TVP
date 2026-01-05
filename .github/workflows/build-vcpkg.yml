@@ -35,7 +35,7 @@ jobs:
       VCPKG_BUILD_TYPE: release
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
 
       - name: Get latest CMake
         # Using 'latest' branch, the latest CMake is installed.
@@ -56,14 +56,14 @@ jobs:
           configurePreset: vcpkg
 
       - name: Upload artifact binary
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v6
         if: ${{ !startsWith(matrix.os, 'windows') }}
         with:
           name: tvp-${{ matrix.name }}-${{ matrix.buildtype }}-luajit=${{ matrix.luajit }}-${{ github.sha }}
           path: ${{ runner.workspace }}/build/tvp
 
       - name: Upload artifact binary (exe)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v6
         if: ${{ startsWith(matrix.os, 'windows') }}
         with:
           name: tvp-${{ matrix.name }}-${{ matrix.buildtype }}-luajit=${{ matrix.luajit }}-${{ github.sha }}
@@ -76,7 +76,7 @@ jobs:
         shell: bash
 
       - name: Upload datapack contents
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v6
         with:
           name: tvp-${{ matrix.name }}-${{ matrix.buildtype }}-luajit=${{ matrix.luajit }}-${{ github.sha }}
           path: ${{ github.workspace }}
