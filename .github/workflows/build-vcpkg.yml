@@ -54,17 +54,17 @@ jobs:
         uses: actions/upload-artifact@v6
         if: "!startsWith(matrix.os, 'windows')"
         with:
-          name: tvp-${{ matrix.os }}-${{ matrix.buildtype }}-luajit=${{ matrix.luajit }}-${{ github.sha }}
-          path: ${{ github.workspace }}/build/${{ matrix.buildtype }}/tvp
+          name: tvp-binary-${{ matrix.os }}-${{ matrix.buildtype }}-luajit=${{ matrix.luajit }}-${{ github.sha }}
+          path: ${{ github.workspace }}/${{ matrix.buildtype }}/tvp
 
-      - name: Upload artifact binary (exe)
+      - name: Upload artifact binary (exe and dlls)
         uses: actions/upload-artifact@v6
         if: startsWith(matrix.os, 'windows')
         with:
-          name: tvp-${{ matrix.os }}-${{ matrix.buildtype }}-luajit=${{ matrix.luajit }}-${{ github.sha }}
+          name: tvp-binary-${{ matrix.os }}-${{ matrix.buildtype }}-luajit=${{ matrix.luajit }}-${{ github.sha }}
           path: |
-            ${{ github.workspace }}/build/${{ matrix.buildtype }}/tvp.exe
-            ${{ github.workspace }}/build/${{ matrix.buildtype }}/*.dll
+            ${{ github.workspace }}/${{ matrix.buildtype }}/tvp.exe
+            ${{ github.workspace }}/${{ matrix.buildtype }}/*.dll
 
       - name: Prepare datapack contents
         run: find . -maxdepth 1 ! -name data ! -name config.lua.dist ! -name key.pem ! -name LICENSE ! -name README.md ! -name schema.sql -exec rm -r {} \;
@@ -73,5 +73,5 @@ jobs:
       - name: Upload datapack contents
         uses: actions/upload-artifact@v6
         with:
-          name: tvp-${{ matrix.os }}-${{ matrix.buildtype }}-luajit=${{ matrix.luajit }}-${{ github.sha }}
+          name: tvp-datapack-${{ matrix.os }}-${{ matrix.buildtype }}-luajit=${{ matrix.luajit }}-${{ github.sha }}
           path: ${{ github.workspace }}
