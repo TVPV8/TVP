@@ -29,22 +29,31 @@ namespace {
 
 using WaitList = std::deque<std::pair<int64_t, uint32_t>>; // (timeout, player guid)
 
+struct ClientSearchResult {
+	WaitList* list;
+	WaitList::iterator it;
+	WaitList::size_type slot;
+};
+
 WaitList priorityWaitList, waitList;
 
-std::tuple<WaitList&, WaitList::iterator, WaitList::size_type> findClient(const Player& player) {
-	const auto fn = [&](const WaitList::value_type& it) { return it.second == player.getGUID(); };
+ClientSearchResult findClient(const Player& player) {
+	const uint32_t playerGuid = player.getGUID();
+	WaitList::size_type slot = 1;
 
-	auto it = std::find_if(priorityWaitList.begin(), priorityWaitList.end(), fn);
-	if (it != priorityWaitList.end()) {
-		return std::make_tuple(std::ref(priorityWaitList), it, std::distance(priorityWaitList.begin(), it) + 1);
+	for (auto it = priorityWaitList.begin(); it != priorityWaitList.end(); ++it, ++slot) {
+		if (it->second == playerGuid) {
+			return {&priorityWaitList, it, slot};
+		}
 	}
 
-	it = std::find_if(waitList.begin(), waitList.end(), fn);
-	if (it != waitList.end()) {
-		return std::make_tuple(std::ref(waitList), it, priorityWaitList.size() + std::distance(waitList.begin(), it) + 1);
+	for (auto it = waitList.begin(); it != waitList.end(); ++it, ++slot) {
+		if (it->second == playerGuid) {
+			return {&waitList, it, slot};
+		}
 	}
 
-	return std::make_tuple(std::ref(waitList), waitList.end(), priorityWaitList.size() + waitList.size());
+	return {&waitList, waitList.end(), slot - 1};
 }
 
 uint8_t getWaitTime(std::size_t slot)
@@ -97,28 +106,27 @@ std::size_t clientLogin(const Player& player)
 		return 0;
 	}
 
-	auto result = findClient(player);
-	if (std::get<1>(result) != std::get<0>(result).end()) {
-		auto currentSlot = std::get<2>(result);
+	const auto [list, it, existingSlot] = findClient(player);
+	if (it != list->end()) {
 		// If server has capacity for this client, let him in even though his current slot might be higher than 0.
-		if ((g_game.getPlayersOnline() + currentSlot) <= maxPlayers) {
-			std::get<0>(result).erase(std::get<1>(result));
+		if ((g_game.getPlayersOnline() + existingSlot) <= maxPlayers) {
+			list->erase(it);
 			return 0;
 		}
 
 		//let them wait a bit longer
-		std::get<1>(result)->first = OTSYS_TIME() + (getTimeout(currentSlot) * 1000);
-		return currentSlot;
+		it->first = OTSYS_TIME() + (getTimeout(existingSlot) * 1000);
+		return existingSlot;
 	}
 
-	auto currentSlot = priorityWaitList.size();
+	auto nextSlot = priorityWaitList.size();
 	if (player.isPremium()) {
-		priorityWaitList.emplace_back(OTSYS_TIME() + (getTimeout(++currentSlot) * 1000), player.getGUID());
+		priorityWaitList.emplace_back(OTSYS_TIME() + (getTimeout(++nextSlot) * 1000), player.getGUID());
 	} else {
-		currentSlot += waitList.size();
-		waitList.emplace_back(OTSYS_TIME() + (getTimeout(++currentSlot) * 1000), player.getGUID());
+		nextSlot += waitList.size();
+		waitList.emplace_back(OTSYS_TIME() + (getTimeout(++nextSlot) * 1000), player.getGUID());
 	}
-	return currentSlot;
+	return nextSlot;
 }
 
 }
