@@ -75,6 +75,9 @@ struct LuaTimerEventDesc {
 	int32_t function = -1;
 	std::vector<int32_t> parameters;
 	uint32_t eventId = 0;
+#ifdef STATS_ENABLED
+	std::string stackTraceback;
+#endif
 
 	LuaTimerEventDesc() = default;
 	LuaTimerEventDesc(LuaTimerEventDesc&& other) = default;
@@ -199,6 +202,9 @@ class LuaScriptInterface
 		int32_t loadFile(const std::string& file, Npc* npc = nullptr);
 
 		const std::string& getFileById(int32_t scriptId);
+#ifdef STATS_ENABLED
+		const std::string& getAddEventStackTracebackHash(const std::string& addEventStackBacktrace);
+#endif
 		int32_t getEvent(const std::string& eventName);
 		int32_t getEvent();
 		int32_t getMetaEvent(const std::string& globalName, const std::string& eventName);
@@ -421,6 +427,9 @@ class LuaScriptInterface
 
 		//script file cache
 		std::map<int32_t, std::string> cacheFiles;
+#ifdef STATS_ENABLED
+		std::map<std::string, std::string> addEventStackTracebackHashCache;
+#endif
 
 	private:
 		void registerClass(const std::string& className, const std::string& baseClass, lua_CFunction newFunction = nullptr);

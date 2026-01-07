@@ -58,6 +58,7 @@ set(tvp_SRC
 	${CMAKE_CURRENT_LIST_DIR}/scriptreader.cpp
 	${CMAKE_CURRENT_LIST_DIR}/scriptwriter.cpp
 	${CMAKE_CURRENT_LIST_DIR}/spells.cpp
+	${CMAKE_CURRENT_LIST_DIR}/stats.cpp
 	${CMAKE_CURRENT_LIST_DIR}/talkaction.cpp
 	${CMAKE_CURRENT_LIST_DIR}/tasks.cpp
 	${CMAKE_CURRENT_LIST_DIR}/teleport.cpp

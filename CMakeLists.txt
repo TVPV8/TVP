@@ -79,6 +79,13 @@ target_link_libraries(tvp PRIVATE
 
 target_link_options(tvp PUBLIC -flto=auto)
 
+# Option to disable OTS Stats
+option(ENABLE_OTS_STATISTICS "OTS Statistics" ON)
+if (ENABLE_OTS_STATISTICS)
+    message(STATUS "OTS Statistics enabled")
+    add_definitions(-DSTATS_ENABLED)
+endif()
+
 ### INTERPROCEDURAL_OPTIMIZATION ###
 cmake_policy(SET CMP0069 NEW)
 include(CheckIPOSupported)
