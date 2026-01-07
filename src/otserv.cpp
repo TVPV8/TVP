@@ -14,6 +14,9 @@
 #include "protocolstatus.h"
 #include "databasemanager.h"
 #include "scheduler.h"
+#ifdef STATS_ENABLED
+#include "stats.h"
+#endif
 #include "databasetasks.h"
 #include "script.h"
 #include "iomap.h"
@@ -26,6 +29,10 @@
 DatabaseTasks g_databaseTasks;
 Dispatcher g_dispatcher;
 Scheduler g_scheduler;
+
+#ifdef STATS_ENABLED
+Stats g_stats;
+#endif
 
 Game g_game;
 ConfigManager g_config;
@@ -68,6 +75,9 @@ int main(int argc, char* argv[])
 
 	g_dispatcher.start();
 	g_scheduler.start();
+#ifdef STATS_ENABLED
+	g_stats.start();
+#endif
 
 	g_dispatcher.addTask(createTask(std::bind(mainLoader, argc, argv, &serviceManager)));
 
@@ -81,11 +91,17 @@ int main(int argc, char* argv[])
 		g_scheduler.shutdown();
 		g_databaseTasks.shutdown();
 		g_dispatcher.shutdown();
+#ifdef STATS_ENABLED
+		g_stats.shutdown();
+#endif
 	}
 
 	g_scheduler.join();
 	g_databaseTasks.join();
 	g_dispatcher.join();
+#ifdef STATS_ENABLED
+	g_stats.join();
+#endif
 	return 0;
 }
 
