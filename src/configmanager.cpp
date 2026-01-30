@@ -241,6 +241,8 @@ bool ConfigManager::load()
 	boolean[SPAWN_ONE_MONSTER_AT_A_TIME] = getGlobalBoolean(L, "spawnOneMonsterAtATime", false);
 	boolean[TILE_OLDSCHOOL_ITEM_STACKING] = getGlobalBoolean(L, "tileOldschoolItemStacking", false);
 	boolean[SPAWN_MULTIFLOOR_RESPAWN_BLOCK] = getGlobalBoolean(L, "spawnMultifloorRespawnBlock", false);
+	boolean[STATS_TRACK_LUA_ADD_EVENTS] = getGlobalBoolean(L, "statsTrackLuaAddEvents", false);
+	boolean[STATS_TRACK_LUA_ADD_EVENTS_HASHES] = getGlobalBoolean(L, "statsTrackLuaAddEventsHashes", false);
 
 	string[DEFAULT_PRIORITY] = getGlobalString(L, "defaultPriority", "high");
 	string[SERVER_NAME] = getGlobalString(L, "serverName", "");
@@ -290,6 +292,9 @@ bool ConfigManager::load()
 	integer[FAILED_LOGINATTEMPTS_IP_BAN] = getGlobalNumber(L, "failedLoginAttemptsIPBan", 15);
 	integer[ACCOUNT_LOCK_DURATION] = getGlobalNumber(L, "accountLockDuration", 5 * 60 * 1000);
 	integer[IP_LOCK_DURATION] = getGlobalNumber(L, "ipLockDuration", 30 * 60 * 1000);
+	integer[STATS_DUMP_INTERVAL] = getGlobalNumber(L, "statsDumpInterval", 30);
+	integer[STATS_SLOW_LOG_TIME] = getGlobalNumber(L, "statsSlowLogTime", 10);
+	integer[STATS_VERY_SLOW_LOG_TIME] = getGlobalNumber(L, "statsVerySlowLogTime", 50);
 
 	expStages = loadXMLStages();
 	expStages.shrink_to_fit();

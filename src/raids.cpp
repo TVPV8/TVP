@@ -211,7 +211,7 @@ void Raids::checkRaids()
 		}
 	}
 
-	checkRaidsEvent = g_scheduler.addEvent(createSchedulerTask(CHECK_RAIDS_INTERVAL, [this] { checkRaids(); }));
+	checkRaidsEvent = g_scheduler.addEvent(createSchedulerTask(CHECK_RAIDS_INTERVAL, std::bind(&Raids::checkRaids, this)));
 }
 
 void Raids::clear()
@@ -296,7 +296,7 @@ void Raid::startRaid()
 {
 	const RaidEventPtr& raidEvent = getNextRaidEvent();
 	if (raidEvent) {
-		nextEventEvent = g_scheduler.addEvent(createSchedulerTask(raidEvent->getDelay(), [this, raidEvent] { executeRaidEvent(raidEvent); }));
+		nextEventEvent = g_scheduler.addEvent(createSchedulerTask(raidEvent->getDelay(), std::bind(&Raid::executeRaidEvent, this, raidEvent)));
 	}
 }
 
@@ -307,7 +307,7 @@ void Raid::executeRaidEvent(const RaidEventPtr& raidEvent)
 
 		if (const RaidEventPtr& newRaidEvent = getNextRaidEvent()) {
 			const uint32_t ticks = static_cast<uint32_t>(std::max<int32_t>(1000, newRaidEvent->getDelay() - raidEvent->getDelay()));
-			nextEventEvent = g_scheduler.addEvent(createSchedulerTask(ticks, [this, newRaidEvent] { executeRaidEvent(newRaidEvent); }));
+			nextEventEvent = g_scheduler.addEvent(createSchedulerTask(ticks, std::bind(&Raid::executeRaidEvent, this, newRaidEvent)));
 		} else {
 			resetRaid();
 		}
