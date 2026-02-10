@@ -213,7 +213,7 @@ bool IOLoginData::loadPlayer(Player* player, bool /*initializeScriptFile*/)
 		"`lastlogin`, `lastlogout`, `skull`, `skulltime`, `balance`, `stamina`, `blessings`, `cap`, "
 		"`skill_fist`, `skill_fist_tries`, `skill_club`, `skill_club_tries`, `skill_sword`, `skill_sword_tries`, "
 		"`skill_axe`, `skill_axe_tries`, `skill_dist`, `skill_dist_tries`, `skill_shielding`, `skill_shielding_tries`, "
-		"`skill_fishing`, `skill_fishing_tries` "
+		"`skill_fishing`, `skill_fishing_tries`, `conditions` "
 		"FROM `players` WHERE `id` = {:d}", player->getGUID()));
 
 	if (!result) {
@@ -300,6 +300,41 @@ bool IOLoginData::loadPlayer(Player* player, bool /*initializeScriptFile*/)
 	player->skills[SKILL_SHIELD].tries = result->getNumber<uint64_t>("skill_shielding_tries");
 	player->skills[SKILL_FISHING].level = result->getNumber<uint16_t>("skill_fishing");
 	player->skills[SKILL_FISHING].tries = result->getNumber<uint64_t>("skill_fishing_tries");
+
+	// Load conditions
+	unsigned long condSize;
+	const char* condData = result->getStream("conditions", condSize);
+	if (condData && condSize > 0) {
+		PropStream propStream;
+		propStream.init(condData, condSize);
+
+		uint32_t conditionCount;
+		if (propStream.read<uint32_t>(conditionCount)) {
+			for (uint32_t i = 0; i < conditionCount; i++) {
+				uint8_t condType;
+				if (!propStream.read<uint8_t>(condType)) {
+					break;
+				}
+
+				Condition* condition = Condition::createCondition(CONDITIONID_DEFAULT, static_cast<ConditionType_t>(condType), 0);
+				if (!condition) {
+					break;
+				}
+
+				if (!condition->unserialize(propStream)) {
+					delete condition;
+					break;
+				}
+
+				// Never load in-fight condition
+				if (static_cast<ConditionType_t>(condType) == CONDITION_INFIGHT) {
+					delete condition;
+				} else {
+					player->storedConditionList.push_front(condition);
+				}
+			}
+		}
+	}
 
 	// Load storage values
 	if ((result = db.storeQuery(fmt::format("SELECT `key`, `value` FROM `player_storage` WHERE `player_id` = {:d}", player->getGUID())))) {
@@ -416,42 +451,7 @@ bool IOLoginData::loadPlayer(Player* player, bool /*initializeScriptFile*/)
 		} while (result->next());
 	}
 
-	// Load conditions
-	if ((result = db.storeQuery(fmt::format("SELECT `conditions` FROM `player_conditions` WHERE `player_id` = {:d}", player->getGUID())))) {
-		unsigned long condSize;
-		const char* condData = result->getStream("conditions", condSize);
-		if (condData && condSize > 0) {
-			PropStream propStream;
-			propStream.init(condData, condSize);
 
-			uint32_t conditionCount;
-			if (propStream.read<uint32_t>(conditionCount)) {
-				for (uint32_t i = 0; i < conditionCount; i++) {
-					uint8_t condType;
-					if (!propStream.read<uint8_t>(condType)) {
-						break;
-					}
-
-					Condition* condition = Condition::createCondition(CONDITIONID_DEFAULT, static_cast<ConditionType_t>(condType), 0);
-					if (!condition) {
-						break;
-					}
-
-					if (!condition->unserialize(propStream)) {
-						delete condition;
-						break;
-					}
-
-					// Never load in-fight condition
-					if (static_cast<ConditionType_t>(condType) == CONDITION_INFIGHT) {
-						delete condition;
-					} else {
-						player->storedConditionList.push_front(condition);
-					}
-				}
-			}
-		}
-	}
 
 	// Load guild membership
 	if ((result = db.storeQuery(fmt::format("SELECT `guild_id`, `rank_id`, `nick` FROM `guild_membership` WHERE `player_id` = {:d}", player->getGUID())))) {
@@ -543,6 +543,38 @@ bool IOLoginData::savePlayer(Player* player)
 		return false;
 	}
 
+	// Serialize conditions
+	PropWriteStream condStream;
+	uint32_t conditionCount = 0;
+
+	// Count persistable conditions
+	for (Condition* condition : player->conditions) {
+		if (condition->isPersistent()) {
+			conditionCount++;
+		}
+	}
+	for (Condition* condition : player->storedConditionList) {
+		conditionCount++;
+	}
+
+	if (conditionCount > 0) {
+		condStream.write<uint32_t>(conditionCount);
+
+		for (Condition* condition : player->conditions) {
+			if (condition->isPersistent()) {
+				condStream.write<uint8_t>(static_cast<uint8_t>(condition->getType()));
+				condition->serialize(condStream);
+			}
+		}
+		for (Condition* condition : player->storedConditionList) {
+			condStream.write<uint8_t>(static_cast<uint8_t>(condition->getType()));
+			condition->serialize(condStream);
+		}
+	}
+
+	size_t condSize;
+	const char* condData = condStream.getStream(condSize);
+
 	// Update main player data
 	query << "UPDATE `players` SET ";
 	query << "`level` = " << player->level << ',';
@@ -563,9 +595,9 @@ bool IOLoginData::savePlayer(Player* player)
 	query << "`soul` = " << static_cast<uint16_t>(player->soul) << ',';
 	query << "`town_id` = " << player->town->getID() << ',';
 	query << "`sex` = " << static_cast<uint16_t>(player->sex) << ',';
-	query << "`posx` = " << player->loginPosition.x << ',';
-	query << "`posy` = " << player->loginPosition.y << ',';
-	query << "`posz` = " << static_cast<uint32_t>(player->loginPosition.z) << ',';
+	query << "`posx` = " << player->position.x << ',';
+	query << "`posy` = " << player->position.y << ',';
+	query << "`posz` = " << static_cast<uint32_t>(player->position.z) << ',';
 	query << "`cap` = " << player->capacity << ',';
 	query << "`blessings` = " << player->blessings.to_ulong() << ',';
 
@@ -609,7 +641,8 @@ bool IOLoginData::savePlayer(Player* player)
 	query << "`skill_shielding` = " << player->skills[SKILL_SHIELD].level << ',';
 	query << "`skill_shielding_tries` = " << player->skills[SKILL_SHIELD].tries << ',';
 	query << "`skill_fishing` = " << player->skills[SKILL_FISHING].level << ',';
-	query << "`skill_fishing_tries` = " << player->skills[SKILL_FISHING].tries;
+	query << "`skill_fishing_tries` = " << player->skills[SKILL_FISHING].tries << ',';
+	query << "`conditions` = " << db.escapeBlob(condData, condSize);
 
 	query << " WHERE `id` = " << player->getGUID();
 
@@ -758,48 +791,7 @@ bool IOLoginData::savePlayer(Player* player)
 		}
 	}
 
-	// Save conditions
-	if (!db.executeQuery(fmt::format("DELETE FROM `player_conditions` WHERE `player_id` = {:d}", player->getGUID()))) {
-		return false;
-	}
-	
-	PropWriteStream condStream;
-	uint32_t conditionCount = 0;
-	
-	// Count persistable conditions
-	for (Condition* condition : player->conditions) {
-		if (condition->isPersistent()) {
-			conditionCount++;
-		}
-	}
-	for (Condition* condition : player->storedConditionList) {
-		conditionCount++;
-	}
-	
-	if (conditionCount > 0) {
-		condStream.write<uint32_t>(conditionCount);
-		
-		for (Condition* condition : player->conditions) {
-			if (condition->isPersistent()) {
-				condStream.write<uint8_t>(static_cast<uint8_t>(condition->getType()));
-				condition->serialize(condStream);
-			}
-		}
-		for (Condition* condition : player->storedConditionList) {
-			condStream.write<uint8_t>(static_cast<uint8_t>(condition->getType()));
-			condition->serialize(condStream);
-		}
 
-		size_t condSize;
-		const char* condData = condStream.getStream(condSize);
-
-		if (!db.executeQuery(fmt::format(
-			"INSERT INTO `player_conditions` (`player_id`, `conditions`) VALUES ({:d}, {:s})",
-			player->getGUID(), db.escapeBlob(condData, condSize)
-		))) {
-			return false;
-		}
-	}
 
 	return transaction.commit();
 }

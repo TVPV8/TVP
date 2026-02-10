@@ -57,15 +57,6 @@ CREATE TABLE IF NOT EXISTS `player_murders` (
     REFERENCES `players` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Player conditions (stored as binary BLOB)
-CREATE TABLE IF NOT EXISTS `player_conditions` (
-  `player_id` INT NOT NULL,
-  `conditions` BLOB NOT NULL,
-  PRIMARY KEY (`player_id`),
-  CONSTRAINT `player_conditions_ibfk_1` FOREIGN KEY (`player_id`) 
-    REFERENCES `players` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 -- Depot items (stored per depot as binary BLOB)
 CREATE TABLE IF NOT EXISTS `player_depotitems` (
   `player_id` INT NOT NULL,
