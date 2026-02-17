@@ -141,6 +141,66 @@ void Condition::serializeTVPFormat(ScriptWriter& script)
 	script.writeNumber(factorPercent);
 }
 
+bool Condition::unserialize(PropStream& propStream)
+{
+	uint8_t idVal;
+	if (!propStream.read<uint8_t>(idVal)) {
+		return false;
+	}
+	id = static_cast<ConditionId_t>(idVal);
+
+	if (!propStream.read<int32_t>(ticks)) {
+		return false;
+	}
+
+	uint8_t buffVal;
+	if (!propStream.read<uint8_t>(buffVal)) {
+		return false;
+	}
+	isBuff = (buffVal != 0);
+
+	if (!propStream.read<uint32_t>(subId)) {
+		return false;
+	}
+
+	uint8_t aggressiveVal;
+	if (!propStream.read<uint8_t>(aggressiveVal)) {
+		return false;
+	}
+	aggressive = (aggressiveVal != 0);
+
+	if (!propStream.read<int32_t>(cycle)) {
+		return false;
+	}
+
+	if (!propStream.read<int32_t>(count)) {
+		return false;
+	}
+
+	if (!propStream.read<int32_t>(maxCount)) {
+		return false;
+	}
+
+	if (!propStream.read<int32_t>(factorPercent)) {
+		return false;
+	}
+
+	return true;
+}
+
+void Condition::serialize(PropWriteStream& propWriteStream) const
+{
+	propWriteStream.write<uint8_t>(static_cast<uint8_t>(id));
+	propWriteStream.write<int32_t>(ticks);
+	propWriteStream.write<uint8_t>(isBuff ? 1 : 0);
+	propWriteStream.write<uint32_t>(subId);
+	propWriteStream.write<uint8_t>(aggressive ? 1 : 0);
+	propWriteStream.write<int32_t>(cycle);
+	propWriteStream.write<int32_t>(count);
+	propWriteStream.write<int32_t>(maxCount);
+	propWriteStream.write<int32_t>(factorPercent);
+}
+
 void Condition::setTicks(int32_t newTicks)
 {
 	ticks = newTicks;

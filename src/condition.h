@@ -111,6 +111,11 @@ class Condition
 		//serialization
 		virtual bool unserializeTVPFormat(ScriptReader& script);
 		virtual void serializeTVPFormat(ScriptWriter& script);
+		
+		// Binary serialization for database storage
+		virtual bool unserialize(PropStream& propStream);
+		virtual void serialize(PropWriteStream& propWriteStream) const;
+		virtual bool isPersistent() const { return ticks > 0; }
 
 	protected:
 		virtual bool updateCondition(const Condition* addCondition);
