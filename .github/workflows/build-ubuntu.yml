@@ -32,8 +32,9 @@ jobs:
 
     strategy:
       matrix:
-        buildtype: [Debug, Release]
-        luajit: [on, off]
+        # Debug builds without LuaJIT on pull requests, Release builds with LuaJIT on pushes
+        buildtype: ${{ github.event_name == 'pull_request' && fromJSON('["Debug"]') || fromJSON('["Release"]') }}
+        luajit: ${{ github.event_name == 'pull_request' && fromJSON('["off"]') || fromJSON('["on"]') }}
 
     steps:
       - uses: actions/checkout@v6
@@ -44,7 +45,6 @@ jobs:
           languages: cpp
           # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
           queries: +security-extended,security-and-quality
-        if: matrix.buildtype == 'Debug' && matrix.luajit == 'on'
 
       - name: Get latest CMake
         # Using 'latest' branch, the latest CMake is installed.
@@ -54,7 +54,7 @@ jobs:
         run: >
           sudo apt update -q &&
           sudo apt install -yq build-essential
-          libfmt-dev libluajit-5.1-dev libmysqlclient-dev libpugixml-dev
+          libfmt-dev ${{ matrix.luajit == 'on' && 'libluajit-5.1-dev' || 'liblua5.4-dev' }} libmysqlclient-dev libpugixml-dev
           libboost-iostreams-dev libboost-locale-dev libboost-system-dev
 
       - name: Build with cmake
@@ -63,16 +63,16 @@ jobs:
           buildPreset: default
           buildPresetAdditionalArgs: "['--config', '${{ matrix.buildtype }}']"
           configurePreset: default
+          configurePresetAdditionalArgs: "['-DUSE_LUAJIT=${{ matrix.luajit }}']"
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
         with:
           category: "/language:cpp"
-        if: matrix.buildtype == 'Debug' && matrix.luajit == 'on'
 
       - name: Upload artifact binary
         uses: actions/upload-artifact@v6
-        if: matrix.buildtype == 'Release' && matrix.luajit == 'on'
+        if: matrix.buildtype == 'Release'
         with:
           name: tvp
           path: ${{ github.workspace }}/${{ matrix.buildtype }}
