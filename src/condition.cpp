@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -70,7 +70,7 @@ int32_t Condition::getParam(ConditionParam_t param)
 			return ticks;
 
 		case CONDITION_PARAM_BUFF_SPELL:
-			return isBuff ? 1: 0;
+			return isBuff ? 1 : 0;
 
 		case CONDITION_PARAM_SUBID:
 			return subId;
@@ -153,12 +153,13 @@ bool Condition::executeCondition(Creature*, int32_t interval)
 		return true;
 	}
 
-	//Not using set ticks here since it would reset endTime
+	// Not using set ticks here since it would reset endTime
 	ticks = std::max<int32_t>(0, ticks - interval);
 	return getEndTime() >= OTSYS_TIME();
 }
 
-Condition* Condition::createCondition(ConditionId_t id, ConditionType_t type, int32_t ticks, int32_t param/* = 0*/, bool buff/* = false*/, uint32_t subId/* = 0*/, bool aggressive/* = false */)
+Condition* Condition::createCondition(ConditionId_t id, ConditionType_t type, int32_t ticks, int32_t param /* = 0*/,
+                                      bool buff /* = false*/, uint32_t subId /* = 0*/, bool aggressive /* = false */)
 {
 	switch (type) {
 		case CONDITION_POISON:
@@ -238,10 +239,7 @@ bool Condition::updateCondition(const Condition* addCondition)
 	return true;
 }
 
-bool ConditionGeneric::startCondition(Creature* creature)
-{
-	return Condition::startCondition(creature);
-}
+bool ConditionGeneric::startCondition(Creature* creature) { return Condition::startCondition(creature); }
 
 bool ConditionGeneric::executeCondition(Creature* creature, int32_t interval)
 {
@@ -286,10 +284,10 @@ void ConditionAttributes::addCondition(Creature* creature, const Condition* cond
 		setTicks(condition->getTicks());
 
 		const ConditionAttributes& conditionAttrs = static_cast<const ConditionAttributes&>(*condition);
-		//Remove the old condition
+		// Remove the old condition
 		endCondition(creature);
 
-		//Apply the new one
+		// Apply the new one
 		memcpy(skills, conditionAttrs.skills, sizeof(skills));
 		memcpy(specialSkills, conditionAttrs.specialSkills, sizeof(specialSkills));
 		memcpy(skillsPercent, conditionAttrs.skillsPercent, sizeof(skillsPercent));
@@ -750,7 +748,7 @@ int32_t ConditionAttributes::getParam(ConditionParam_t param)
 		case CONDITION_PARAM_SKILL_FISHING:
 			return skills[SKILL_FISHING];
 
-		case CONDITION_PARAM_SKILL_FISHINGPERCENT: 
+		case CONDITION_PARAM_SKILL_FISHINGPERCENT:
 			return skillsPercent[SKILL_FISHING];
 
 		case CONDITION_PARAM_STAT_MAXHITPOINTS:
@@ -800,8 +798,7 @@ int32_t ConditionAttributes::getParam(ConditionParam_t param)
 void ConditionRegeneration::addCondition(Creature*, const Condition* condition)
 {
 	if (updateCondition(condition)) {
-		if (condition->getTicks() != -1)
-			setTicks(condition->getTicks());
+		if (condition->getTicks() != -1) setTicks(condition->getTicks());
 
 		const ConditionRegeneration& conditionRegen = static_cast<const ConditionRegeneration&>(*condition);
 
@@ -1171,7 +1168,7 @@ bool ConditionDamage::addDamage(int32_t rounds, int32_t time, int32_t value)
 {
 	time = std::max<int32_t>(time, EVENT_CREATURE_THINK_INTERVAL);
 	if (rounds == -1) {
-		//periodic damage
+		// periodic damage
 		periodDamage = value;
 		setParam(CONDITION_PARAM_TICKINTERVAL, time);
 		setParam(CONDITION_PARAM_TICKS, -1);
@@ -1182,7 +1179,7 @@ bool ConditionDamage::addDamage(int32_t rounds, int32_t time, int32_t value)
 		return false;
 	}
 
-	//rounds, time, damage
+	// rounds, time, damage
 	for (int32_t i = 0; i <= rounds; ++i) {
 		IntervalInfo damageInfo{};
 		damageInfo.interval = time;
@@ -1404,9 +1401,9 @@ bool ConditionDamage::doDamage(Creature* creature, int32_t healthChange)
 	/*
 	* Only 7.7 related
 	if (attacker && attacker->getPlayer()) {
-		if (creature->getPlayer()) {
-			damage.value = (damage.value - 1) / 2;
-		}
+	    if (creature->getPlayer()) {
+	        damage.value = (damage.value - 1) / 2;
+	    }
 	}
 	*/
 
@@ -1424,7 +1421,7 @@ void ConditionDamage::addCondition(Creature* creature, const Condition* conditio
 	}
 
 	const ConditionDamage& conditionDamage = static_cast<const ConditionDamage&>(*condition);
-	
+
 	// Apply step in damage careless if we override the condition or not
 	if (cycle != 0) {
 		if (conditionDamage.initDamage != 0) {
@@ -1553,7 +1550,7 @@ int32_t ConditionSpeed::getParam(ConditionParam_t param)
 	switch (param) {
 		case CONDITION_PARAM_SPEED:
 			return speedDelta;
-			
+
 		case CONDITION_PARAM_SPEEDVARIATION:
 			return speedVariation;
 
@@ -1614,10 +1611,7 @@ bool ConditionSpeed::executeCondition(Creature* creature, int32_t interval)
 	return Condition::executeCondition(creature, interval);
 }
 
-void ConditionSpeed::endCondition(Creature* creature)
-{
-	g_game.changeSpeed(creature, -storedSpeedDelta);
-}
+void ConditionSpeed::endCondition(Creature* creature) { g_game.changeSpeed(creature, -storedSpeedDelta); }
 
 void ConditionSpeed::addCondition(Creature* creature, const Condition* condition)
 {
@@ -1689,10 +1683,7 @@ void ConditionInvisible::endCondition(Creature* creature)
 	}
 }
 
-void ConditionOutfit::setOutfit(const Outfit_t& outfit)
-{
-	this->outfit = outfit;
-}
+void ConditionOutfit::setOutfit(const Outfit_t& outfit) { this->outfit = outfit; }
 
 void ConditionOutfit::serializeTVPFormat(ScriptWriter& script)
 {
@@ -1816,10 +1807,7 @@ bool ConditionLight::executeCondition(Creature* creature, int32_t interval)
 	return Condition::executeCondition(creature, interval);
 }
 
-void ConditionLight::endCondition(Creature* creature)
-{
-	g_game.changeLight(creature);
-}
+void ConditionLight::endCondition(Creature* creature) { g_game.changeLight(creature); }
 
 void ConditionLight::addCondition(Creature* creature, const Condition* condition)
 {
@@ -1973,7 +1961,4 @@ void ConditionDrunk::endCondition(Creature*)
 	//
 }
 
-uint32_t ConditionDrunk::getIcons() const
-{
-	return ICON_DRUNK;
-}
+uint32_t ConditionDrunk::getIcons() const { return ICON_DRUNK; }

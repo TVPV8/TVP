@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -10,8 +10,7 @@ namespace OTB {
 
 constexpr Identifier wildcard = {{'\0', '\0', '\0', '\0'}};
 
-Loader::Loader(const std::string& fileName, const Identifier& acceptedIdentifier):
-	fileContents(fileName)
+Loader::Loader(const std::string& fileName, const Identifier& acceptedIdentifier) : fileContents(fileName)
 {
 	constexpr auto minimalSize = sizeof(Identifier) + sizeof(Node::START) + sizeof(Node::type) + sizeof(Node::END);
 	if (fileContents.size() <= minimalSize) {
@@ -26,7 +25,8 @@ Loader::Loader(const std::string& fileName, const Identifier& acceptedIdentifier
 }
 
 using NodeStack = std::stack<Node*, std::vector<Node*>>;
-static Node& getCurrentNode(const NodeStack& nodeStack) {
+static Node& getCurrentNode(const NodeStack& nodeStack)
+{
 	if (nodeStack.empty()) {
 		throw InvalidOTBFormat{};
 	}
@@ -45,7 +45,7 @@ const Node& Loader::parseTree()
 	parseStack.push(&root);
 
 	for (; it != fileContents.end(); ++it) {
-		switch(static_cast<uint8_t>(*it)) {
+		switch (static_cast<uint8_t>(*it)) {
 			case Node::START: {
 				auto& currentNode = getCurrentNode(parseStack);
 				if (currentNode.children.empty()) {
@@ -96,12 +96,13 @@ bool Loader::getProps(const Node& node, PropStream& props)
 	propBuffer.resize(size);
 	bool lastEscaped = false;
 
-	auto escapedPropEnd = std::copy_if(node.propsBegin, node.propsEnd, propBuffer.begin(), [&lastEscaped](const char& byte) {
-		lastEscaped = byte == static_cast<char>(Node::ESCAPE) && !lastEscaped;
-		return !lastEscaped;
-	});
+	auto escapedPropEnd =
+	    std::copy_if(node.propsBegin, node.propsEnd, propBuffer.begin(), [&lastEscaped](const char& byte) {
+		    lastEscaped = byte == static_cast<char>(Node::ESCAPE) && !lastEscaped;
+		    return !lastEscaped;
+	    });
 	props.init(&propBuffer[0], std::distance(propBuffer.begin(), escapedPropEnd));
 	return true;
 }
 
-} //namespace OTB
+} // namespace OTB

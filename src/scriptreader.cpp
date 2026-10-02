@@ -230,8 +230,10 @@ void ScriptReader::error(const std::string& errMessage)
 	}
 
 	std::ostringstream ss;
-	ss << "[Error - ScriptReader::error]: In script file '" << filenames[recursionDepth] << "':" << lines[recursionDepth] << ": " << errMessage << std::endl;
-	ss << "[Error - ScriptReader::error] Token: " << static_cast<int32_t>(token) << " Special: " << static_cast<int32_t>(special) << std::endl;
+	ss << "[Error - ScriptReader::error]: In script file '" << filenames[recursionDepth]
+	   << "':" << lines[recursionDepth] << ": " << errMessage << std::endl;
+	ss << "[Error - ScriptReader::error] Token: " << static_cast<int32_t>(token)
+	   << " Special: " << static_cast<int32_t>(special) << std::endl;
 	std::cout << ss.str() << std::endl;
 	isGood = false;
 }

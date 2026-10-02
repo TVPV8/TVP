@@ -1,9 +1,10 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #pragma once
 
-enum ThreadState {
+enum ThreadState
+{
 	THREAD_STATE_RUNNING,
 	THREAD_STATE_CLOSING,
 	THREAD_STATE_TERMINATED,
@@ -53,7 +54,8 @@ enum RuleViolationRights
 	INVALID_PAYMENT = 0x31,
 };
 
-enum itemAttrTypes : uint32_t {
+enum itemAttrTypes : uint32_t
+{
 	ITEM_ATTRIBUTE_NONE,
 
 	ITEM_ATTRIBUTE_ACTIONID = 1 << 0,
@@ -89,12 +91,14 @@ enum itemAttrTypes : uint32_t {
 	ITEM_ATTRIBUTE_CUSTOM = 1U << 31
 };
 
-enum VipStatus_t : uint8_t {
+enum VipStatus_t : uint8_t
+{
 	VIPSTATUS_OFFLINE = 0,
 	VIPSTATUS_ONLINE = 1,
 };
 
-enum CreatureType_t : uint8_t {
+enum CreatureType_t : uint8_t
+{
 	CREATURETYPE_PLAYER = 0,
 	CREATURETYPE_MONSTER = 1,
 	CREATURETYPE_NPC = 2,
@@ -102,7 +106,8 @@ enum CreatureType_t : uint8_t {
 	CREATURETYPE_SUMMON_OTHERS = 4,
 };
 
-enum OperatingSystem_t : uint8_t {
+enum OperatingSystem_t : uint8_t
+{
 	CLIENTOS_NONE = 0,
 
 	CLIENTOS_LINUX = 1,
@@ -114,13 +119,15 @@ enum OperatingSystem_t : uint8_t {
 	CLIENTOS_OTCLIENT_MAC = 12,
 };
 
-enum SpellType_t : uint8_t {
+enum SpellType_t : uint8_t
+{
 	SPELL_UNDEFINED = 0,
 	SPELL_INSTANT = 1,
 	SPELL_RUNE = 2,
 };
 
-enum AccountType_t : uint8_t {
+enum AccountType_t : uint8_t
+{
 	ACCOUNT_TYPE_NORMAL = 1,
 	ACCOUNT_TYPE_TUTOR = 2,
 	ACCOUNT_TYPE_SENIORTUTOR = 3,
@@ -129,7 +136,8 @@ enum AccountType_t : uint8_t {
 	ACCOUNT_TYPE_GOD = 6
 };
 
-enum RaceType_t : uint8_t {
+enum RaceType_t : uint8_t
+{
 	RACE_NONE,
 	RACE_VENOM,
 	RACE_BLOOD,
@@ -138,7 +146,8 @@ enum RaceType_t : uint8_t {
 	RACE_ENERGY,
 };
 
-enum CombatType_t : uint16_t {
+enum CombatType_t : uint16_t
+{
 	COMBAT_NONE = 0,
 
 	COMBAT_PHYSICALDAMAGE = 1 << 0,
@@ -153,7 +162,8 @@ enum CombatType_t : uint16_t {
 	COMBAT_COUNT = 8
 };
 
-enum CombatParam_t {
+enum CombatParam_t
+{
 	COMBAT_PARAM_TYPE,
 	COMBAT_PARAM_EFFECT,
 	COMBAT_PARAM_DISTANCEEFFECT,
@@ -168,17 +178,19 @@ enum CombatParam_t {
 	COMBAT_PARAM_FORCEONTARGETEVENT,
 };
 
-enum CallBackParam_t {
+enum CallBackParam_t
+{
 	CALLBACK_PARAM_LEVELMAGICVALUE,
 	CALLBACK_PARAM_SKILLVALUE,
 	CALLBACK_PARAM_TARGETTILE,
 	CALLBACK_PARAM_TARGETCREATURE,
 };
 
-enum ConditionParam_t {
+enum ConditionParam_t
+{
 	CONDITION_PARAM_OWNER = 1,
 	CONDITION_PARAM_TICKS = 2,
-	//CONDITION_PARAM_OUTFIT = 3,
+	// CONDITION_PARAM_OUTFIT = 3,
 	CONDITION_PARAM_HEALTHGAIN = 4,
 	CONDITION_PARAM_HEALTHTICKS = 5,
 	CONDITION_PARAM_MANAGAIN = 6,
@@ -239,14 +251,16 @@ enum ConditionParam_t {
 	CONDITION_PARAM_FACTORPERCENT = 61,
 };
 
-enum BlockType_t : uint8_t {
+enum BlockType_t : uint8_t
+{
 	BLOCK_NONE,
 	BLOCK_DEFENSE,
 	BLOCK_ARMOR,
 	BLOCK_IMMUNITY
 };
 
-enum skills_t : uint8_t {
+enum skills_t : uint8_t
+{
 	SKILL_FIST = 0,
 	SKILL_CLUB = 1,
 	SKILL_SWORD = 2,
@@ -262,7 +276,8 @@ enum skills_t : uint8_t {
 	SKILL_LAST = SKILL_FISHING
 };
 
-enum stats_t {
+enum stats_t
+{
 	STAT_MAXHITPOINTS,
 	STAT_MAXMANAPOINTS,
 	STAT_SOULPOINTS, // unused
@@ -272,7 +287,8 @@ enum stats_t {
 	STAT_LAST = STAT_MAGICPOINTS
 };
 
-enum SpecialSkills_t {
+enum SpecialSkills_t
+{
 	SPECIALSKILL_CRITICALHITCHANCE,
 	SPECIALSKILL_CRITICALHITAMOUNT,
 	SPECIALSKILL_LIFELEECHCHANCE,
@@ -284,14 +300,16 @@ enum SpecialSkills_t {
 	SPECIALSKILL_LAST = SPECIALSKILL_MANALEECHAMOUNT
 };
 
-enum formulaType_t {
+enum formulaType_t
+{
 	COMBAT_FORMULA_UNDEFINED,
 	COMBAT_FORMULA_LEVELMAGIC,
 	COMBAT_FORMULA_SKILL,
 	COMBAT_FORMULA_DAMAGE,
 };
 
-enum ConditionType_t {
+enum ConditionType_t
+{
 	CONDITION_NONE,
 
 	CONDITION_POISON = 1 << 0,
@@ -315,7 +333,8 @@ enum ConditionType_t {
 	CONDITION_PACIFIED = 1 << 18,
 };
 
-enum ConditionId_t : int8_t {
+enum ConditionId_t : int8_t
+{
 	CONDITIONID_DEFAULT = -1,
 	CONDITIONID_COMBAT,
 	CONDITIONID_HEAD,
@@ -330,18 +349,21 @@ enum ConditionId_t : int8_t {
 	CONDITIONID_AMMO,
 };
 
-enum PlayerSex_t : uint8_t {
+enum PlayerSex_t : uint8_t
+{
 	PLAYERSEX_FEMALE = 0,
 	PLAYERSEX_MALE = 1,
 
 	PLAYERSEX_LAST = PLAYERSEX_MALE
 };
 
-enum Vocation_t : uint16_t {
+enum Vocation_t : uint16_t
+{
 	VOCATION_NONE = 0
 };
 
-enum ReturnValue {
+enum ReturnValue
+{
 	RETURNVALUE_NOERROR,
 	RETURNVALUE_NOTPOSSIBLE,
 	RETURNVALUE_NOTENOUGHROOM,
@@ -415,7 +437,8 @@ enum ReturnValue {
 	RETURNVALUE_ITEMCANNOTBEMOVEDTHERE,
 };
 
-struct Outfit_t {
+struct Outfit_t
+{
 	uint16_t lookType = 0;
 	uint16_t lookTypeEx = 0;
 	uint8_t lookHead = 0;
@@ -424,7 +447,8 @@ struct Outfit_t {
 	uint8_t lookFeet = 0;
 };
 
-struct LightInfo {
+struct LightInfo
+{
 	uint8_t level = 0;
 	uint8_t color = 0;
 	uint8_t red = 0;
@@ -434,7 +458,6 @@ struct LightInfo {
 	constexpr LightInfo(uint8_t level, uint8_t color) : level(level), color(color) {}
 };
 
-
 struct ModalWindow
 {
 	std::list<std::pair<std::string, uint8_t>> buttons, choices;
@@ -443,7 +466,9 @@ struct ModalWindow
 	uint8_t defaultEnterButton = 0xFF, defaultEscapeButton = 0xFF;
 	bool priority = false;
 
-	ModalWindow(uint32_t id, std::string title, std::string message): title(std::move(title)), message(std::move(message)), id(id) {}
+	ModalWindow(uint32_t id, std::string title, std::string message) :
+	    title(std::move(title)), message(std::move(message)), id(id)
+	{}
 };
 
 enum CombatOrigin
@@ -475,7 +500,8 @@ struct CombatDamage
 	}
 };
 
-enum MonstersEvent_t : uint8_t {
+enum MonstersEvent_t : uint8_t
+{
 	MONSTERS_EVENT_NONE = 0,
 	MONSTERS_EVENT_THINK = 1,
 	MONSTERS_EVENT_APPEAR = 2,

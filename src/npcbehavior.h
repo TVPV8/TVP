@@ -15,60 +15,60 @@ enum NpcBehaviourSituation_t : uint8_t
 
 enum NpcBehaviourType_t : uint8_t
 {
-	BEHAVIOUR_TYPE_NOP = 0, // returns true on conditions
-	BEHAVIOUR_TYPE_STRING, // match string, or NPC say
-	BEHAVIOUR_TYPE_NUMBER, // return a number
-	BEHAVIOUR_TYPE_OPERATION, // <, =, >, >=, <=, <>
-	BEHAVIOUR_TYPE_MESSAGE_COUNT, // get quantity in player message
-	BEHAVIOUR_TYPE_IDLE, // idle npc
-	BEHAVIOUR_TYPE_QUEUE, // queue talking creature
-	BEHAVIOUR_TYPE_TOPIC, // get/set topic
-	BEHAVIOUR_TYPE_PRICE, // get/set price
-	BEHAVIOUR_TYPE_DATA, // get/set data
-	BEHAVIOUR_TYPE_ITEM, // get/set item
-	BEHAVIOUR_TYPE_AMOUNT, // get/set amount
-	BEHAVIOUR_TYPE_TEXT, // get/set string
-	BEHAVIOUR_TYPE_HEALTH, // get/set health
-	BEHAVIOUR_TYPE_COUNT, // count amount of items
-	BEHAVIOUR_TYPE_CREATEMONEY, // create money
-	BEHAVIOUR_TYPE_COUNTMONEY, // get player total money
-	BEHAVIOUR_TYPE_DELETEMONEY, // remove money from player
-	BEHAVIOUR_TYPE_CREATE, // create item
-	BEHAVIOUR_TYPE_DELETE, // deletes an item
-	BEHAVIOUR_TYPE_EFFECTME, // effect on NPC
-	BEHAVIOUR_TYPE_EFFECTOPP, // effect on player
-	BEHAVIOUR_TYPE_BURNING, // get/set burning
-	BEHAVIOUR_TYPE_POISON, // get/set poison
-	BEHAVIOUR_TYPE_SPELLKNOWN, // check if spell is known
-	BEHAVIOUR_TYPE_SPELLLEVEL, // get spell level
+	BEHAVIOUR_TYPE_NOP = 0,         // returns true on conditions
+	BEHAVIOUR_TYPE_STRING,          // match string, or NPC say
+	BEHAVIOUR_TYPE_NUMBER,          // return a number
+	BEHAVIOUR_TYPE_OPERATION,       // <, =, >, >=, <=, <>
+	BEHAVIOUR_TYPE_MESSAGE_COUNT,   // get quantity in player message
+	BEHAVIOUR_TYPE_IDLE,            // idle npc
+	BEHAVIOUR_TYPE_QUEUE,           // queue talking creature
+	BEHAVIOUR_TYPE_TOPIC,           // get/set topic
+	BEHAVIOUR_TYPE_PRICE,           // get/set price
+	BEHAVIOUR_TYPE_DATA,            // get/set data
+	BEHAVIOUR_TYPE_ITEM,            // get/set item
+	BEHAVIOUR_TYPE_AMOUNT,          // get/set amount
+	BEHAVIOUR_TYPE_TEXT,            // get/set string
+	BEHAVIOUR_TYPE_HEALTH,          // get/set health
+	BEHAVIOUR_TYPE_COUNT,           // count amount of items
+	BEHAVIOUR_TYPE_CREATEMONEY,     // create money
+	BEHAVIOUR_TYPE_COUNTMONEY,      // get player total money
+	BEHAVIOUR_TYPE_DELETEMONEY,     // remove money from player
+	BEHAVIOUR_TYPE_CREATE,          // create item
+	BEHAVIOUR_TYPE_DELETE,          // deletes an item
+	BEHAVIOUR_TYPE_EFFECTME,        // effect on NPC
+	BEHAVIOUR_TYPE_EFFECTOPP,       // effect on player
+	BEHAVIOUR_TYPE_BURNING,         // get/set burning
+	BEHAVIOUR_TYPE_POISON,          // get/set poison
+	BEHAVIOUR_TYPE_SPELLKNOWN,      // check if spell is known
+	BEHAVIOUR_TYPE_SPELLLEVEL,      // get spell level
 	BEHAVIOUR_TYPE_SPELLMAGICLEVEL, // get spell magic level
-	BEHAVIOUR_TYPE_TEACHSPELL, // player learn spell
-	BEHAVIOUR_TYPE_LEVEL, // get player level
-	BEHAVIOUR_TYPE_MAGICLEVEL, // get player magic level
-	BEHAVIOUR_TYPE_RANDOM, // random value
-	BEHAVIOUR_TYPE_QUESTVALUE, // get/set quest value
-	BEHAVIOUR_TYPE_TELEPORT, // teleport player to position
-	BEHAVIOUR_TYPE_SORCERER, // get/set vocation
-	BEHAVIOUR_TYPE_DRUID, // get/set vocation
-	BEHAVIOUR_TYPE_KNIGHT, // get/set vocation
-	BEHAVIOUR_TYPE_PALADIN, // get/set vocation
-	BEHAVIOUR_TYPE_ISPREMIUM, // is account premium
-	BEHAVIOUR_TYPE_PVPENFORCED, // get world type pvpenforced
-	BEHAVIOUR_TYPE_MALE, // is player male
-	BEHAVIOUR_TYPE_FEMALE, // is player female
-	BEHAVIOUR_TYPE_PZLOCKED, // is player pz locked
-	BEHAVIOUR_TYPE_PROMOTED, // check if player promoted
-	BEHAVIOUR_TYPE_PROFESSION, // get/set profession
-	BEHAVIOUR_TYPE_PROMOTE, // promote the player
-	BEHAVIOUR_TYPE_SUMMON, // summons a monster
-	BEHAVIOUR_TYPE_EXPERIENCE, // grant experience to a player
-	BEHAVIOUR_TYPE_BALANCE, // return player balance
-	BEHAVIOUR_TYPE_WITHDRAW, // withdraw from player bank balance
-	BEHAVIOUR_TYPE_DEPOSIT, // deposit x amount of gold
-	BEHAVIOUR_TYPE_TRANSFER, // transfer x amount of gold
-	BEHAVIOUR_TYPE_BLESS, // add blessing to player
+	BEHAVIOUR_TYPE_TEACHSPELL,      // player learn spell
+	BEHAVIOUR_TYPE_LEVEL,           // get player level
+	BEHAVIOUR_TYPE_MAGICLEVEL,      // get player magic level
+	BEHAVIOUR_TYPE_RANDOM,          // random value
+	BEHAVIOUR_TYPE_QUESTVALUE,      // get/set quest value
+	BEHAVIOUR_TYPE_TELEPORT,        // teleport player to position
+	BEHAVIOUR_TYPE_SORCERER,        // get/set vocation
+	BEHAVIOUR_TYPE_DRUID,           // get/set vocation
+	BEHAVIOUR_TYPE_KNIGHT,          // get/set vocation
+	BEHAVIOUR_TYPE_PALADIN,         // get/set vocation
+	BEHAVIOUR_TYPE_ISPREMIUM,       // is account premium
+	BEHAVIOUR_TYPE_PVPENFORCED,     // get world type pvpenforced
+	BEHAVIOUR_TYPE_MALE,            // is player male
+	BEHAVIOUR_TYPE_FEMALE,          // is player female
+	BEHAVIOUR_TYPE_PZLOCKED,        // is player pz locked
+	BEHAVIOUR_TYPE_PROMOTED,        // check if player promoted
+	BEHAVIOUR_TYPE_PROFESSION,      // get/set profession
+	BEHAVIOUR_TYPE_PROMOTE,         // promote the player
+	BEHAVIOUR_TYPE_SUMMON,          // summons a monster
+	BEHAVIOUR_TYPE_EXPERIENCE,      // grant experience to a player
+	BEHAVIOUR_TYPE_BALANCE,         // return player balance
+	BEHAVIOUR_TYPE_WITHDRAW,        // withdraw from player bank balance
+	BEHAVIOUR_TYPE_DEPOSIT,         // deposit x amount of gold
+	BEHAVIOUR_TYPE_TRANSFER,        // transfer x amount of gold
+	BEHAVIOUR_TYPE_BLESS,           // add blessing to player
 	BEHAVIOUR_TYPE_CREATECONTAINER, // create a container of an item in particular
-	BEHAVIOUR_TYPE_TOWN, // change player town
+	BEHAVIOUR_TYPE_TOWN,            // change player town
 };
 
 enum NpcBehaviourOperator_t : uint8_t
@@ -113,7 +113,7 @@ struct NpcBehaviourNode
 	NpcBehaviourNodePtr left;
 	NpcBehaviourNodePtr right;
 
-	NpcBehaviourNode() : type(), number(0), left(nullptr), right(nullptr) { }
+	NpcBehaviourNode() : type(), number(0), left(nullptr), right(nullptr) {}
 	~NpcBehaviourNode() = default;
 
 	NpcBehaviourNodePtr clone() const
@@ -142,8 +142,8 @@ struct NpcBehaviourCondition
 
 	NpcBehaviourCondition() : type(), situation(SITUATION_NONE), string(), number(0), expression(nullptr) {}
 	~NpcBehaviourCondition() = default;
-	
-	//non-copyable
+
+	// non-copyable
 	NpcBehaviourCondition(const NpcBehaviourCondition&) = delete;
 	NpcBehaviourCondition& operator=(const NpcBehaviourCondition&) = delete;
 
@@ -159,13 +159,8 @@ struct NpcBehaviourAction
 	NpcBehaviourNodePtr expression2;
 	NpcBehaviourNodePtr expression3;
 
-	NpcBehaviourAction() :
-		type(),
-		string(),
-		number(0),
-		expression(nullptr),
-		expression2(nullptr),
-		expression3(nullptr) {}
+	NpcBehaviourAction() : type(), string(), number(0), expression(nullptr), expression2(nullptr), expression3(nullptr)
+	{}
 	~NpcBehaviourAction() = default;
 
 	NpcBehaviourActionPtr clone() const
@@ -197,7 +192,7 @@ struct NpcBehaviour
 	NpcBehaviour() = default;
 	~NpcBehaviour() = default;
 
-	//non-copyable
+	// non-copyable
 	NpcBehaviour(const NpcBehaviour&) = delete;
 	NpcBehaviour& operator=(const NpcBehaviour&) = delete;
 };
@@ -227,12 +222,12 @@ public:
 
 	void react(NpcBehaviourSituation_t situation, Player* player, const std::string& message);
 
-	static bool compareBehaviour(const NpcBehaviourPtr& left, const NpcBehaviourPtr& right) {
+	static bool compareBehaviour(const NpcBehaviourPtr& left, const NpcBehaviourPtr& right)
+	{
 		return left->priority >= right->priority;
 	}
 
 private:
-
 	bool checkCondition(const NpcBehaviourConditionPtr& condition, Player* player, std::string& message);
 	void checkAction(const NpcBehaviourActionPtr& action, Player* player, std::string& message);
 

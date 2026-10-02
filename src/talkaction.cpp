@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -7,16 +7,9 @@
 #include "talkaction.h"
 #include "pugicast.h"
 
-TalkActions::TalkActions()
-	: scriptInterface("TalkAction Interface")
-{
-	scriptInterface.initState();
-}
+TalkActions::TalkActions() : scriptInterface("TalkAction Interface") { scriptInterface.initState(); }
 
-TalkActions::~TalkActions()
-{
-	clear();
-}
+TalkActions::~TalkActions() { clear(); }
 
 void TalkActions::clear()
 {
@@ -25,19 +18,13 @@ void TalkActions::clear()
 	getScriptInterface().reInitState();
 }
 
-LuaScriptInterface& TalkActions::getScriptInterface()
-{
-	return scriptInterface;
-}
+LuaScriptInterface& TalkActions::getScriptInterface() { return scriptInterface; }
 
-std::string TalkActions::getScriptBaseName() const
-{
-	return "talkactions";
-}
+std::string TalkActions::getScriptBaseName() const { return "talkactions"; }
 
 bool TalkActions::registerLuaEvent(TalkAction* event)
 {
-	TalkAction_ptr talkAction{ event };
+	TalkAction_ptr talkAction{event};
 	std::vector<std::string> words = talkAction->getWordsMap();
 
 	for (size_t i = 0; i < words.size(); i++) {
@@ -54,10 +41,11 @@ bool TalkActions::registerLuaEvent(TalkAction* event)
 TalkActionResult_t TalkActions::playerSaySpell(Player* player, SpeakClasses type, const std::string& words) const
 {
 	size_t wordsLength = words.length();
-	for (auto it = talkActions.begin(); it != talkActions.end(); ) {
+	for (auto it = talkActions.begin(); it != talkActions.end();) {
 		const std::string& talkactionWords = it->first;
 		size_t talkactionLength = talkactionWords.length();
-		if (wordsLength < talkactionLength || strncasecmp(words.c_str(), talkactionWords.c_str(), talkactionLength) != 0) {
+		if (wordsLength < talkactionLength ||
+		    strncasecmp(words.c_str(), talkactionWords.c_str(), talkactionLength) != 0) {
 			++it;
 			continue;
 		}
@@ -101,14 +89,11 @@ TalkActionResult_t TalkActions::playerSaySpell(Player* player, SpeakClasses type
 	return TALKACTION_CONTINUE;
 }
 
-std::string TalkAction::getScriptEventName() const
-{
-	return "onSay";
-}
+std::string TalkAction::getScriptEventName() const { return "onSay"; }
 
 bool TalkAction::executeSay(Player* player, const std::string& words, const std::string& param, SpeakClasses type) const
 {
-	//onSay(player, words, param, type)
+	// onSay(player, words, param, type)
 	if (!scriptInterface->reserveScriptEnv()) {
 		std::cout << "[Error - TalkAction::executeSay] Call stack overflow" << std::endl;
 		return false;

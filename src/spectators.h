@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #pragma once
 
@@ -12,12 +12,12 @@ class SpectatorVec
 	using Vec = std::vector<Creature*>;
 	using Iterator = Vec::iterator;
 	using ConstIterator = Vec::const_iterator;
-public:
-	SpectatorVec() {
-		vec.reserve(32);
-	}
 
-	void addSpectators(const SpectatorVec& spectators) {
+public:
+	SpectatorVec() { vec.reserve(32); }
+
+	void addSpectators(const SpectatorVec& spectators)
+	{
 		for (Creature* spectator : spectators.vec) {
 			auto it = std::find(vec.begin(), vec.end(), spectator);
 			if (it != end()) {
@@ -27,7 +27,8 @@ public:
 		}
 	}
 
-	void erase(Creature* spectator) {
+	void erase(Creature* spectator)
+	{
 		auto it = std::find(vec.begin(), vec.end(), spectator);
 		if (it == end()) {
 			return;

@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -17,21 +17,15 @@ extern Vocations g_vocations;
 extern ConfigManager g_config;
 extern LuaEnvironment g_luaEnvironment;
 
-Spells::Spells()
-{
-	scriptInterface.initState();
-}
+Spells::Spells() { scriptInterface.initState(); }
 
-Spells::~Spells()
-{
-	clear();
-}
+Spells::~Spells() { clear(); }
 
 TalkActionResult_t Spells::playerSaySpell(Player* player, std::string& words)
 {
 	std::string str_words = words;
 
-	//strip trailing spaces
+	// strip trailing spaces
 	trimString(str_words);
 	str_words = removeExtraSpaces(str_words);
 
@@ -101,24 +95,19 @@ void Spells::clear()
 	getScriptInterface().reInitState();
 }
 
-LuaScriptInterface& Spells::getScriptInterface()
-{
-	return scriptInterface;
-}
+LuaScriptInterface& Spells::getScriptInterface() { return scriptInterface; }
 
-std::string Spells::getScriptBaseName() const
-{
-	return "spells";
-}
+std::string Spells::getScriptBaseName() const { return "spells"; }
 
 bool Spells::registerInstantLuaEvent(InstantSpell* event)
 {
-	InstantSpell_ptr instant { event };
+	InstantSpell_ptr instant{event};
 	if (instant) {
 		std::string words = instant->getWords();
 		auto result = instants.emplace(instant->getWords(), std::move(*instant));
 		if (!result.second) {
-			std::cout << "[Warning - Spells::registerInstantLuaEvent] Duplicate registered instant spell with words: " << words << std::endl;
+			std::cout << "[Warning - Spells::registerInstantLuaEvent] Duplicate registered instant spell with words: "
+			          << words << std::endl;
 		}
 		return result.second;
 	}
@@ -128,12 +117,13 @@ bool Spells::registerInstantLuaEvent(InstantSpell* event)
 
 bool Spells::registerRuneLuaEvent(RuneSpell* event)
 {
-	RuneSpell_ptr rune { event };
+	RuneSpell_ptr rune{event};
 	if (rune) {
 		uint16_t id = rune->getRuneItemId();
 		auto result = runes.emplace(rune->getRuneItemId(), std::move(*rune));
 		if (!result.second) {
-			std::cout << "[Warning - Spells::registerRuneLuaEvent] Duplicate registered rune with id: " << id << std::endl;
+			std::cout << "[Warning - Spells::registerRuneLuaEvent] Duplicate registered rune with id: " << id
+			          << std::endl;
 		}
 		return result.second;
 	}
@@ -192,9 +182,10 @@ InstantSpell* Spells::getInstantSpell(const std::string& words)
 
 	for (auto& it : instants) {
 		const std::string& instantSpellWords = it.second.getWords();
-		
+
 		// match the current spell words with the given words
-		if (compareSpellWords(instantSpellWords, constructedWords, (it.second.getHasParam() || it.second.getHasPlayerNameParam()))) {
+		if (compareSpellWords(instantSpellWords, constructedWords,
+		                      (it.second.getHasParam() || it.second.getHasPlayerNameParam()))) {
 			result = &it.second;
 		}
 
@@ -220,10 +211,7 @@ Position Spells::getCasterPosition(Creature* creature, Direction dir)
 }
 
 CombatSpell::CombatSpell(Combat_ptr combat, bool needTarget, bool needDirection) :
-	ScriptEvent(&g_spells->getScriptInterface()),
-	combat(combat),
-	needDirection(needDirection),
-	needTarget(needTarget)
+    ScriptEvent(&g_spells->getScriptInterface()), combat(combat), needDirection(needDirection), needTarget(needTarget)
 {}
 
 bool CombatSpell::loadScriptCombat()
@@ -288,7 +276,7 @@ bool CombatSpell::castSpell(Creature* creature, Creature* target)
 
 bool CombatSpell::executeCastSpell(Creature* creature, const LuaVariant& var)
 {
-	//onCastSpell(creature, var)
+	// onCastSpell(creature, var)
 	if (!scriptInterface->reserveScriptEnv()) {
 		std::cout << "[Error - CombatSpell::executeCastSpell] Call stack overflow" << std::endl;
 		return false;
@@ -320,29 +308,14 @@ bool Spell::configureSpell(const pugi::xml_node& node)
 	name = nameAttribute.as_string();
 
 	static const char* reservedList[] = {
-		"melee",
-		"physical",
-		"poison",
-		"fire",
-		"energy",
-		"drown",
-		"lifedrain",
-		"manadrain",
-		"healing",
-		"speed",
-		"outfit",
-		"invisible",
-		"drunk",
-		"firefield",
-		"poisonfield",
-		"energyfield",
-		"firecondition",
-		"poisoncondition",
-		"energycondition",
+	    "melee",           "physical",  "poison",      "fire",        "energy",        "drown",
+	    "lifedrain",       "manadrain", "healing",     "speed",       "outfit",        "invisible",
+	    "drunk",           "firefield", "poisonfield", "energyfield", "firecondition", "poisoncondition",
+	    "energycondition",
 	};
 
-	//static size_t size = sizeof(reservedList) / sizeof(const char*);
-	//for (size_t i = 0; i < size; ++i) {
+	// static size_t size = sizeof(reservedList) / sizeof(const char*);
+	// for (size_t i = 0; i < size; ++i) {
 	for (const char* reserved : reservedList) {
 		if (strcasecmp(reserved, name.c_str()) == 0) {
 			std::cout << "[Error - Spell::configureSpell] Spell is using a reserved name: " << reserved << std::endl;
@@ -422,7 +395,8 @@ bool Spell::configureSpell(const pugi::xml_node& node)
 		} else if (tmpStrValue == "creature") {
 			blockingCreature = true;
 		} else {
-			std::cout << "[Warning - Spell::configureSpell] Blocktype \"" << attr.as_string() << "\" does not exist." << std::endl;
+			std::cout << "[Warning - Spell::configureSpell] Blocktype \"" << attr.as_string() << "\" does not exist."
+			          << std::endl;
 		}
 	}
 
@@ -471,7 +445,7 @@ bool Spell::playerSpellCheck(Player* player) const
 			return false;
 		}
 	}
-	
+
 	if (!vocSpellMap.empty() && vocSpellMap.find(player->getVocationId()) == vocSpellMap.end()) {
 		player->sendCancelMessage(RETURNVALUE_YOURVOCATIONCANNOTUSETHISSPELL);
 		g_game.addMagicEffect(player->getPosition(), CONST_ME_POFF);
@@ -506,7 +480,8 @@ bool Spell::playerSpellCheck(Player* player) const
 		return false;
 	}
 
-	if ((aggressive || pzLock) && !player->hasFlag(PlayerFlag_IgnoreProtectionZone) && player->getZone() == ZONE_PROTECTION) {
+	if ((aggressive || pzLock) && !player->hasFlag(PlayerFlag_IgnoreProtectionZone) &&
+	    player->getZone() == ZONE_PROTECTION) {
 		player->sendCancelMessage(RETURNVALUE_ACTIONNOTPERMITTEDINPROTECTIONZONE);
 		g_game.addMagicEffect(player->getPosition(), CONST_ME_POFF);
 		return false;
@@ -617,8 +592,7 @@ bool Spell::playerRuneSpellCheck(Player* player, const Position& toPos)
 	}
 
 	if (range != -1) {
-		if ((Position::getDistanceX(playerPos, toPos) > range) ||
-			(Position::getDistanceY(playerPos, toPos) > range)) {
+		if ((Position::getDistanceX(playerPos, toPos) > range) || (Position::getDistanceY(playerPos, toPos) > range)) {
 			player->sendCancelMessage(RETURNVALUE_DESTINATIONOUTOFREACH);
 			g_game.addMagicEffect(player->getPosition(), CONST_ME_POFF);
 			return false;
@@ -653,7 +627,8 @@ bool Spell::playerRuneSpellCheck(Player* player, const Position& toPos)
 
 	if (aggressive && needTarget && bottomVisibleCreature && player->hasSecureMode()) {
 		const Player* targetPlayer = bottomVisibleCreature->getPlayer();
-		if (targetPlayer && targetPlayer != player && player->getSkullClient(targetPlayer) == SKULL_NONE && !Combat::isInPvpZone(player, targetPlayer)) {
+		if (targetPlayer && targetPlayer != player && player->getSkullClient(targetPlayer) == SKULL_NONE &&
+		    !Combat::isInPvpZone(player, targetPlayer)) {
 			player->sendCancelMessage(RETURNVALUE_TURNSECUREMODETOATTACKUNMARKEDPLAYERS);
 			g_game.addMagicEffect(player->getPosition(), CONST_ME_POFF);
 			return false;
@@ -719,10 +694,7 @@ uint32_t Spell::getManaCost(const Player* player) const
 	return 0;
 }
 
-std::string InstantSpell::getScriptEventName() const
-{
-	return "onCastSpell";
-}
+std::string InstantSpell::getScriptEventName() const { return "onCastSpell"; }
 
 bool InstantSpell::playerCastInstant(Player* player, std::string& param)
 {
@@ -846,8 +818,7 @@ bool InstantSpell::canThrowSpell(const Creature* creature, const Creature* targe
 	}
 
 	if (range != -1) {
-		if ((Position::getDistanceX(fromPos, toPos) > range) ||
-			(Position::getDistanceY(fromPos, toPos) > range)) {
+		if ((Position::getDistanceX(fromPos, toPos) > range) || (Position::getDistanceY(fromPos, toPos) > range)) {
 			return false;
 		}
 	}
@@ -902,7 +873,7 @@ bool InstantSpell::internalCastSpell(Creature* creature, const LuaVariant& var)
 
 bool InstantSpell::executeCastSpell(Creature* creature, const LuaVariant& var)
 {
-	//onCastSpell(creature, var)
+	// onCastSpell(creature, var)
 	if (!scriptInterface->reserveScriptEnv()) {
 		std::cout << "[Error - InstantSpell::executeCastSpell] Call stack overflow" << std::endl;
 		return false;
@@ -929,8 +900,7 @@ bool InstantSpell::canCast(const Player* player) const
 		return false;
 	}
 
-	if (player->hasFlag(PlayerFlag_IgnoreSpellCheck) ||
-		g_config.getBoolean(ConfigManager::NO_SPELL_REQUIREMENTS)) {
+	if (player->hasFlag(PlayerFlag_IgnoreSpellCheck) || g_config.getBoolean(ConfigManager::NO_SPELL_REQUIREMENTS)) {
 		return true;
 	}
 
@@ -947,10 +917,7 @@ bool InstantSpell::canCast(const Player* player) const
 	return false;
 }
 
-std::string RuneSpell::getScriptEventName() const
-{
-	return "onCastSpell";
-}
+std::string RuneSpell::getScriptEventName() const { return "onCastSpell"; }
 
 ReturnValue RuneSpell::canExecuteAction(const Player* player, const Position& toPos)
 {
@@ -1014,7 +981,8 @@ bool RuneSpell::executeUse(Player* player, Item* item, const Position&, Thing* t
 
 	bool pzLock = getPzLock();
 	if (pzLock) {
-		if (g_game.getWorldType() == WORLD_TYPE_NO_PVP || g_game.map.getTile(toPosition)->hasFlag(TILESTATE_NOPVPZONE)) {
+		if (g_game.getWorldType() == WORLD_TYPE_NO_PVP ||
+		    g_game.map.getTile(toPosition)->hasFlag(TILESTATE_NOPVPZONE)) {
 			pzLock = false;
 		}
 	}
@@ -1062,7 +1030,7 @@ bool RuneSpell::internalCastSpell(Creature* creature, const LuaVariant& var)
 
 bool RuneSpell::executeCastSpell(Creature* creature, const LuaVariant& var)
 {
-	//onCastSpell(creature, var)
+	// onCastSpell(creature, var)
 	if (!scriptInterface->reserveScriptEnv()) {
 		std::cout << "[Error - RuneSpell::executeCastSpell] Call stack overflow" << std::endl;
 		return false;

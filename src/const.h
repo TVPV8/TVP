@@ -1,11 +1,12 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #pragma once
 
 static constexpr int32_t NETWORKMESSAGE_MAXSIZE = 24590;
 
-enum MagicEffectClasses : uint8_t {
+enum MagicEffectClasses : uint8_t
+{
 	CONST_ME_NONE,
 
 	CONST_ME_DRAWBLOOD = 1,
@@ -35,7 +36,8 @@ enum MagicEffectClasses : uint8_t {
 	CONST_ME_SOUND_WHITE = 25,
 };
 
-enum ShootType_t : uint8_t {
+enum ShootType_t : uint8_t
+{
 	CONST_ANI_NONE,
 
 	CONST_ANI_SPEAR = 1,
@@ -53,12 +55,13 @@ enum ShootType_t : uint8_t {
 	CONST_ANI_SNOWBALL = 13,
 	CONST_ANI_POWERBOLT = 14,
 	CONST_ANI_POISON = 15,
-	
+
 	// for internal use, don't send to client
 	CONST_ANI_WEAPONTYPE = 0xFE, // 254
 };
 
-enum SpeakClasses : uint8_t {
+enum SpeakClasses : uint8_t
+{
 	TALKTYPE_SAY = 1,
 	TALKTYPE_WHISPER = 2,
 	TALKTYPE_YELL = 3,
@@ -68,29 +71,31 @@ enum SpeakClasses : uint8_t {
 	TALKTYPE_RVR_ANSWER = 7,
 	TALKTYPE_RVR_CONTINUE = 8,
 	TALKTYPE_BROADCAST = 9,
-	TALKTYPE_CHANNEL_R1 = 10, // Red - #c text
+	TALKTYPE_CHANNEL_R1 = 10,  // Red - #c text
 	TALKTYPE_PRIVATE_RED = 11, // @name@text
-	TALKTYPE_CHANNEL_O = 12, // orange
-	TALKTYPE_CHANNEL_R2 = 14, // red anonymous - #d text
+	TALKTYPE_CHANNEL_O = 12,   // orange
+	TALKTYPE_CHANNEL_R2 = 14,  // red anonymous - #d text
 	TALKTYPE_MONSTER_YELL = 0x10,
 	TALKTYPE_MONSTER_SAY = 0x11,
 };
 
-enum MessageClasses : uint8_t {
-	MESSAGE_STATUS_CONSOLE_YELLOW = 0x01, //Yellow message in the console
-	MESSAGE_STATUS_CONSOLE_LBLUE = 0x04, //Light blue message in the console
-	MESSAGE_STATUS_CONSOLE_ORANGE = 0x11, //Orange message in the console
-	MESSAGE_STATUS_WARNING = 0x12, //Red message in game window and in the console
-	MESSAGE_EVENT_ADVANCE = 0x13, //White message in game window and in the console
-	MESSAGE_EVENT_DEFAULT = 0x14, //White message at the bottom of the game window and in the console
-	MESSAGE_STATUS_DEFAULT = 0x15, //White message at the bottom of the game window and in the console
-	MESSAGE_INFO_DESCR = 0x16, //Green message in game window and in the console
-	MESSAGE_STATUS_SMALL = 0x17, //White message at the bottom of the game window"
-	MESSAGE_STATUS_CONSOLE_BLUE = 0x18, //Blue message in the console
-	MESSAGE_STATUS_CONSOLE_RED = 0x19, //Red message in the console
+enum MessageClasses : uint8_t
+{
+	MESSAGE_STATUS_CONSOLE_YELLOW = 0x01, // Yellow message in the console
+	MESSAGE_STATUS_CONSOLE_LBLUE = 0x04,  // Light blue message in the console
+	MESSAGE_STATUS_CONSOLE_ORANGE = 0x11, // Orange message in the console
+	MESSAGE_STATUS_WARNING = 0x12,        // Red message in game window and in the console
+	MESSAGE_EVENT_ADVANCE = 0x13,         // White message in game window and in the console
+	MESSAGE_EVENT_DEFAULT = 0x14,         // White message at the bottom of the game window and in the console
+	MESSAGE_STATUS_DEFAULT = 0x15,        // White message at the bottom of the game window and in the console
+	MESSAGE_INFO_DESCR = 0x16,            // Green message in game window and in the console
+	MESSAGE_STATUS_SMALL = 0x17,          // White message at the bottom of the game window"
+	MESSAGE_STATUS_CONSOLE_BLUE = 0x18,   // Blue message in the console
+	MESSAGE_STATUS_CONSOLE_RED = 0x19,    // Red message in the console
 };
 
-enum FluidTypes_t : uint8_t {
+enum FluidTypes_t : uint8_t
+{
 	FLUID_NONE = 0,
 	FLUID_WATER,
 	FLUID_WINE,
@@ -106,11 +111,13 @@ enum FluidTypes_t : uint8_t {
 	FLUID_LEMONADE,
 };
 
-enum SquareColor_t : uint8_t {
+enum SquareColor_t : uint8_t
+{
 	SQ_COLOR_BLACK = 0,
 };
 
-enum TextColor_t : uint8_t {
+enum TextColor_t : uint8_t
+{
 	TEXTCOLOR_BLUE = 5,
 	TEXTCOLOR_LIGHTGREEN = 30,
 	TEXTCOLOR_LIGHTBLUE = 35,
@@ -128,7 +135,8 @@ enum TextColor_t : uint8_t {
 	TEXTCOLOR_NONE = 255,
 };
 
-enum Icons_t {
+enum Icons_t
+{
 	ICON_POISON = 1 << 0,
 	ICON_BURN = 1 << 1,
 	ICON_ENERGY = 1 << 2,
@@ -139,7 +147,8 @@ enum Icons_t {
 	ICON_SWORDS = 1 << 7,
 };
 
-enum WeaponType_t : uint8_t {
+enum WeaponType_t : uint8_t
+{
 	WEAPON_NONE,
 	WEAPON_SWORD,
 	WEAPON_CLUB,
@@ -150,7 +159,8 @@ enum WeaponType_t : uint8_t {
 	WEAPON_AMMO,
 };
 
-enum Ammo_t : uint8_t {
+enum Ammo_t : uint8_t
+{
 	AMMO_NONE,
 	AMMO_BOLT,
 	AMMO_ARROW,
@@ -161,14 +171,16 @@ enum Ammo_t : uint8_t {
 	AMMO_SNOWBALL,
 };
 
-enum WeaponAction_t : uint8_t {
+enum WeaponAction_t : uint8_t
+{
 	WEAPONACTION_NONE,
 	WEAPONACTION_REMOVECOUNT,
 	WEAPONACTION_REMOVECHARGE,
 	WEAPONACTION_MOVE,
 };
 
-enum WieldInfo_t {
+enum WieldInfo_t
+{
 	WIELDINFO_NONE = 0 << 0,
 	WIELDINFO_LEVEL = 1 << 0,
 	WIELDINFO_MAGLV = 1 << 1,
@@ -176,7 +188,8 @@ enum WieldInfo_t {
 	WIELDINFO_PREMIUM = 1 << 3,
 };
 
-enum Skulls_t : uint8_t {
+enum Skulls_t : uint8_t
+{
 	SKULL_NONE = 0,
 	SKULL_YELLOW = 1,
 	SKULL_GREEN = 2,
@@ -184,7 +197,8 @@ enum Skulls_t : uint8_t {
 	SKULL_RED = 4,
 };
 
-enum PartyShields_t : uint8_t {
+enum PartyShields_t : uint8_t
+{
 	SHIELD_NONE = 0,
 	SHIELD_WHITEYELLOW = 1,
 	SHIELD_WHITEBLUE = 2,
@@ -192,7 +206,8 @@ enum PartyShields_t : uint8_t {
 	SHIELD_YELLOW = 4,
 };
 
-enum item_t : uint16_t {
+enum item_t : uint16_t
+{
 	ITEM_FIREFIELD_PVP_FULL = 1487,
 	ITEM_FIREFIELD_PVP_MEDIUM = 1488,
 	ITEM_FIREFIELD_PVP_SMALL = 1489,
@@ -236,10 +251,11 @@ enum item_t : uint16_t {
 
 	ITEM_AMULETOFLOSS = 2173,
 
-	ITEM_DOCUMENT_RO = 1968, //read-only
+	ITEM_DOCUMENT_RO = 1968, // read-only
 };
 
-enum PlayerFlags : uint64_t {
+enum PlayerFlags : uint64_t
+{
 	PlayerFlag_CannotUseCombat = 1 << 0,
 	PlayerFlag_CannotAttackPlayer = 1 << 1,
 	PlayerFlag_CannotAttackMonster = 1 << 2,
@@ -279,7 +295,8 @@ enum PlayerFlags : uint64_t {
 	PlayerFlag_FullLight = static_cast<uint64_t>(1) << 36,
 };
 
-enum ReloadTypes_t : uint8_t  {
+enum ReloadTypes_t : uint8_t
+{
 	RELOAD_TYPE_ALL,
 	RELOAD_TYPE_CHAT,
 	RELOAD_TYPE_CONFIG,
@@ -297,7 +314,7 @@ static constexpr int32_t CHANNEL_PARTY = 0x01;
 static constexpr int32_t CHANNEL_RULE_REP = 0x02;
 static constexpr int32_t CHANNEL_PRIVATE = 0xFFFF;
 
-//Reserved player storage key ranges;
+// Reserved player storage key ranges;
 //[10000000 - 20000000];
 static constexpr int32_t PSTRG_RESERVED_RANGE_START = 10000000;
 static constexpr int32_t PSTRG_RESERVED_RANGE_SIZE = 10000000;
@@ -305,4 +322,5 @@ static constexpr int32_t PSTRG_RESERVED_RANGE_SIZE = 10000000;
 static constexpr int32_t PSTRG_OUTFITS_RANGE_START = (PSTRG_RESERVED_RANGE_START + 1000);
 static constexpr int32_t PSTRG_OUTFITS_RANGE_SIZE = 500;
 
-#define IS_IN_KEYRANGE(key, range) (key >= PSTRG_##range##_START && ((key - PSTRG_##range##_START) <= PSTRG_##range##_SIZE))
+#define IS_IN_KEYRANGE(key, range) \
+	(key >= PSTRG_##range##_START && ((key - PSTRG_##range##_START) <= PSTRG_##range##_SIZE))

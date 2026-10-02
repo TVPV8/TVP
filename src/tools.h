@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #pragma once
 
@@ -31,9 +31,7 @@ using IntegerVector = std::vector<int32_t>;
 
 StringVector explodeString(const std::string& inString, const std::string& separator, int32_t limit = -1);
 IntegerVector vectorAtoi(const StringVector& stringVector);
-constexpr bool hasBitSet(uint32_t flag, uint32_t flags) {
-	return (flags & flag) != 0;
-}
+constexpr bool hasBitSet(uint32_t flag, uint32_t flags) { return (flags & flag) != 0; }
 
 std::mt19937& getRandomGenerator();
 int32_t random(int32_t minNumber, int32_t maxNumber);

@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -18,7 +18,8 @@ Task* createTaskWithStats(TaskFunc&& f, const std::string& description, const st
 	return new Task(std::move(f), description, extraDescription);
 }
 
-Task* createTaskWithStats(uint32_t expiration, TaskFunc&& f, const std::string& description, const std::string& extraDescription)
+Task* createTaskWithStats(uint32_t expiration, TaskFunc&& f, const std::string& description,
+                          const std::string& extraDescription)
 {
 	return new Task(expiration, std::move(f), description, extraDescription);
 }
@@ -38,11 +39,13 @@ void Dispatcher::threadMain()
 		// check if there are tasks waiting
 		taskLockUnique.lock();
 		if (taskList.empty()) {
-			//if the list is empty wait for signal
+			// if the list is empty wait for signal
 #ifdef STATS_ENABLED
 			time_point = std::chrono::high_resolution_clock::now();
 			taskSignal.wait(taskLockUnique);
-			g_stats.dispatcherWaitTime(dispatcherId) += std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - time_point).count();
+			g_stats.dispatcherWaitTime(dispatcherId) += std::chrono::duration_cast<std::chrono::nanoseconds>(
+			                                                std::chrono::high_resolution_clock::now() - time_point)
+			                                                .count();
 #else
 			taskSignal.wait(taskLockUnique);
 #endif
@@ -67,7 +70,9 @@ void Dispatcher::threadMain()
 				(*task)();
 			}
 #ifdef STATS_ENABLED
-			task->executionTime = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - time_point).count();
+			task->executionTime = std::chrono::duration_cast<std::chrono::nanoseconds>(
+			                          std::chrono::high_resolution_clock::now() - time_point)
+			                          .count();
 			g_stats.addDispatcherTask(dispatcherId, task);
 #else
 			delete task;

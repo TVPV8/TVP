@@ -24,9 +24,7 @@ public:
 	bool canRead() const;
 
 	TokenType_t nextToken(bool allowNegativeDigits = false);
-	TokenType_t getToken() const {
-		return token;
-	}
+	TokenType_t getToken() const { return token; }
 
 	void error(const std::string& errMessage);
 
@@ -64,14 +62,15 @@ public:
 	Position readPosition();
 
 	static std::string prepString(const std::string& str);
+
 private:
 	void closeCurrentFile();
 
 	TokenType_t token = TOKEN_ENDOFFILE;
 
-	std::array<FILE*, 3> files{ nullptr, nullptr, nullptr };
+	std::array<FILE*, 3> files{nullptr, nullptr, nullptr};
 	std::array<std::string, 3> filenames{};
-	std::array<int32_t, 3> lines{ 1, 1, 1 };
+	std::array<int32_t, 3> lines{1, 1, 1};
 
 	bool isGood = true;
 
@@ -82,4 +81,3 @@ private:
 	std::string identifier;
 	std::string string;
 };
-

@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -64,7 +64,7 @@ bool argumentsHandler(const StringVector& args);
 int main(int argc, char* argv[])
 {
 	StringVector args = StringVector(argv, argv + argc);
-	if(argc > 1 && !argumentsHandler(args)) {
+	if (argc > 1 && !argumentsHandler(args)) {
 		return 0;
 	}
 
@@ -84,7 +84,8 @@ int main(int argc, char* argv[])
 	g_loaderSignal.wait(g_loaderUniqueLock);
 
 	if (serviceManager.is_running()) {
-		std::cout << ">> " << g_config.getString(ConfigManager::SERVER_NAME) << " Server Online!" << std::endl << std::endl;
+		std::cout << ">> " << g_config.getString(ConfigManager::SERVER_NAME) << " Server Online!" << std::endl
+		          << std::endl;
 		serviceManager.run();
 	} else {
 		std::cout << ">> No services running. The server is NOT online." << std::endl;
@@ -124,7 +125,7 @@ void printServerVersion()
 #if defined(LUAJIT_VERSION)
 	std::cout << "Linked with " << LUAJIT_VERSION << " for Lua support" << std::endl;
 #else
-	std::cout << "Linked with " << LUA_RELEASE << " for Lua support"  << std::endl;
+	std::cout << "Linked with " << LUA_RELEASE << " for Lua support" << std::endl;
 #endif
 	std::cout << std::endl;
 
@@ -134,7 +135,8 @@ void printServerVersion()
 }
 
 #if !defined(_MSC_VER)
-__attribute__((used)) void saveServer() {
+__attribute__((used)) void saveServer()
+{
 	g_game.map.refreshMap();
 	g_game.saveGameState();
 }
@@ -142,7 +144,7 @@ __attribute__((used)) void saveServer() {
 
 void mainLoader(int, char*[], ServiceManager* services)
 {
-	//dispatcher thread
+	// dispatcher thread
 	g_game.setGameState(GAME_STATE_STARTUP);
 
 	srand(static_cast<unsigned int>(OTSYS_TIME()));
@@ -191,12 +193,12 @@ void mainLoader(int, char*[], ServiceManager* services)
 	}
 #endif
 
-	//set RSA key
+	// set RSA key
 	try {
 		std::ifstream key{"key.pem"};
 		std::string pem{std::istreambuf_iterator<char>{key}, std::istreambuf_iterator<char>{}};
 		tfs::rsa::loadPEM(pem);
-	} catch(const std::exception& e) {
+	} catch (const std::exception& e) {
 		startupErrorMessage(e.what());
 		return;
 	}
@@ -214,7 +216,8 @@ void mainLoader(int, char*[], ServiceManager* services)
 	std::cout << ">> Running database manager" << std::endl;
 
 	if (!DatabaseManager::isDatabaseSetup()) {
-		startupErrorMessage("The database you have specified in config.lua is empty, please import the schema.sql to your database.");
+		startupErrorMessage(
+		    "The database you have specified in config.lua is empty, please import the schema.sql to your database.");
 		return;
 	}
 	g_databaseTasks.start();
@@ -225,7 +228,7 @@ void mainLoader(int, char*[], ServiceManager* services)
 		std::cout << "> No tables were optimized." << std::endl;
 	}
 
-	//load vocations
+	// load vocations
 	std::cout << ">> Loading vocations" << std::endl;
 	if (!g_vocations.loadFromXml()) {
 		startupErrorMessage("Unable to load vocations!");
@@ -343,12 +346,12 @@ bool argumentsHandler(const StringVector& args)
 	for (const auto& arg : args) {
 		if (arg == "--help") {
 			std::clog << "Usage:\n"
-			"\n"
-			"\t--config=$1\t\tAlternate configuration file path.\n"
-			"\t--ip=$1\t\t\tIP address of the server.\n"
-			"\t\t\t\tShould be equal to the global IP.\n"
-			"\t--login-port=$1\tPort for login server to listen on.\n"
-			"\t--game-port=$1\tPort for game server to listen on.\n";
+			             "\n"
+			             "\t--config=$1\t\tAlternate configuration file path.\n"
+			             "\t--ip=$1\t\t\tIP address of the server.\n"
+			             "\t\t\t\tShould be equal to the global IP.\n"
+			             "\t--login-port=$1\tPort for login server to listen on.\n"
+			             "\t--game-port=$1\tPort for game server to listen on.\n";
 			return false;
 		} else if (arg == "--version") {
 			printServerVersion();

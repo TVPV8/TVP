@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -14,7 +14,8 @@ extern Game g_game;
 std::map<uint32_t, int64_t> ProtocolStatus::ipConnectMap;
 const uint64_t ProtocolStatus::start = OTSYS_TIME();
 
-enum RequestedInfo_t : uint16_t {
+enum RequestedInfo_t : uint16_t
+{
 	REQUEST_BASIC_SERVER_INFO = 1 << 0,
 	REQUEST_OWNER_SERVER_INFO = 1 << 1,
 	REQUEST_MISC_SERVER_INFO = 1 << 2,
@@ -32,7 +33,8 @@ void ProtocolStatus::onRecvFirstMessage(NetworkMessage& msg)
 		std::string ipStr = convertIPToString(ip);
 		if (ipStr != g_config.getString(ConfigManager::IP)) {
 			std::map<uint32_t, int64_t>::const_iterator it = ipConnectMap.find(ip);
-			if (it != ipConnectMap.end() && (OTSYS_TIME() < (it->second + g_config.getNumber(ConfigManager::STATUSQUERY_TIMEOUT)))) {
+			if (it != ipConnectMap.end() &&
+			    (OTSYS_TIME() < (it->second + g_config.getNumber(ConfigManager::STATUSQUERY_TIMEOUT)))) {
 				disconnect();
 				return;
 			}
@@ -42,25 +44,26 @@ void ProtocolStatus::onRecvFirstMessage(NetworkMessage& msg)
 	ipConnectMap[ip] = OTSYS_TIME();
 
 	switch (msg.getByte()) {
-		//XML info protocol
+		// XML info protocol
 		case 0xFF: {
 			if (msg.getString(4) == "info") {
-				g_dispatcher.addTask(createTask(std::bind(&ProtocolStatus::sendStatusString,
-									  std::static_pointer_cast<ProtocolStatus>(shared_from_this()))));
+				g_dispatcher.addTask(createTask(std::bind(
+				    &ProtocolStatus::sendStatusString, std::static_pointer_cast<ProtocolStatus>(shared_from_this()))));
 				return;
 			}
 			break;
 		}
 
-		//Another ServerInfo protocol
+		// Another ServerInfo protocol
 		case 0x01: {
 			uint16_t requestedInfo = msg.get<uint16_t>(); // only a Byte is necessary, though we could add new info here
 			std::string characterName;
 			if (requestedInfo & REQUEST_PLAYER_STATUS_INFO) {
 				characterName = msg.getString();
 			}
-			g_dispatcher.addTask(createTask(std::bind(&ProtocolStatus::sendInfo, std::static_pointer_cast<ProtocolStatus>(shared_from_this()),
-								  requestedInfo, characterName)));
+			g_dispatcher.addTask(createTask(std::bind(&ProtocolStatus::sendInfo,
+			                                          std::static_pointer_cast<ProtocolStatus>(shared_from_this()),
+			                                          requestedInfo, characterName)));
 			return;
 		}
 
@@ -117,8 +120,7 @@ void ProtocolStatus::sendStatusString()
 				if (listIP[it.second->getIP()] < 5) {
 					real++;
 				}
-			}
-			else {
+			} else {
 				listIP[it.second->getIP()] = 1;
 				real++;
 				ips++;

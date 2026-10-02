@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #pragma once
 
@@ -11,7 +11,8 @@ class Player;
 class ScriptReader;
 class ScriptWriter;
 
-enum ConditionAttr_t {
+enum ConditionAttr_t
+{
 	CONDITIONATTR_TYPE = 1,
 	CONDITIONATTR_ID,
 	CONDITIONATTR_TICKS,
@@ -49,11 +50,12 @@ enum ConditionAttr_t {
 	CONDITIONATTR_FACTOR_PERCENT,
 	CONDITIONATTR_OWNERGUID,
 
-	//reserved for serialization
+	// reserved for serialization
 	CONDITIONATTR_END = 254,
 };
 
-struct IntervalInfo {
+struct IntervalInfo
+{
 	int32_t timeLeft;
 	int32_t value;
 	int32_t interval;
@@ -61,371 +63,359 @@ struct IntervalInfo {
 
 class Condition
 {
-	public:
-		Condition() = default;
-		Condition(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff = false, uint32_t subId = 0, bool aggressive = false) :
-			endTime(ticks == -1 ? std::numeric_limits<int64_t>::max() : 0),
-			subId(subId), ticks(ticks), conditionType(type), isBuff(buff), aggressive(aggressive), id(id) {}
-		virtual ~Condition() = default;
+public:
+	Condition() = default;
+	Condition(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff = false, uint32_t subId = 0,
+	          bool aggressive = false) :
+	    endTime(ticks == -1 ? std::numeric_limits<int64_t>::max() : 0),
+	    subId(subId),
+	    ticks(ticks),
+	    conditionType(type),
+	    isBuff(buff),
+	    aggressive(aggressive),
+	    id(id)
+	{}
+	virtual ~Condition() = default;
 
-		virtual bool startCondition(Creature* creature);
-		virtual bool executeCondition(Creature* creature, int32_t interval);
-		virtual void endCondition(Creature* creature) = 0;
-		virtual void addCondition(Creature* creature, const Condition* condition) = 0;
-		virtual uint32_t getIcons() const {
-			return 0;
-		}
+	virtual bool startCondition(Creature* creature);
+	virtual bool executeCondition(Creature* creature, int32_t interval);
+	virtual void endCondition(Creature* creature) = 0;
+	virtual void addCondition(Creature* creature, const Condition* condition) = 0;
+	virtual uint32_t getIcons() const { return 0; }
 
-		ConditionId_t getId() const {
-			return id;
-		}
-		uint32_t getSubId() const {
-			return subId;
-		}
+	ConditionId_t getId() const { return id; }
+	uint32_t getSubId() const { return subId; }
 
-		virtual Condition* clone() const = 0;
+	virtual Condition* clone() const = 0;
 
-		ConditionType_t getType() const {
-			return conditionType;
-		}
-		int64_t getEndTime() const {
-			return endTime;
-		}
-		int32_t getTicks() const {
-			return ticks;
-		}
-		void setTicks(int32_t newTicks);
-		bool isAggressive() const {
-			return aggressive;
-		}
+	ConditionType_t getType() const { return conditionType; }
+	int64_t getEndTime() const { return endTime; }
+	int32_t getTicks() const { return ticks; }
+	void setTicks(int32_t newTicks);
+	bool isAggressive() const { return aggressive; }
 
-		int32_t getCycle() const { return cycle; }
-		int32_t getMinCycle() const { return minCycle; }
-		int32_t getMaxCount() const { return maxCount; }
+	int32_t getCycle() const { return cycle; }
+	int32_t getMinCycle() const { return minCycle; }
+	int32_t getMaxCount() const { return maxCount; }
 
-		static Condition* createCondition(ConditionId_t id, ConditionType_t type, int32_t ticks, int32_t param = 0, bool buff = false, uint32_t subId = 0, bool aggressive = false);
+	static Condition* createCondition(ConditionId_t id, ConditionType_t type, int32_t ticks, int32_t param = 0,
+	                                  bool buff = false, uint32_t subId = 0, bool aggressive = false);
 
-		virtual bool setParam(ConditionParam_t param, int32_t value);
-		virtual int32_t getParam(ConditionParam_t param);
+	virtual bool setParam(ConditionParam_t param, int32_t value);
+	virtual int32_t getParam(ConditionParam_t param);
 
-		//serialization
-		virtual bool unserializeTVPFormat(ScriptReader& script);
-		virtual void serializeTVPFormat(ScriptWriter& script);
+	// serialization
+	virtual bool unserializeTVPFormat(ScriptReader& script);
+	virtual void serializeTVPFormat(ScriptWriter& script);
 
-	protected:
-		virtual bool updateCondition(const Condition* addCondition);
+protected:
+	virtual bool updateCondition(const Condition* addCondition);
 
-		int32_t cycle = 0;
-		int32_t minCycle = 0;
-		int32_t count = 0;
-		int32_t maxCount = 0;
-		int32_t factorPercent = -1;
+	int32_t cycle = 0;
+	int32_t minCycle = 0;
+	int32_t count = 0;
+	int32_t maxCount = 0;
+	int32_t factorPercent = -1;
 
-		int64_t endTime;
-		uint32_t subId;
-		int32_t ticks;
-		ConditionType_t conditionType;
-		bool isBuff;
-		bool aggressive;
+	int64_t endTime;
+	uint32_t subId;
+	int32_t ticks;
+	ConditionType_t conditionType;
+	bool isBuff;
+	bool aggressive;
 
-	private:
-		ConditionId_t id;
+private:
+	ConditionId_t id;
 };
 
 class ConditionGeneric : public Condition
 {
-	public:
-		ConditionGeneric(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff = false, uint32_t subId = 0, bool aggressive = false):
-			Condition(id, type, ticks, buff, subId, aggressive) {}
+public:
+	ConditionGeneric(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff = false, uint32_t subId = 0,
+	                 bool aggressive = false) :
+	    Condition(id, type, ticks, buff, subId, aggressive)
+	{}
 
-		bool startCondition(Creature* creature) override;
-		bool executeCondition(Creature* creature, int32_t interval) override;
-		void endCondition(Creature* creature) override;
-		void addCondition(Creature* creature, const Condition* condition) override;
-		uint32_t getIcons() const override;
+	bool startCondition(Creature* creature) override;
+	bool executeCondition(Creature* creature, int32_t interval) override;
+	void endCondition(Creature* creature) override;
+	void addCondition(Creature* creature, const Condition* condition) override;
+	uint32_t getIcons() const override;
 
-		ConditionGeneric* clone() const override {
-			return new ConditionGeneric(*this);
-		}
+	ConditionGeneric* clone() const override { return new ConditionGeneric(*this); }
 };
 
 class ConditionAttributes final : public ConditionGeneric
 {
-	public:
-		ConditionAttributes(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff = false, uint32_t subId = 0, bool aggressive = false) :
-			ConditionGeneric(id, type, ticks, buff, subId, aggressive) {}
+public:
+	ConditionAttributes(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff = false, uint32_t subId = 0,
+	                    bool aggressive = false) :
+	    ConditionGeneric(id, type, ticks, buff, subId, aggressive)
+	{}
 
-		bool startCondition(Creature* creature) override;
-		bool executeCondition(Creature* creature, int32_t interval) override;
-		void endCondition(Creature* creature) override;
-		void addCondition(Creature* creature, const Condition* condition) override;
+	bool startCondition(Creature* creature) override;
+	bool executeCondition(Creature* creature, int32_t interval) override;
+	void endCondition(Creature* creature) override;
+	void addCondition(Creature* creature, const Condition* condition) override;
 
-		bool setParam(ConditionParam_t param, int32_t value) override;
-		int32_t getParam(ConditionParam_t param) override;
+	bool setParam(ConditionParam_t param, int32_t value) override;
+	int32_t getParam(ConditionParam_t param) override;
 
-		ConditionAttributes* clone() const override {
-			return new ConditionAttributes(*this);
-		}
+	ConditionAttributes* clone() const override { return new ConditionAttributes(*this); }
 
-		//serialization
-		void serializeTVPFormat(ScriptWriter& script) override;
-		bool unserializeTVPFormat(ScriptReader& script) override;
+	// serialization
+	void serializeTVPFormat(ScriptWriter& script) override;
+	bool unserializeTVPFormat(ScriptReader& script) override;
 
-	private:
-		int32_t skills[SKILL_LAST + 1] = {};
-		int32_t skillsPercent[SKILL_LAST + 1] = {};
-		int32_t specialSkills[SPECIALSKILL_LAST + 1] = {};
-		int32_t stats[STAT_LAST + 1] = {};
-		int32_t statsPercent[STAT_LAST + 1] = {};
-		int32_t currentSkill = 0;
-		int32_t currentSpecialSkill = 0;
-		int32_t currentStat = 0;
+private:
+	int32_t skills[SKILL_LAST + 1] = {};
+	int32_t skillsPercent[SKILL_LAST + 1] = {};
+	int32_t specialSkills[SPECIALSKILL_LAST + 1] = {};
+	int32_t stats[STAT_LAST + 1] = {};
+	int32_t statsPercent[STAT_LAST + 1] = {};
+	int32_t currentSkill = 0;
+	int32_t currentSpecialSkill = 0;
+	int32_t currentStat = 0;
 
-		bool disableDefense = false;
+	bool disableDefense = false;
 
-		void updatePercentStats(Player* player);
-		void updateStats(Player* player);
-		void updatePercentSkills(Player* player);
-		void updateSkills(Player* player);
+	void updatePercentStats(Player* player);
+	void updateStats(Player* player);
+	void updatePercentSkills(Player* player);
+	void updateSkills(Player* player);
 };
 
 class ConditionRegeneration final : public ConditionGeneric
 {
-	public:
-		ConditionRegeneration(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff = false, uint32_t subId = 0, bool aggressive = false):
-			ConditionGeneric(id, type, ticks, buff, subId, aggressive) {}
+public:
+	ConditionRegeneration(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff = false, uint32_t subId = 0,
+	                      bool aggressive = false) :
+	    ConditionGeneric(id, type, ticks, buff, subId, aggressive)
+	{}
 
-		void addCondition(Creature* creature, const Condition* condition) override;
-		bool executeCondition(Creature* creature, int32_t interval) override;
+	void addCondition(Creature* creature, const Condition* condition) override;
+	bool executeCondition(Creature* creature, int32_t interval) override;
 
-		bool setParam(ConditionParam_t param, int32_t value) override;
-		int32_t getParam(ConditionParam_t param) override;
+	bool setParam(ConditionParam_t param, int32_t value) override;
+	int32_t getParam(ConditionParam_t param) override;
 
-		ConditionRegeneration* clone() const override {
-			return new ConditionRegeneration(*this);
-		}
+	ConditionRegeneration* clone() const override { return new ConditionRegeneration(*this); }
 
-		//serialization
-		void serializeTVPFormat(ScriptWriter& script) override;
-		bool unserializeTVPFormat(ScriptReader& script) override;
+	// serialization
+	void serializeTVPFormat(ScriptWriter& script) override;
+	bool unserializeTVPFormat(ScriptReader& script) override;
 
-	private:
-		uint32_t internalHealthTicks = 0;
-		uint32_t internalManaTicks = 0;
+private:
+	uint32_t internalHealthTicks = 0;
+	uint32_t internalManaTicks = 0;
 
-		uint32_t healthTicks = 1000;
-		uint32_t manaTicks = 1000;
-		uint32_t healthGain = 0;
-		uint32_t manaGain = 0;
+	uint32_t healthTicks = 1000;
+	uint32_t manaTicks = 1000;
+	uint32_t healthGain = 0;
+	uint32_t manaGain = 0;
 };
 
 class ConditionSoul final : public ConditionGeneric
 {
-	public:
-		ConditionSoul(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff = false, uint32_t subId = 0, bool aggressive = false) :
-			ConditionGeneric(id, type, ticks, buff, subId, aggressive) {}
+public:
+	ConditionSoul(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff = false, uint32_t subId = 0,
+	              bool aggressive = false) :
+	    ConditionGeneric(id, type, ticks, buff, subId, aggressive)
+	{}
 
-		void addCondition(Creature* creature, const Condition* condition) override;
-		bool executeCondition(Creature* creature, int32_t interval) override;
+	void addCondition(Creature* creature, const Condition* condition) override;
+	bool executeCondition(Creature* creature, int32_t interval) override;
 
-		bool setParam(ConditionParam_t param, int32_t value) override;
-		int32_t getParam(ConditionParam_t param) override;
+	bool setParam(ConditionParam_t param, int32_t value) override;
+	int32_t getParam(ConditionParam_t param) override;
 
-		ConditionSoul* clone() const override {
-			return new ConditionSoul(*this);
-		}
+	ConditionSoul* clone() const override { return new ConditionSoul(*this); }
 
-		//serialization
-		void serializeTVPFormat(ScriptWriter& script) override;
-		bool unserializeTVPFormat(ScriptReader& script) override;
+	// serialization
+	void serializeTVPFormat(ScriptWriter& script) override;
+	bool unserializeTVPFormat(ScriptReader& script) override;
 
-	private:
-		uint32_t internalSoulTicks = 0;
-		uint32_t soulTicks = 0;
-		uint32_t soulGain = 0;
+private:
+	uint32_t internalSoulTicks = 0;
+	uint32_t soulTicks = 0;
+	uint32_t soulGain = 0;
 };
 
 class ConditionInvisible final : public ConditionGeneric
 {
-	public:
-		ConditionInvisible(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff = false, uint32_t subId = 0, bool aggressive = false) :
-			ConditionGeneric(id, type, ticks, buff, subId, aggressive) {}
+public:
+	ConditionInvisible(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff = false, uint32_t subId = 0,
+	                   bool aggressive = false) :
+	    ConditionGeneric(id, type, ticks, buff, subId, aggressive)
+	{}
 
-		bool startCondition(Creature* creature) override;
-		void endCondition(Creature* creature) override;
+	bool startCondition(Creature* creature) override;
+	void endCondition(Creature* creature) override;
 
-		ConditionInvisible* clone() const override {
-			return new ConditionInvisible(*this);
-		}
+	ConditionInvisible* clone() const override { return new ConditionInvisible(*this); }
 };
 
 class ConditionDamage final : public Condition
 {
-	public:
-		ConditionDamage() = default;
-		ConditionDamage(ConditionId_t id, ConditionType_t type, bool buff = false, uint32_t subId = 0, bool aggressive = true) :
-			Condition(id, type, 0, buff, subId, aggressive) {}
+public:
+	ConditionDamage() = default;
+	ConditionDamage(ConditionId_t id, ConditionType_t type, bool buff = false, uint32_t subId = 0,
+	                bool aggressive = true) :
+	    Condition(id, type, 0, buff, subId, aggressive)
+	{}
 
-		static void generateDamageList(int32_t amount, int32_t start, std::list<int32_t>& list);
+	static void generateDamageList(int32_t amount, int32_t start, std::list<int32_t>& list);
 
-		bool startCondition(Creature* creature) override;
-		bool executeCondition(Creature* creature, int32_t interval) override;
-		void endCondition(Creature* creature) override;
-		void addCondition(Creature* creature, const Condition* condition) override;
-		uint32_t getIcons() const override;
+	bool startCondition(Creature* creature) override;
+	bool executeCondition(Creature* creature, int32_t interval) override;
+	void endCondition(Creature* creature) override;
+	void addCondition(Creature* creature, const Condition* condition) override;
+	uint32_t getIcons() const override;
 
-		ConditionDamage* clone() const override {
-			return new ConditionDamage(*this);
-		}
+	ConditionDamage* clone() const override { return new ConditionDamage(*this); }
 
-		bool setParam(ConditionParam_t param, int32_t value) override;
-		int32_t getParam(ConditionParam_t param) override;
+	bool setParam(ConditionParam_t param, int32_t value) override;
+	int32_t getParam(ConditionParam_t param) override;
 
-		bool addDamage(int32_t rounds, int32_t time, int32_t value);
-		bool doForceUpdate() const {
-			return forceUpdate;
-		}
-		int32_t getTotalDamage() const;
+	bool addDamage(int32_t rounds, int32_t time, int32_t value);
+	bool doForceUpdate() const { return forceUpdate; }
+	int32_t getTotalDamage() const;
 
-		void setInitDamage(int32_t initDamage) {
-			this->initDamage = initDamage;
-		}
+	void setInitDamage(int32_t initDamage) { this->initDamage = initDamage; }
 
-		//serialization
-		void serializeTVPFormat(ScriptWriter& script) override;
-		bool unserializeTVPFormat(ScriptReader& script) override;
+	// serialization
+	void serializeTVPFormat(ScriptWriter& script) override;
+	bool unserializeTVPFormat(ScriptReader& script) override;
 
-	private:
-		int32_t maxDamage = 0;
-		int32_t minDamage = 0;
-		int32_t startDamage = 0;
-		int32_t periodDamage = 0;
-		int32_t periodDamageTick = 0;
-		int32_t tickInterval = 2000;
-		int32_t initDamage = 0;
+private:
+	int32_t maxDamage = 0;
+	int32_t minDamage = 0;
+	int32_t startDamage = 0;
+	int32_t periodDamage = 0;
+	int32_t periodDamageTick = 0;
+	int32_t tickInterval = 2000;
+	int32_t initDamage = 0;
 
-		bool forceUpdate = false;
-		bool delayed = false;
-		bool field = false;
-		uint32_t owner = 0;
-		uint32_t ownerGuid = 0;
+	bool forceUpdate = false;
+	bool delayed = false;
+	bool field = false;
+	uint32_t owner = 0;
+	uint32_t ownerGuid = 0;
 
-		bool init();
+	bool init();
 
-		std::list<IntervalInfo> damageList;
+	std::list<IntervalInfo> damageList;
 
-		bool getNextDamage(int32_t& damage);
-		bool doDamage(Creature* creature, int32_t healthChange);
+	bool getNextDamage(int32_t& damage);
+	bool doDamage(Creature* creature, int32_t healthChange);
 
-		bool updateCondition(const Condition* addCondition) override;
+	bool updateCondition(const Condition* addCondition) override;
 };
 
 class ConditionSpeed final : public Condition
 {
-	public:
-		ConditionSpeed(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff, uint32_t subId, int32_t changeSpeed, bool aggressive = false) :
-			Condition(id, type, ticks, buff, subId, aggressive), speedDelta(changeSpeed) {}
+public:
+	ConditionSpeed(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff, uint32_t subId,
+	               int32_t changeSpeed, bool aggressive = false) :
+	    Condition(id, type, ticks, buff, subId, aggressive), speedDelta(changeSpeed)
+	{}
 
-		bool startCondition(Creature* creature) override;
-		bool executeCondition(Creature* creature, int32_t interval) override;
-		void endCondition(Creature* creature) override;
-		void addCondition(Creature* creature, const Condition* condition) override;
-		uint32_t getIcons() const override;
+	bool startCondition(Creature* creature) override;
+	bool executeCondition(Creature* creature, int32_t interval) override;
+	void endCondition(Creature* creature) override;
+	void addCondition(Creature* creature, const Condition* condition) override;
+	uint32_t getIcons() const override;
 
-		ConditionSpeed* clone() const override {
-			return new ConditionSpeed(*this);
-		}
+	ConditionSpeed* clone() const override { return new ConditionSpeed(*this); }
 
-		bool setParam(ConditionParam_t param, int32_t value) override;
-		int32_t getParam(ConditionParam_t param) override;
+	bool setParam(ConditionParam_t param, int32_t value) override;
+	int32_t getParam(ConditionParam_t param) override;
 
-		//serialization
-		void serializeTVPFormat(ScriptWriter& script) override;
-		bool unserializeTVPFormat(ScriptReader& script) override;
+	// serialization
+	void serializeTVPFormat(ScriptWriter& script) override;
+	bool unserializeTVPFormat(ScriptReader& script) override;
 
-	private:
-		int32_t storedSpeedDelta = 0;
-		int32_t speedDelta = 0;
-		int32_t speedVariation = 0;
+private:
+	int32_t storedSpeedDelta = 0;
+	int32_t speedDelta = 0;
+	int32_t speedVariation = 0;
 };
 
 class ConditionOutfit final : public Condition
 {
-	public:
-		ConditionOutfit(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff = false, uint32_t subId = 0, bool aggressive = false) :
-			Condition(id, type, ticks, buff, subId, aggressive) {}
+public:
+	ConditionOutfit(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff = false, uint32_t subId = 0,
+	                bool aggressive = false) :
+	    Condition(id, type, ticks, buff, subId, aggressive)
+	{}
 
-		bool startCondition(Creature* creature) override;
-		bool executeCondition(Creature* creature, int32_t interval) override;
-		void endCondition(Creature* creature) override;
-		void addCondition(Creature* creature, const Condition* condition) override;
+	bool startCondition(Creature* creature) override;
+	bool executeCondition(Creature* creature, int32_t interval) override;
+	void endCondition(Creature* creature) override;
+	void addCondition(Creature* creature, const Condition* condition) override;
 
-		ConditionOutfit* clone() const override {
-			return new ConditionOutfit(*this);
-		}
+	ConditionOutfit* clone() const override { return new ConditionOutfit(*this); }
 
-		void setOutfit(const Outfit_t& outfit);
+	void setOutfit(const Outfit_t& outfit);
 
-		//serialization
-		void serializeTVPFormat(ScriptWriter& script) override;
-		bool unserializeTVPFormat(ScriptReader& script) override;
+	// serialization
+	void serializeTVPFormat(ScriptWriter& script) override;
+	bool unserializeTVPFormat(ScriptReader& script) override;
 
-	private:
-		Outfit_t outfit;
+private:
+	Outfit_t outfit;
 };
 
 class ConditionLight final : public Condition
 {
-	public:
-		ConditionLight(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff, uint32_t subId, uint8_t lightlevel, uint8_t lightcolor, bool aggressive = false) :
-			Condition(id, type, ticks, buff, subId, aggressive), lightInfo(lightlevel, lightcolor) {}
+public:
+	ConditionLight(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff, uint32_t subId, uint8_t lightlevel,
+	               uint8_t lightcolor, bool aggressive = false) :
+	    Condition(id, type, ticks, buff, subId, aggressive), lightInfo(lightlevel, lightcolor)
+	{}
 
-		bool startCondition(Creature* creature) override;
-		bool executeCondition(Creature* creature, int32_t interval) override;
-		void endCondition(Creature* creature) override;
-		void addCondition(Creature* creature, const Condition* condition) override;
+	bool startCondition(Creature* creature) override;
+	bool executeCondition(Creature* creature, int32_t interval) override;
+	void endCondition(Creature* creature) override;
+	void addCondition(Creature* creature, const Condition* condition) override;
 
-		ConditionLight* clone() const override {
-			return new ConditionLight(*this);
-		}
+	ConditionLight* clone() const override { return new ConditionLight(*this); }
 
-		const LightInfo& getLightInfo() const {
-			return lightInfo;
-		}
+	const LightInfo& getLightInfo() const { return lightInfo; }
 
-		bool setParam(ConditionParam_t param, int32_t value) override;
-		int32_t getParam(ConditionParam_t param) override;
+	bool setParam(ConditionParam_t param, int32_t value) override;
+	int32_t getParam(ConditionParam_t param) override;
 
-		//serialization
-		void serializeTVPFormat(ScriptWriter& script) override;
-		bool unserializeTVPFormat(ScriptReader& script) override;
+	// serialization
+	void serializeTVPFormat(ScriptWriter& script) override;
+	bool unserializeTVPFormat(ScriptReader& script) override;
 
-	private:
-		void updateLightCycles(const Condition* condition);
+private:
+	void updateLightCycles(const Condition* condition);
 
-		LightInfo lightInfo;
-		uint32_t internalLightTicks = 0;
-		uint32_t lightChangeInterval = 0;
+	LightInfo lightInfo;
+	uint32_t internalLightTicks = 0;
+	uint32_t lightChangeInterval = 0;
 };
 
 class ConditionDrunk final : public Condition
 {
-	public:
-		ConditionDrunk(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff, uint32_t subId, bool aggressive = false)
-		    	: Condition(id, type, ticks, buff, subId, aggressive) {
-			//
-		}
+public:
+	ConditionDrunk(ConditionId_t id, ConditionType_t type, int32_t ticks, bool buff, uint32_t subId,
+	               bool aggressive = false) :
+	    Condition(id, type, ticks, buff, subId, aggressive)
+	{
+		//
+	}
 
-		uint32_t getIcons() const override;
-		void endCondition(Creature* creature) override;
-		bool startCondition(Creature* creature) override;
-		void addCondition(Creature* creature, const Condition* condition) override;
-		bool executeCondition(Creature* creature, int32_t interval) override;
+	uint32_t getIcons() const override;
+	void endCondition(Creature* creature) override;
+	bool startCondition(Creature* creature) override;
+	void addCondition(Creature* creature, const Condition* condition) override;
+	bool executeCondition(Creature* creature, int32_t interval) override;
 
-		ConditionDrunk* clone() const override {
-			return new ConditionDrunk(*this);
-		}
+	ConditionDrunk* clone() const override { return new ConditionDrunk(*this); }
 
-	private:
-		bool updateCondition(const Condition* addCondition) override;
+private:
+	bool updateCondition(const Condition* addCondition) override;
 };

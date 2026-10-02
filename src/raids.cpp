@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -21,10 +21,7 @@ extern ConfigManager g_config;
 static constexpr auto DEFAULT_MIN_MARGIN = 3 * 24 * 60 * 60;
 static constexpr auto DEFAULT_MAX_MARGIN = 30 * 24 * 60 * 60;
 
-Raids::Raids()
-{
-	scriptInterface.initState();
-}
+Raids::Raids() { scriptInterface.initState(); }
 
 bool Raids::loadFromXml()
 {
@@ -62,7 +59,8 @@ bool Raids::loadFromXml()
 			file = attr.as_string();
 		} else {
 			file = fmt::format("raids/{:s}.xml", name);
-			std::cout << "[Warning - Raids::loadFromXml] File tag missing for raid " << name << ". Using default: " << file << std::endl;
+			std::cout << "[Warning - Raids::loadFromXml] File tag missing for raid " << name
+			          << ". Using default: " << file << std::endl;
 		}
 
 		if ((attr = raidNode.attribute("log"))) {
@@ -82,7 +80,7 @@ bool Raids::loadFromXml()
 		if ((attr = raidNode.attribute("minmargin"))) {
 			minmargin = pugi::cast<uint32_t>(attr.value());
 		}
-		
+
 		if ((attr = raidNode.attribute("maxmargin"))) {
 			maxmargin = pugi::cast<uint32_t>(attr.value());
 		}
@@ -90,7 +88,7 @@ bool Raids::loadFromXml()
 		if ((attr = raidNode.attribute("serverSaveMargin"))) {
 			serverSaveMargin = pugi::cast<uint32_t>(attr.value());
 		}
-		
+
 		if ((attr = raidNode.attribute("repeatable"))) {
 			repeatable = attr.as_bool();
 		}
@@ -120,7 +118,7 @@ bool Raids::loadFromXml()
 	for (const RaidPtr& raid : raidList) {
 		Database& db = Database::getInstance();
 		if (const auto queryResult = db.storeQuery(
-			fmt::format("SELECT `date` FROM `raids` WHERE `name` = {:s}", db.escapeString(raid->getName())))) {
+		        fmt::format("SELECT `date` FROM `raids` WHERE `name` = {:s}", db.escapeString(raid->getName())))) {
 			raid->setDateTime(queryResult->getNumber<time_t>("date"));
 			if (raid->isLogged()) {
 				std::cout << ">> [Raids] " << raid->getName() << " scheduled to happen sometime around "
@@ -135,8 +133,7 @@ bool Raids::loadFromXml()
 
 			const time_t currentDateTime = raid->getDateTime();
 			if (prevRaidDate != 0 && raid->getDateTime() - prevRaidDate <= std::time(nullptr) + DEFAULT_MIN_MARGIN) {
-				raid->setDateTime(raid->getDateTime() +
-				                  uniform_random(DEFAULT_MIN_MARGIN, DEFAULT_MAX_MARGIN));
+				raid->setDateTime(raid->getDateTime() + uniform_random(DEFAULT_MIN_MARGIN, DEFAULT_MAX_MARGIN));
 			}
 
 			prevRaidDate = currentDateTime;
@@ -159,7 +156,8 @@ bool Raids::startup()
 		return false;
 	}
 
-	checkRaidsEvent = g_scheduler.addEvent(createSchedulerTask(CHECK_RAIDS_INTERVAL, std::bind(&Raids::checkRaids, this)));
+	checkRaidsEvent =
+	    g_scheduler.addEvent(createSchedulerTask(CHECK_RAIDS_INTERVAL, std::bind(&Raids::checkRaids, this)));
 
 	started = true;
 	return started;
@@ -172,7 +170,7 @@ void Raids::checkRaids()
 
 		for (const RaidPtr& raid : raidList) {
 			if (!raid->hasExecuted() && std::time(nullptr) >= raid->getDateTime()) {
-				const std::string &serverSaveTime = g_config.getString(ConfigManager::SERVER_SAVE_TIME);
+				const std::string& serverSaveTime = g_config.getString(ConfigManager::SERVER_SAVE_TIME);
 				// do not execute this raid if it is near server save margin.
 				if (!serverSaveTime.empty()) {
 					const std::vector<std::string> serverSaveTimeSplitted = explodeString(serverSaveTime, ":");
@@ -184,20 +182,23 @@ void Raids::checkRaids()
 						const time_t currentTime = std::time(nullptr);
 						const tm* timeInfo = std::localtime(&currentTime);
 
-						const time_t serverSaveTime = currentTime - (timeInfo->tm_hour * 3600 + timeInfo->tm_min * 60 + timeInfo->tm_sec) +
-							hour * 3600 + minute * 60;
+						const time_t serverSaveTime =
+						    currentTime - (timeInfo->tm_hour * 3600 + timeInfo->tm_min * 60 + timeInfo->tm_sec) +
+						    hour * 3600 + minute * 60;
 
-						if (raid->serverSaveMargin != 0 && raid->getDateTime() - serverSaveTime <= raid->serverSaveMargin) {
-							raid->setDateTime(raid->getDateTime() + uniform_random(raid->serverSaveMargin / 2, raid->serverSaveMargin));
-							g_databaseTasks.addTask(
-								fmt::format("UPDATE `raids` SET `date` = {:d}, `count` = `count` + 1 WHERE `name` = {:s}", raid->getDateTime(), db.escapeString(raid->getName())));
+						if (raid->serverSaveMargin != 0 &&
+						    raid->getDateTime() - serverSaveTime <= raid->serverSaveMargin) {
+							raid->setDateTime(raid->getDateTime() +
+							                  uniform_random(raid->serverSaveMargin / 2, raid->serverSaveMargin));
+							g_databaseTasks.addTask(fmt::format(
+							    "UPDATE `raids` SET `date` = {:d}, `count` = `count` + 1 WHERE `name` = {:s}",
+							    raid->getDateTime(), db.escapeString(raid->getName())));
 							continue;
 						}
 					}
 				}
 
-				if (raid->bossRaid == false)
-					raid->reschedule();
+				if (raid->bossRaid == false) raid->reschedule();
 
 				setRunning(raid);
 				raid->startRaid();
@@ -211,7 +212,8 @@ void Raids::checkRaids()
 		}
 	}
 
-	checkRaidsEvent = g_scheduler.addEvent(createSchedulerTask(CHECK_RAIDS_INTERVAL, std::bind(&Raids::checkRaids, this)));
+	checkRaidsEvent =
+	    g_scheduler.addEvent(createSchedulerTask(CHECK_RAIDS_INTERVAL, std::bind(&Raids::checkRaids, this)));
 }
 
 void Raids::clear()
@@ -279,14 +281,14 @@ bool Raid::loadFromXml(const std::string& filename)
 		if (event->configureRaidEvent(eventNode)) {
 			raidEvents.push_back(std::move(event));
 		} else {
-			std::cout << "[Error - Raid::loadFromXml] In file (" << filename << "), eventNode: " << eventNode.name() << std::endl;
+			std::cout << "[Error - Raid::loadFromXml] In file (" << filename << "), eventNode: " << eventNode.name()
+			          << std::endl;
 		}
 	}
 
-	//sort by delay time
-	std::ranges::sort(raidEvents, [](const RaidEventPtr& lhs, const RaidEventPtr& rhs) {
-		return lhs->getDelay() < rhs->getDelay();
-	});
+	// sort by delay time
+	std::ranges::sort(
+	    raidEvents, [](const RaidEventPtr& lhs, const RaidEventPtr& rhs) { return lhs->getDelay() < rhs->getDelay(); });
 
 	loaded = true;
 	return true;
@@ -296,7 +298,8 @@ void Raid::startRaid()
 {
 	const RaidEventPtr& raidEvent = getNextRaidEvent();
 	if (raidEvent) {
-		nextEventEvent = g_scheduler.addEvent(createSchedulerTask(raidEvent->getDelay(), std::bind(&Raid::executeRaidEvent, this, raidEvent)));
+		nextEventEvent = g_scheduler.addEvent(
+		    createSchedulerTask(raidEvent->getDelay(), std::bind(&Raid::executeRaidEvent, this, raidEvent)));
 	}
 }
 
@@ -306,8 +309,10 @@ void Raid::executeRaidEvent(const RaidEventPtr& raidEvent)
 		nextEvent++;
 
 		if (const RaidEventPtr& newRaidEvent = getNextRaidEvent()) {
-			const uint32_t ticks = static_cast<uint32_t>(std::max<int32_t>(1000, newRaidEvent->getDelay() - raidEvent->getDelay()));
-			nextEventEvent = g_scheduler.addEvent(createSchedulerTask(ticks, std::bind(&Raid::executeRaidEvent, this, newRaidEvent)));
+			const uint32_t ticks =
+			    static_cast<uint32_t>(std::max<int32_t>(1000, newRaidEvent->getDelay() - raidEvent->getDelay()));
+			nextEventEvent = g_scheduler.addEvent(
+			    createSchedulerTask(ticks, std::bind(&Raid::executeRaidEvent, this, newRaidEvent)));
 		} else {
 			resetRaid();
 		}
@@ -324,8 +329,7 @@ void Raid::resetRaid()
 
 void Raid::reschedule()
 {
-	if (rescheduled)
-		return;
+	if (rescheduled) return;
 
 	rescheduled = true;
 
@@ -333,17 +337,16 @@ void Raid::reschedule()
 
 	// Update the raid next execution date, do not update if it is a boss raid.
 	if (getInterval() != 0) {
-		setDateTime(std::time(nullptr) + getInterval() +
-			uniform_random(minmargin, maxmargin));
+		setDateTime(std::time(nullptr) + getInterval() + uniform_random(minmargin, maxmargin));
 
 		if (isLogged()) {
 			std::cout << ">> [Raids] " << getName() << " re-scheduled to happen sometime around "
-				<< formatDate(getDateTime()) << std::endl;
+			          << formatDate(getDateTime()) << std::endl;
 		}
 	}
 
-	g_databaseTasks.addTask(
-		fmt::format("UPDATE `raids` SET `date` = {:d}, `count` = `count` + 1 WHERE `name` = {:s}", getDateTime(), db.escapeString(getName())));
+	g_databaseTasks.addTask(fmt::format("UPDATE `raids` SET `date` = {:d}, `count` = `count` + 1 WHERE `name` = {:s}",
+	                                    getDateTime(), db.escapeString(getName())));
 }
 
 void Raid::stopEvents()
@@ -405,11 +408,13 @@ bool AnnounceEvent::configureRaidEvent(const pugi::xml_node& eventNode)
 		} else if (tmpStrValue == "redconsole") {
 			messageType = MESSAGE_STATUS_CONSOLE_RED;
 		} else {
-			std::cout << "[Notice] Raid: Unknown type tag missing for announce event. Using default: " << static_cast<uint32_t>(messageType) << std::endl;
+			std::cout << "[Notice] Raid: Unknown type tag missing for announce event. Using default: "
+			          << static_cast<uint32_t>(messageType) << std::endl;
 		}
 	} else {
 		messageType = MESSAGE_EVENT_ADVANCE;
-		std::cout << "[Notice] Raid: type tag missing for announce event. Using default: " << static_cast<uint32_t>(messageType) << std::endl;
+		std::cout << "[Notice] Raid: type tag missing for announce event. Using default: "
+		          << static_cast<uint32_t>(messageType) << std::endl;
 	}
 	return true;
 }
@@ -657,7 +662,6 @@ bool AreaSpawnEvent::configureRaidEvent(const pugi::xml_node& eventNode)
 
 			backSpawn.extraLoot.push_back(std::move(loot));
 		}
-
 	}
 	return true;
 }
@@ -679,8 +683,11 @@ bool AreaSpawnEvent::executeEvent()
 
 			bool success = false;
 			for (int32_t tries = 0; tries < MAXIMUM_TRIES_PER_MONSTER; tries++) {
-				const Tile* tile = g_game.map.getTile(uniform_random(fromPos.x, toPos.x), uniform_random(fromPos.y, toPos.y), uniform_random(fromPos.z, toPos.z));
-				if (tile && !tile->isMoveableBlocking() && !tile->hasFlag(TILESTATE_PROTECTIONZONE) && tile->getTopCreature() == nullptr && g_game.placeCreature(monster, tile->getPosition(), true)) {
+				const Tile* tile =
+				    g_game.map.getTile(uniform_random(fromPos.x, toPos.x), uniform_random(fromPos.y, toPos.y),
+				                       uniform_random(fromPos.z, toPos.z));
+				if (tile && !tile->isMoveableBlocking() && !tile->hasFlag(TILESTATE_PROTECTIONZONE) &&
+				    tile->getTopCreature() == nullptr && g_game.placeCreature(monster, tile->getPosition(), true)) {
 					success = true;
 					monster->isRaidBoss = bossSpawn;
 					monster->raidEvent = parentRaid;
@@ -716,14 +723,11 @@ bool RaidScriptEvent::configureRaidEvent(const pugi::xml_node& eventNode)
 	return true;
 }
 
-std::string RaidScriptEvent::getScriptEventName() const
-{
-	return "onRaid";
-}
+std::string RaidScriptEvent::getScriptEventName() const { return "onRaid"; }
 
 bool RaidScriptEvent::executeEvent()
 {
-	//onRaid()
+	// onRaid()
 	if (!scriptInterface->reserveScriptEnv()) {
 		std::cout << "[Error - ScriptEvent::onRaid] Call stack overflow" << std::endl;
 		return false;

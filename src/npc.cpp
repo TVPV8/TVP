@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -38,11 +38,7 @@ Npc* Npc::createNpc(const std::string& name)
 }
 
 Npc::Npc(const std::string& name) :
-	Creature(),
-	filename("data/npc/" + name + ".xml"),
-	npcEventHandler(nullptr),
-	masterRadius(-1),
-	loaded(false)
+    Creature(), filename("data/npc/" + name + ".xml"), npcEventHandler(nullptr), masterRadius(-1), loaded(false)
 {
 	reset();
 }
@@ -55,15 +51,9 @@ Npc::~Npc()
 	}
 }
 
-void Npc::addList()
-{
-	g_game.addNpc(this);
-}
+void Npc::addList() { g_game.addNpc(this); }
 
-void Npc::removeList()
-{
-	g_game.removeNpc(this);
-}
+void Npc::removeList() { g_game.removeNpc(this); }
 
 bool Npc::load()
 {
@@ -191,7 +181,8 @@ bool Npc::loadFromXml()
 
 		if (health > healthMax) {
 			health = healthMax;
-			std::cout << "[Warning - Npc::loadFromXml] Health now is greater than health max in " << filename << std::endl;
+			std::cout << "[Warning - Npc::loadFromXml] Health now is greater than health max in " << filename
+			          << std::endl;
 		}
 	}
 
@@ -310,8 +301,8 @@ void Npc::onRemoveCreature(Creature* creature, bool isLogout)
 	addYieldToDo();
 }
 
-void Npc::onCreatureMove(Creature* creature, const Tile* newTile, const Position& newPos,
-                         const Tile* oldTile, const Position& oldPos, bool teleport)
+void Npc::onCreatureMove(Creature* creature, const Tile* newTile, const Position& newPos, const Tile* oldTile,
+                         const Position& oldPos, bool teleport)
 {
 	Creature::onCreatureMove(creature, newTile, newPos, oldTile, oldPos, teleport);
 
@@ -350,7 +341,7 @@ void Npc::onCreatureSay(Creature* creature, SpeakClasses type, const std::string
 		return;
 	}
 
-	//only players for script events
+	// only players for script events
 	Player* player = creature->getPlayer();
 	if (player) {
 		if (npcEventHandler) {
@@ -418,7 +409,7 @@ void Npc::onThink(uint32_t interval)
 			turnToCreature(player);
 
 			if (behaviorConversationTimeout != 0 && OTSYS_TIME() > behaviorConversationTimeout ||
-				!Position::areInRange<4, 3, 0>(player->getPosition(), getPosition())) {
+			    !Position::areInRange<4, 3, 0>(player->getPosition(), getPosition())) {
 				if (player) {
 					npcBehavior->react(SITUATION_VANISH, player, "");
 				}
@@ -513,8 +504,8 @@ bool Npc::getRandomStep(Direction& dir, bool) const
 	return true;
 }
 
-bool Npc::doMoveTo(const Position& pos, int32_t minTargetDist/* = 1*/, int32_t maxTargetDist/* = 1*/,
-                   bool fullPathSearch/* = true*/, bool clearSight/* = true*/, int32_t maxSearchDist/* = 0*/)
+bool Npc::doMoveTo(const Position& pos, int32_t minTargetDist /* = 1*/, int32_t maxTargetDist /* = 1*/,
+                   bool fullPathSearch /* = true*/, bool clearSight /* = true*/, int32_t maxSearchDist /* = 0*/)
 {
 	std::vector<Direction> dirList;
 	if (getPathTo(pos, dirList, minTargetDist, maxTargetDist, fullPathSearch, clearSight, maxSearchDist)) {
@@ -571,13 +562,9 @@ void Npc::setCreatureFocus(Creature* creature)
 	}
 }
 
-NpcScriptInterface* Npc::getScriptInterface()
-{
-	return scriptInterface;
-}
+NpcScriptInterface* Npc::getScriptInterface() { return scriptInterface; }
 
-NpcScriptInterface::NpcScriptInterface() :
-	LuaScriptInterface("Npc interface")
+NpcScriptInterface::NpcScriptInterface() : LuaScriptInterface("Npc interface")
 {
 	libLoaded = false;
 	initState();
@@ -622,7 +609,7 @@ bool NpcScriptInterface::loadNpcLib(const std::string& file)
 
 void NpcScriptInterface::registerFunctions()
 {
-	//npc exclusive functions
+	// npc exclusive functions
 	lua_register(luaState, "selfSay", NpcScriptInterface::luaActionSay);
 	lua_register(luaState, "selfMove", NpcScriptInterface::luaActionMove);
 	lua_register(luaState, "selfMoveTo", NpcScriptInterface::luaActionMoveTo);
@@ -641,7 +628,7 @@ void NpcScriptInterface::registerFunctions()
 
 int NpcScriptInterface::luaActionSay(lua_State* L)
 {
-	//selfSay(words)
+	// selfSay(words)
 	Npc* npc = getScriptEnv()->getNpc();
 	if (!npc) {
 		return 0;
@@ -654,7 +641,7 @@ int NpcScriptInterface::luaActionSay(lua_State* L)
 
 int NpcScriptInterface::luaActionMove(lua_State* L)
 {
-	//selfMove(direction)
+	// selfMove(direction)
 	Npc* npc = getScriptEnv()->getNpc();
 	if (npc) {
 		g_game.internalMoveCreature(npc, getNumber<Direction>(L, 1));
@@ -664,8 +651,9 @@ int NpcScriptInterface::luaActionMove(lua_State* L)
 
 int NpcScriptInterface::luaActionMoveTo(lua_State* L)
 {
-	//selfMoveTo(x, y, z[, minTargetDist = 1[, maxTargetDist = 1[, fullPathSearch = true[, clearSight = true[, maxSearchDist = 0]]]]])
-	//selfMoveTo(position[, minTargetDist = 1[, maxTargetDist = 1[, fullPathSearch = true[, clearSight = true[, maxSearchDist = 0]]]]])
+	// selfMoveTo(x, y, z[, minTargetDist = 1[, maxTargetDist = 1[, fullPathSearch = true[, clearSight = true[,
+	// maxSearchDist = 0]]]]]) selfMoveTo(position[, minTargetDist = 1[, maxTargetDist = 1[, fullPathSearch = true[,
+	// clearSight = true[, maxSearchDist = 0]]]]])
 	Npc* npc = getScriptEnv()->getNpc();
 	if (!npc) {
 		return 0;
@@ -682,20 +670,15 @@ int NpcScriptInterface::luaActionMoveTo(lua_State* L)
 		argsStart = 4;
 	}
 
-	pushBoolean(L, npc->doMoveTo(
-		position,
-		getNumber<int32_t>(L, argsStart, 1),
-		getNumber<int32_t>(L, argsStart + 1, 1),
-		getBoolean(L, argsStart + 2, true),
-		getBoolean(L, argsStart + 3, true),
-		getNumber<int32_t>(L, argsStart + 4, 0)
-	));
+	pushBoolean(L, npc->doMoveTo(position, getNumber<int32_t>(L, argsStart, 1), getNumber<int32_t>(L, argsStart + 1, 1),
+	                             getBoolean(L, argsStart + 2, true), getBoolean(L, argsStart + 3, true),
+	                             getNumber<int32_t>(L, argsStart + 4, 0)));
 	return 1;
 }
 
 int NpcScriptInterface::luaActionTurn(lua_State* L)
 {
-	//selfTurn(direction)
+	// selfTurn(direction)
 	Npc* npc = getScriptEnv()->getNpc();
 	if (npc) {
 		g_game.internalCreatureTurn(npc, getNumber<Direction>(L, 1));
@@ -705,7 +688,7 @@ int NpcScriptInterface::luaActionTurn(lua_State* L)
 
 int NpcScriptInterface::luaActionFollow(lua_State* L)
 {
-	//selfFollow(player)
+	// selfFollow(player)
 	Npc* npc = getScriptEnv()->getNpc();
 	if (!npc) {
 		pushBoolean(L, false);
@@ -718,7 +701,7 @@ int NpcScriptInterface::luaActionFollow(lua_State* L)
 
 int NpcScriptInterface::luagetDistanceTo(lua_State* L)
 {
-	//getDistanceTo(uid)
+	// getDistanceTo(uid)
 	ScriptEnvironment* env = getScriptEnv();
 
 	Npc* npc = env->getNpc();
@@ -742,7 +725,8 @@ int NpcScriptInterface::luagetDistanceTo(lua_State* L)
 	if (npcPos.z != thingPos.z) {
 		lua_pushnumber(L, -1);
 	} else {
-		int32_t dist = std::max<int32_t>(Position::getDistanceX(npcPos, thingPos), Position::getDistanceY(npcPos, thingPos));
+		int32_t dist =
+		    std::max<int32_t>(Position::getDistanceX(npcPos, thingPos), Position::getDistanceY(npcPos, thingPos));
 		lua_pushnumber(L, dist);
 	}
 	return 1;
@@ -750,7 +734,7 @@ int NpcScriptInterface::luagetDistanceTo(lua_State* L)
 
 int NpcScriptInterface::luaSetNpcFocus(lua_State* L)
 {
-	//doNpcSetCreatureFocus(cid)
+	// doNpcSetCreatureFocus(cid)
 	Npc* npc = getScriptEnv()->getNpc();
 	if (npc) {
 		npc->setCreatureFocus(getCreature(L, -1));
@@ -760,7 +744,7 @@ int NpcScriptInterface::luaSetNpcFocus(lua_State* L)
 
 int NpcScriptInterface::luaGetNpcCid(lua_State* L)
 {
-	//getNpcCid()
+	// getNpcCid()
 	Npc* npc = getScriptEnv()->getNpc();
 	if (npc) {
 		lua_pushnumber(L, npc->getID());
@@ -772,7 +756,7 @@ int NpcScriptInterface::luaGetNpcCid(lua_State* L)
 
 int NpcScriptInterface::luaGetNpcParameter(lua_State* L)
 {
-	//getNpcParameter(paramKey)
+	// getNpcParameter(paramKey)
 	Npc* npc = getScriptEnv()->getNpc();
 	if (!npc) {
 		lua_pushnil(L);
@@ -792,7 +776,7 @@ int NpcScriptInterface::luaGetNpcParameter(lua_State* L)
 
 int NpcScriptInterface::luaDoSellItem(lua_State* L)
 {
-	//doSellItem(cid, itemid, amount, <optional> subtype, <optional> actionid, <optional: default: 1> canDropOnMap)
+	// doSellItem(cid, itemid, amount, <optional> subtype, <optional> actionid, <optional: default: 1> canDropOnMap)
 	Player* player = getPlayer(L, 1);
 	if (!player) {
 		reportErrorFunc(L, getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
@@ -888,7 +872,7 @@ int NpcScriptInterface::luaNpcSetFocus(lua_State* L)
 }
 
 NpcEventsHandler::NpcEventsHandler(const std::string& file, Npc* npc) :
-	npc(npc), scriptInterface(npc->getScriptInterface())
+    npc(npc), scriptInterface(npc->getScriptInterface())
 {
 	loaded = scriptInterface->loadFile("data/npc/scripts/" + file, npc) == 0;
 	if (!loaded) {
@@ -903,10 +887,7 @@ NpcEventsHandler::NpcEventsHandler(const std::string& file, Npc* npc) :
 	}
 }
 
-bool NpcEventsHandler::isLoaded() const
-{
-	return loaded;
-}
+bool NpcEventsHandler::isLoaded() const { return loaded; }
 
 void NpcEventsHandler::onCreatureAppear(Creature* creature)
 {
@@ -914,7 +895,7 @@ void NpcEventsHandler::onCreatureAppear(Creature* creature)
 		return;
 	}
 
-	//onCreatureAppear(creature)
+	// onCreatureAppear(creature)
 	if (!scriptInterface->reserveScriptEnv()) {
 		std::cout << "[Error - NpcScript::onCreatureAppear] Call stack overflow" << std::endl;
 		return;
@@ -937,7 +918,7 @@ void NpcEventsHandler::onCreatureDisappear(Creature* creature)
 		return;
 	}
 
-	//onCreatureDisappear(creature)
+	// onCreatureDisappear(creature)
 	if (!scriptInterface->reserveScriptEnv()) {
 		std::cout << "[Error - NpcScript::onCreatureDisappear] Call stack overflow" << std::endl;
 		return;
@@ -960,7 +941,7 @@ void NpcEventsHandler::onCreatureMove(Creature* creature, const Position& oldPos
 		return;
 	}
 
-	//onCreatureMove(creature, oldPos, newPos)
+	// onCreatureMove(creature, oldPos, newPos)
 	if (!scriptInterface->reserveScriptEnv()) {
 		std::cout << "[Error - NpcScript::onCreatureMove] Call stack overflow" << std::endl;
 		return;
@@ -985,7 +966,7 @@ void NpcEventsHandler::onCreatureSay(Creature* creature, SpeakClasses type, cons
 		return;
 	}
 
-	//onCreatureSay(creature, type, msg)
+	// onCreatureSay(creature, type, msg)
 	if (!scriptInterface->reserveScriptEnv()) {
 		std::cout << "[Error - NpcScript::onCreatureSay] Call stack overflow" << std::endl;
 		return;
@@ -1010,7 +991,7 @@ void NpcEventsHandler::onThink()
 		return;
 	}
 
-	//onThink()
+	// onThink()
 	if (!scriptInterface->reserveScriptEnv()) {
 		std::cout << "[Error - NpcScript::onThink] Call stack overflow" << std::endl;
 		return;

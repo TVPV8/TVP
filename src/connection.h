@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #pragma once
 
@@ -25,81 +25,80 @@ using ConstServicePort_ptr = std::shared_ptr<const ServicePort>;
 
 class ConnectionManager
 {
-	public:
-		static ConnectionManager& getInstance() {
-			static ConnectionManager instance;
-			return instance;
-		}
+public:
+	static ConnectionManager& getInstance()
+	{
+		static ConnectionManager instance;
+		return instance;
+	}
 
-		Connection_ptr createConnection(boost::asio::io_context& io_context, ConstServicePort_ptr servicePort);
-		void releaseConnection(const Connection_ptr& connection);
-		void closeAll();
+	Connection_ptr createConnection(boost::asio::io_context& io_context, ConstServicePort_ptr servicePort);
+	void releaseConnection(const Connection_ptr& connection);
+	void closeAll();
 
-	private:
-		ConnectionManager() = default;
+private:
+	ConnectionManager() = default;
 
-		std::unordered_set<Connection_ptr> connections;
-		std::mutex connectionManagerLock;
+	std::unordered_set<Connection_ptr> connections;
+	std::mutex connectionManagerLock;
 };
 
 class Connection : public std::enable_shared_from_this<Connection>
 {
-	public:
-		// non-copyable
-		Connection(const Connection&) = delete;
-		Connection& operator=(const Connection&) = delete;
+public:
+	// non-copyable
+	Connection(const Connection&) = delete;
+	Connection& operator=(const Connection&) = delete;
 
-		enum { FORCE_CLOSE = true };
+	enum
+	{
+		FORCE_CLOSE = true
+	};
 
-		Connection(boost::asio::io_context& io_context,
-		ConstServicePort_ptr service_port) :
-			readTimer(io_context),
-			writeTimer(io_context),
-			service_port(std::move(service_port)),
-			socket(io_context) {}
-		~Connection();
+	Connection(boost::asio::io_context& io_context, ConstServicePort_ptr service_port) :
+	    readTimer(io_context), writeTimer(io_context), service_port(std::move(service_port)), socket(io_context)
+	{}
+	~Connection();
 
-		friend class ConnectionManager;
+	friend class ConnectionManager;
 
-		void close(bool force = false);
-		// Used by protocols that require server to send first
-		void accept(Protocol_ptr protocol);
-		void accept();
+	void close(bool force = false);
+	// Used by protocols that require server to send first
+	void accept(Protocol_ptr protocol);
+	void accept();
 
-		void send(const OutputMessage_ptr& msg);
+	void send(const OutputMessage_ptr& msg);
 
-		uint32_t getIP();
+	uint32_t getIP();
 
-	private:
-		void parseHeader(const boost::system::error_code& error);
-		void parsePacket(const boost::system::error_code& error);
+private:
+	void parseHeader(const boost::system::error_code& error);
+	void parsePacket(const boost::system::error_code& error);
 
-		void onWriteOperation(const boost::system::error_code& error);
+	void onWriteOperation(const boost::system::error_code& error);
 
-		static void handleTimeout(ConnectionWeak_ptr connectionWeak, const boost::system::error_code& error);
+	static void handleTimeout(ConnectionWeak_ptr connectionWeak, const boost::system::error_code& error);
 
-		void closeSocket();
-		void internalSend(const OutputMessage_ptr& msg);
+	void closeSocket();
+	void internalSend(const OutputMessage_ptr& msg);
 
-		boost::asio::ip::tcp::socket& getSocket() {
-			return socket;
-		}
-		friend class ServicePort;
+	boost::asio::ip::tcp::socket& getSocket() { return socket; }
+	friend class ServicePort;
 
-		NetworkMessage msg;
+	NetworkMessage msg;
 
-		boost::asio::steady_timer readTimer;
-		boost::asio::steady_timer writeTimer;
+	boost::asio::steady_timer readTimer;
+	boost::asio::steady_timer writeTimer;
 
-		std::recursive_mutex connectionLock;
+	std::recursive_mutex connectionLock;
 
-		std::list<OutputMessage_ptr> messageQueue;
+	std::list<OutputMessage_ptr> messageQueue;
 
-		ConstServicePort_ptr service_port;
-		Protocol_ptr protocol;
+	ConstServicePort_ptr service_port;
+	Protocol_ptr protocol;
 
-		boost::asio::ip::tcp::socket socket;
+	boost::asio::ip::tcp::socket socket;
 
-		bool closed = false;
-		bool receivedFirst = false;
+	bool closed = false;
+	bool receivedFirst = false;
 };

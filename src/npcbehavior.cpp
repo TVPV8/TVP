@@ -14,7 +14,7 @@ extern Game g_game;
 extern Monsters g_monsters;
 extern Spells* g_spells;
 
-NpcBehavior::NpcBehavior(Npc* _npc) : npc(_npc) 
+NpcBehavior::NpcBehavior(Npc* _npc) : npc(_npc)
 {
 	topic = 0;
 	data = -1;
@@ -680,7 +680,8 @@ void NpcBehavior::react(NpcBehaviourSituation_t situation, Player* player, const
 bool NpcBehavior::checkCondition(const NpcBehaviourConditionPtr& condition, Player* player, std::string& message)
 {
 	switch (condition->type) {
-		case BEHAVIOUR_TYPE_NOP: break;
+		case BEHAVIOUR_TYPE_NOP:
+			break;
 		case BEHAVIOUR_TYPE_MESSAGE_COUNT: {
 			int32_t value = searchDigit(message);
 			if (value < condition->number) {
@@ -766,7 +767,8 @@ bool NpcBehavior::checkCondition(const NpcBehaviourConditionPtr& condition, Play
 void NpcBehavior::checkAction(const NpcBehaviourActionPtr& action, Player* player, std::string& message)
 {
 	switch (action->type) {
-		case BEHAVIOUR_TYPE_NOP: break;
+		case BEHAVIOUR_TYPE_NOP:
+			break;
 		case BEHAVIOUR_TYPE_STRING: {
 			npc->addWaitToDo(talkDelay);
 			npc->addActionToDo([this, capture0 = parseResponse(player, action->string)] { npc->doSay(capture0); });
@@ -862,9 +864,9 @@ void NpcBehavior::checkAction(const NpcBehaviourActionPtr& action, Player* playe
 			}
 
 			amount = std::max<int32_t>(1, amount);
-			
+
 			uint32_t totalRemoved = player->removeItemOfType(type, amount, data, true);
-			if (static_cast<int32_t>(totalRemoved) != amount) { 
+			if (static_cast<int32_t>(totalRemoved) != amount) {
 				// not all required items were removed, now remove from equipment
 				player->removeItemOfType(type, amount - totalRemoved, data, false);
 			}
@@ -990,7 +992,8 @@ void NpcBehavior::checkAction(const NpcBehaviourActionPtr& action, Player* playe
 			for (int32_t i = 0; i < std::max<int32_t>(1, amount); i++) {
 				Item* container = Item::CreateItem(containerId);
 				if (!container) {
-					std::cout << "[Error - NpcBehavior::checkAction]: CreateContainer - failed to create container item" << std::endl;
+					std::cout << "[Error - NpcBehavior::checkAction]: CreateContainer - failed to create container item"
+					          << std::endl;
 					break;
 				}
 
@@ -998,7 +1001,8 @@ void NpcBehavior::checkAction(const NpcBehaviourActionPtr& action, Player* playe
 				for (int32_t c = 0; c < std::max<int32_t>(1, realContainer->capacity()); c++) {
 					Item* item = Item::CreateItem(itemId, data);
 					if (!item) {
-						std::cout << "[Error - NpcBehavior::checkAction]: CreateContainer - failed to create item" << std::endl;
+						std::cout << "[Error - NpcBehavior::checkAction]: CreateContainer - failed to create item"
+						          << std::endl;
 						break;
 					}
 
@@ -1123,7 +1127,8 @@ int64_t NpcBehavior::evaluate(const NpcBehaviourNodePtr& node, Player* player, s
 		case BEHAVIOUR_TYPE_SPELLLEVEL: {
 			InstantSpell* spell = g_spells->getInstantSpellByName(string);
 			if (!spell) {
-				std::cout << "[Warning - NpcBehavior::evaluate]: SpellLevel unknown spell " << node->string << std::endl;
+				std::cout << "[Warning - NpcBehavior::evaluate]: SpellLevel unknown spell " << node->string
+				          << std::endl;
 				return std::numeric_limits<int32_t>::max();
 			}
 
@@ -1132,7 +1137,8 @@ int64_t NpcBehavior::evaluate(const NpcBehaviourNodePtr& node, Player* player, s
 		case BEHAVIOUR_TYPE_SPELLMAGICLEVEL: {
 			InstantSpell* spell = g_spells->getInstantSpellByName(string);
 			if (!spell) {
-				std::cout << "[Warning - NpcBehavior::evaluate]: SpellLevel unknown spell " << node->string << std::endl;
+				std::cout << "[Warning - NpcBehavior::evaluate]: SpellLevel unknown spell " << node->string
+				          << std::endl;
 				return std::numeric_limits<int32_t>::max();
 			}
 
@@ -1323,7 +1329,7 @@ void NpcBehavior::idle()
 			if (!player) {
 				continue;
 			}
-			
+
 			if (!Position::areInRange<3, 3>(player->getPosition(), npc->getPosition())) {
 				continue;
 			}
@@ -1337,10 +1343,7 @@ void NpcBehavior::idle()
 	}
 }
 
-void NpcBehavior::reset()
-{
-	talkDelay = 1000;
-}
+void NpcBehavior::reset() { talkDelay = 1000; }
 
 bool NpcBehaviourCondition::setCondition(NpcBehaviourType_t _type, int32_t _number, const std::string& _string)
 {

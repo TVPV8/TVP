@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -155,7 +155,8 @@ bool BedItem::sleep(Player* player)
 
 	// kick player after he sees himself walk onto the bed and it change id
 	uint32_t playerId = player->getID();
-	g_scheduler.addEvent(createSchedulerTask(SCHEDULER_MINTICKS, std::bind(&Game::kickPlayer, &g_game, playerId, false)));
+	g_scheduler.addEvent(
+	    createSchedulerTask(SCHEDULER_MINTICKS, std::bind(&Game::kickPlayer, &g_game, playerId, false)));
 
 	// change self and partner's appearance
 	updateAppearance(player);
@@ -219,8 +220,7 @@ void BedItem::regeneratePlayer(Player* player) const
 			const int32_t newRegenTicks = condition->getTicks() - (1000 * (sleptTime / 5));
 			if (newRegenTicks <= 0) {
 				player->removeCondition(condition);
-			}
-			else {
+			} else {
 				condition->setTicks(newRegenTicks);
 			}
 		}
@@ -234,7 +234,6 @@ void BedItem::regeneratePlayer(Player* player) const
 	if (sleptTime > 899) {
 		player->changeSoul(sleptTime / 900);
 	}
-
 }
 
 void BedItem::updateAppearance(const Player* player)

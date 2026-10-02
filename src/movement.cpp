@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -9,26 +9,13 @@
 extern Game g_game;
 extern Vocations g_vocations;
 
-MoveEvents::MoveEvents() :
-	scriptInterface("MoveEvents Interface")
-{
-	scriptInterface.initState();
-}
+MoveEvents::MoveEvents() : scriptInterface("MoveEvents Interface") { scriptInterface.initState(); }
 
-MoveEvents::~MoveEvents()
-{
-	clear();
-}
+MoveEvents::~MoveEvents() { clear(); }
 
-void MoveEvents::clearMap(MoveListMap& map)
-{
-	map.clear();
-}
+void MoveEvents::clearMap(MoveListMap& map) { map.clear(); }
 
-void MoveEvents::clearPosMap(MovePosListMap& map)
-{
-	map.clear();
-}
+void MoveEvents::clearPosMap(MovePosListMap& map) { map.clear(); }
 
 void MoveEvents::clear()
 {
@@ -40,19 +27,13 @@ void MoveEvents::clear()
 	getScriptInterface().reInitState();
 }
 
-LuaScriptInterface& MoveEvents::getScriptInterface()
-{
-	return scriptInterface;
-}
+LuaScriptInterface& MoveEvents::getScriptInterface() { return scriptInterface; }
 
-std::string MoveEvents::getScriptBaseName() const
-{
-	return "movements";
-}
+std::string MoveEvents::getScriptBaseName() const { return "movements"; }
 
 bool MoveEvents::registerLuaFunction(MoveEvent* event)
 {
-	MoveEvent_ptr moveEvent{ event };
+	MoveEvent_ptr moveEvent{event};
 
 	const MoveEvent_t eventType = moveEvent->getEventType();
 	if (eventType == MOVE_EVENT_ADD_ITEM || eventType == MOVE_EVENT_REMOVE_ITEM) {
@@ -102,7 +83,7 @@ bool MoveEvents::registerLuaFunction(MoveEvent* event)
 
 bool MoveEvents::registerLuaEvent(MoveEvent* event)
 {
-	MoveEvent_ptr moveEvent{ event };
+	MoveEvent_ptr moveEvent{event};
 
 	const MoveEvent_t eventType = moveEvent->getEventType();
 	if (eventType == MOVE_EVENT_ADD_ITEM || eventType == MOVE_EVENT_REMOVE_ITEM) {
@@ -203,17 +184,39 @@ MoveEvent* MoveEvents::getEvent(Item* item, MoveEvent_t eventType, slots_t slot)
 {
 	uint32_t slotp;
 	switch (slot) {
-		case CONST_SLOT_HEAD: slotp = SLOTP_HEAD; break;
-		case CONST_SLOT_NECKLACE: slotp = SLOTP_NECKLACE; break;
-		case CONST_SLOT_BACKPACK: slotp = SLOTP_BACKPACK; break;
-		case CONST_SLOT_ARMOR: slotp = SLOTP_ARMOR; break;
-		case CONST_SLOT_RIGHT: slotp = SLOTP_RIGHT; break;
-		case CONST_SLOT_LEFT: slotp = SLOTP_LEFT; break;
-		case CONST_SLOT_LEGS: slotp = SLOTP_LEGS; break;
-		case CONST_SLOT_FEET: slotp = SLOTP_FEET; break;
-		case CONST_SLOT_AMMO: slotp = SLOTP_AMMO; break;
-		case CONST_SLOT_RING: slotp = SLOTP_RING; break;
-		default: slotp = 0; break;
+		case CONST_SLOT_HEAD:
+			slotp = SLOTP_HEAD;
+			break;
+		case CONST_SLOT_NECKLACE:
+			slotp = SLOTP_NECKLACE;
+			break;
+		case CONST_SLOT_BACKPACK:
+			slotp = SLOTP_BACKPACK;
+			break;
+		case CONST_SLOT_ARMOR:
+			slotp = SLOTP_ARMOR;
+			break;
+		case CONST_SLOT_RIGHT:
+			slotp = SLOTP_RIGHT;
+			break;
+		case CONST_SLOT_LEFT:
+			slotp = SLOTP_LEFT;
+			break;
+		case CONST_SLOT_LEGS:
+			slotp = SLOTP_LEGS;
+			break;
+		case CONST_SLOT_FEET:
+			slotp = SLOTP_FEET;
+			break;
+		case CONST_SLOT_AMMO:
+			slotp = SLOTP_AMMO;
+			break;
+		case CONST_SLOT_RING:
+			slotp = SLOTP_RING;
+			break;
+		default:
+			slotp = 0;
+			break;
 	}
 
 	auto it = itemIdMap.find(item->getID());
@@ -443,12 +446,18 @@ uint32_t MoveEvents::onItemMove(Item* item, Tile* tile, bool isAdd)
 std::string MoveEvent::getScriptEventName() const
 {
 	switch (eventType) {
-		case MOVE_EVENT_STEP_IN: return "onStepIn";
-		case MOVE_EVENT_STEP_OUT: return "onStepOut";
-		case MOVE_EVENT_EQUIP: return "onEquip";
-		case MOVE_EVENT_DEEQUIP: return "onDeEquip";
-		case MOVE_EVENT_ADD_ITEM: return "onAddItem";
-		case MOVE_EVENT_REMOVE_ITEM: return "onRemoveItem";
+		case MOVE_EVENT_STEP_IN:
+			return "onStepIn";
+		case MOVE_EVENT_STEP_OUT:
+			return "onStepOut";
+		case MOVE_EVENT_EQUIP:
+			return "onEquip";
+		case MOVE_EVENT_DEEQUIP:
+			return "onDeEquip";
+		case MOVE_EVENT_ADD_ITEM:
+			return "onAddItem";
+		case MOVE_EVENT_REMOVE_ITEM:
+			return "onRemoveItem";
 		default:
 			std::cout << "[Error - MoveEvent::getScriptEventName] Invalid event type" << std::endl;
 			return {};
@@ -466,10 +475,7 @@ uint32_t MoveEvent::StepInField(Creature* creature, Item* item, const Position&)
 	return LUA_ERROR_ITEM_NOT_FOUND;
 }
 
-uint32_t MoveEvent::StepOutField(Creature*, Item*, const Position&)
-{
-	return 1;
-}
+uint32_t MoveEvent::StepOutField(Creature*, Item*, const Position&) { return 1; }
 
 uint32_t MoveEvent::AddItemField(Item* item, Item*, const Position&)
 {
@@ -485,10 +491,7 @@ uint32_t MoveEvent::AddItemField(Item* item, Item*, const Position&)
 	return LUA_ERROR_ITEM_NOT_FOUND;
 }
 
-uint32_t MoveEvent::RemoveItemField(Item*, Item*, const Position&)
-{
-	return 1;
-}
+uint32_t MoveEvent::RemoveItemField(Item*, Item*, const Position&) { return 1; }
 
 ReturnValue MoveEvent::EquipItem(MoveEvent* moveEvent, Player* player, Item* item, slots_t slot, bool isCheck)
 {
@@ -537,7 +540,8 @@ ReturnValue MoveEvent::EquipItem(MoveEvent* moveEvent, Player* player, Item* ite
 	}
 
 	if (it.abilities->manaShield) {
-		Condition* condition = Condition::createCondition(static_cast<ConditionId_t>(slot), CONDITION_MANASHIELD, -1, 0);
+		Condition* condition =
+		    Condition::createCondition(static_cast<ConditionId_t>(slot), CONDITION_MANASHIELD, -1, 0);
 		player->addCondition(condition);
 	}
 
@@ -551,7 +555,8 @@ ReturnValue MoveEvent::EquipItem(MoveEvent* moveEvent, Player* player, Item* ite
 	}
 
 	if (it.abilities->regeneration) {
-		Condition* condition = Condition::createCondition(static_cast<ConditionId_t>(slot), CONDITION_REGENERATION, -1, 0);
+		Condition* condition =
+		    Condition::createCondition(static_cast<ConditionId_t>(slot), CONDITION_REGENERATION, -1, 0);
 
 		if (it.abilities->healthGain != 0) {
 			condition->setParam(CONDITION_PARAM_HEALTHGAIN, it.abilities->healthGain);
@@ -572,7 +577,7 @@ ReturnValue MoveEvent::EquipItem(MoveEvent* moveEvent, Player* player, Item* ite
 		player->addCondition(condition);
 	}
 
-	//skill modifiers
+	// skill modifiers
 	bool needUpdateSkills = false;
 
 	for (int32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
@@ -593,7 +598,7 @@ ReturnValue MoveEvent::EquipItem(MoveEvent* moveEvent, Player* player, Item* ite
 		player->sendSkills();
 	}
 
-	//stat modifiers
+	// stat modifiers
 	bool needUpdateStats = false;
 
 	for (int32_t s = STAT_FIRST; s <= STAT_LAST; ++s) {
@@ -604,7 +609,9 @@ ReturnValue MoveEvent::EquipItem(MoveEvent* moveEvent, Player* player, Item* ite
 
 		if (it.abilities->statsPercent[s]) {
 			needUpdateStats = true;
-			player->setVarStats(static_cast<stats_t>(s), static_cast<int32_t>(player->getDefaultStats(static_cast<stats_t>(s)) * ((it.abilities->statsPercent[s] - 100) / 100.f)));
+			player->setVarStats(static_cast<stats_t>(s),
+			                    static_cast<int32_t>(player->getDefaultStats(static_cast<stats_t>(s)) *
+			                                         ((it.abilities->statsPercent[s] - 100) / 100.f)));
 		}
 	}
 
@@ -654,7 +661,7 @@ ReturnValue MoveEvent::DeEquipItem(MoveEvent*, Player* player, Item* item, slots
 		player->removeCondition(CONDITION_REGENERATION, static_cast<ConditionId_t>(slot));
 	}
 
-	//skill modifiers
+	// skill modifiers
 	bool needUpdateSkills = false;
 
 	for (int32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
@@ -675,7 +682,7 @@ ReturnValue MoveEvent::DeEquipItem(MoveEvent*, Player* player, Item* item, slots
 		player->sendSkills();
 	}
 
-	//stat modifiers
+	// stat modifiers
 	bool needUpdateStats = false;
 
 	for (int32_t s = STAT_FIRST; s <= STAT_LAST; ++s) {
@@ -686,7 +693,9 @@ ReturnValue MoveEvent::DeEquipItem(MoveEvent*, Player* player, Item* item, slots
 
 		if (it.abilities->statsPercent[s]) {
 			needUpdateStats = true;
-			player->setVarStats(static_cast<stats_t>(s), -static_cast<int32_t>(player->getDefaultStats(static_cast<stats_t>(s)) * ((it.abilities->statsPercent[s] - 100) / 100.f)));
+			player->setVarStats(static_cast<stats_t>(s),
+			                    -static_cast<int32_t>(player->getDefaultStats(static_cast<stats_t>(s)) *
+			                                          ((it.abilities->statsPercent[s] - 100) / 100.f)));
 		}
 	}
 
@@ -697,15 +706,9 @@ ReturnValue MoveEvent::DeEquipItem(MoveEvent*, Player* player, Item* item, slots
 	return RETURNVALUE_NOERROR;
 }
 
-MoveEvent_t MoveEvent::getEventType() const
-{
-	return eventType;
-}
+MoveEvent_t MoveEvent::getEventType() const { return eventType; }
 
-void MoveEvent::setEventType(MoveEvent_t type)
-{
-	eventType = type;
-}
+void MoveEvent::setEventType(MoveEvent_t type) { eventType = type; }
 
 uint32_t MoveEvent::fireStepEvent(Creature* creature, Item* item, const Position& pos)
 {
@@ -717,8 +720,8 @@ uint32_t MoveEvent::fireStepEvent(Creature* creature, Item* item, const Position
 
 bool MoveEvent::executeStep(Creature* creature, Item* item, const Position& pos)
 {
-	//onStepIn(creature, item, pos, fromPosition)
-	//onStepOut(creature, item, pos, fromPosition)
+	// onStepIn(creature, item, pos, fromPosition)
+	// onStepOut(creature, item, pos, fromPosition)
 	if (!scriptInterface->reserveScriptEnv()) {
 		std::cout << "[Error - MoveEvent::executeStep] Call stack overflow" << std::endl;
 		return false;
@@ -753,8 +756,8 @@ ReturnValue MoveEvent::fireEquip(Player* player, Item* item, slots_t slot, bool 
 
 bool MoveEvent::executeEquip(Player* player, Item* item, slots_t slot, bool isCheck)
 {
-	//onEquip(player, item, slot, isCheck)
-	//onDeEquip(player, item, slot, isCheck)
+	// onEquip(player, item, slot, isCheck)
+	// onDeEquip(player, item, slot, isCheck)
 	if (!scriptInterface->reserveScriptEnv()) {
 		std::cout << "[Error - MoveEvent::executeEquip] Call stack overflow" << std::endl;
 		return false;
@@ -786,8 +789,8 @@ uint32_t MoveEvent::fireAddRemItem(Item* item, Item* tileItem, const Position& p
 
 bool MoveEvent::executeAddRemItem(Item* item, Item* tileItem, const Position& pos)
 {
-	//onaddItem(moveitem, tileitem, pos)
-	//onRemoveItem(moveitem, tileitem, pos)
+	// onaddItem(moveitem, tileitem, pos)
+	// onRemoveItem(moveitem, tileitem, pos)
 	if (!scriptInterface->reserveScriptEnv()) {
 		std::cout << "[Error - MoveEvent::executeAddRemItem] Call stack overflow" << std::endl;
 		return false;

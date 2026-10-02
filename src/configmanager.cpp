@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -71,12 +71,9 @@ bool getGlobalBoolean(lua_State* L, const char* identifier, const bool defaultVa
 	return val != 0;
 }
 
-}
+} // namespace
 
-ConfigManager::ConfigManager()
-{
-	string[CONFIG_FILE] = "config.lua";
-}
+ConfigManager::ConfigManager() { string[CONFIG_FILE] = "config.lua"; }
 
 namespace {
 
@@ -120,7 +117,7 @@ ExperienceStages loadXMLStages()
 	return stages;
 }
 
-}
+} // namespace
 
 bool ConfigManager::load()
 {
@@ -137,8 +134,8 @@ bool ConfigManager::load()
 		return false;
 	}
 
-	//parse config
-	if (!loaded) { //info that must be loaded one time (unless we reset the modules involved)
+	// parse config
+	if (!loaded) { // info that must be loaded one time (unless we reset the modules involved)
 		boolean[BIND_ONLY_GLOBAL_ADDRESS] = getGlobalBoolean(L, "bindOnlyGlobalAddress", false);
 		boolean[OPTIMIZE_DATABASE] = getGlobalBoolean(L, "startupDatabaseOptimization", true);
 
@@ -174,7 +171,8 @@ bool ConfigManager::load()
 
 		integer[MAP_REFRESH_INTERVAL] = getGlobalNumber(L, "mapRefreshInterval", 30 * 1000);
 		integer[MAP_REFRESH_TILES_PER_CYCLE] = getGlobalNumber(L, "mapRefreshTilesPerCycle", 32 * 32);
-		integer[MAP_REFRESH_VISIBILITY_INTERVAL] = getGlobalNumber(L, "mapRefreshTileVisibilityInterval", 5 * 60 * 1000);
+		integer[MAP_REFRESH_VISIBILITY_INTERVAL] =
+		    getGlobalNumber(L, "mapRefreshTileVisibilityInterval", 5 * 60 * 1000);
 
 		integer[TILE_ITEM_LIMIT] = getGlobalNumber(L, "tileItemLimit", 1000);
 		integer[HOUSE_TILE_ITEM_LIMIT] = getGlobalNumber(L, "houseTileItemLimit", 100);
@@ -254,7 +252,8 @@ bool ConfigManager::load()
 	string[WORLD_TYPE] = getGlobalString(L, "worldType", "pvp");
 	string[ROOK_TOWN_NAME] = getGlobalString(L, "rookTownName", "Rookgaard");
 	string[IP_LOCK_MESSAGE] = getGlobalString(L, "ipLockMessage", "IP address blocked for 30 minutes. Please wait.");
-	string[ACCOUNT_LOCK_MESSAGE] = getGlobalString(L, "accountLockMessage", "Account disabled for five minutes. Please wait.");
+	string[ACCOUNT_LOCK_MESSAGE] =
+	    getGlobalString(L, "accountLockMessage", "Account disabled for five minutes. Please wait.");
 	string[SERVER_SAVE_TIME] = getGlobalString(L, "serverSaveTime", "04:00:00");
 
 	integer[MAX_PLAYERS] = getGlobalNumber(L, "maxPlayers");
@@ -348,7 +347,7 @@ float ConfigManager::getExperienceStage(uint32_t level) const
 	auto it = std::find_if(expStages.begin(), expStages.end(), [level](auto&& stage) {
 		auto&& [minLevel, maxLevel, _] = stage;
 		return level >= minLevel && level <= maxLevel;
-		});
+	});
 
 	if (it == expStages.end()) {
 		return getNumber(ConfigManager::RATE_EXPERIENCE);

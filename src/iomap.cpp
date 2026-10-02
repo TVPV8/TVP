@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -47,10 +47,11 @@ bool IOMap::loadMap(Map* map, const std::string& fileName, bool replaceExistingT
 
 		uint32_t headerVersion = root_header.version;
 		if (headerVersion == 0) {
-			//In otbm version 1 the count variable after splashes/fluidcontainers and stackables
-			//are saved as attributes instead, this solves a lot of problems with items
-			//that are changed (stackable/charges/fluidcontainer/splash) during an update.
-			setLastErrorString("This map need to be upgraded by using the latest map editor version to be able to load correctly.");
+			// In otbm version 1 the count variable after splashes/fluidcontainers and stackables
+			// are saved as attributes instead, this solves a lot of problems with items
+			// that are changed (stackable/charges/fluidcontainer/splash) during an update.
+			setLastErrorString(
+			    "This map need to be upgraded by using the latest map editor version to be able to load correctly.");
 			return false;
 		}
 
@@ -108,7 +109,8 @@ MapDataLoadResult_t IOMap::loadMapData()
 	}
 
 	// compare date times
-	auto otbmLastWriteTime = std::filesystem::last_write_time(fmt::format("data/world/{:s}.otbm", g_config.getString(ConfigManager::MAP_NAME)));
+	auto otbmLastWriteTime = std::filesystem::last_write_time(
+	    fmt::format("data/world/{:s}.otbm", g_config.getString(ConfigManager::MAP_NAME)));
 
 	const std::string filename = "gamedata/map.tvpm";
 	std::ifstream fileTest(filename, std::ios::binary);
@@ -116,7 +118,8 @@ MapDataLoadResult_t IOMap::loadMapData()
 		auto liveMapDataWriteTime = std::filesystem::last_write_time("gamedata/map.tvpm");
 
 		if (otbmLastWriteTime > liveMapDataWriteTime) {
-			std::cout << "> INFO: Original OTBM map is newer than live map data, proceeding to load original OTBM map." << std::endl;
+			std::cout << "> INFO: Original OTBM map is newer than live map data, proceeding to load original OTBM map."
+			          << std::endl;
 			g_game.toggleSendPlayersToTemple(true);
 			return MAP_DATA_LOAD_NONE;
 		} else {
@@ -169,13 +172,16 @@ MapDataLoadResult_t IOMap::loadMapData()
 			for (uint32_t ii = 0; ii < totalItems; ii++) {
 				Item* item = Item::CreateItem(propStream);
 				if (!item) {
-					std::cout << fmt::format("ERROR - [IOMapSerialize::loadMapData]: Failed to create item - {:s}", filename) << std::endl;
+					std::cout << fmt::format("ERROR - [IOMapSerialize::loadMapData]: Failed to create item - {:s}",
+					                         filename)
+					          << std::endl;
 					delete tile;
 					return MAP_DATA_LOAD_ERROR;
 				}
 
 				if (!item->unserializeTVPFormat(propStream)) {
-					std::cout << "> ERROR - [IOMapSerialize::loadMapData]: Failed to unserialize item in file " << filename << std::endl;
+					std::cout << "> ERROR - [IOMapSerialize::loadMapData]: Failed to unserialize item in file "
+					          << filename << std::endl;
 					delete item;
 					delete tile;
 					return MAP_DATA_LOAD_ERROR;
@@ -214,7 +220,7 @@ MapDataLoadResult_t IOMap::loadMapData()
 		for (uint32_t i = 0; i < totalHouses; i++) {
 			uint32_t houseId;
 			propStream.read<uint32_t>(houseId);
-			
+
 			std::string name;
 			propStream.readString(name);
 
@@ -463,8 +469,7 @@ bool IOMap::saveMapData()
 	file.write(data, size);
 	file.close();
 
-	std::cout << "> Saved map data in: " <<
-		(OTSYS_TIME() - start) / (1000.) << " s" << std::endl;
+	std::cout << "> Saved map data in: " << (OTSYS_TIME() - start) / (1000.) << " s" << std::endl;
 	return true;
 }
 
@@ -533,16 +538,16 @@ bool IOMap::saveHouseDatabaseInformation()
 		DBResult_ptr result = db.storeQuery(fmt::format("SELECT `id` FROM `houses` WHERE `id` = {:d}", house->getId()));
 		if (result) {
 			db.executeQuery(fmt::format(
-				"UPDATE `houses` SET `owner` = {:d}, `paid` = {:d}, `warnings` = {:d}, `name` = {:s}, `town_id` = {:d}, `rent` = {:d}, `size` = {:d}, `beds` = {:d} WHERE `id` = {:d}",
-				house->getOwner(), house->getPaidUntil(), house->getPayRentWarnings(),
-				db.escapeString(house->getName()), house->getTownId(), house->getRent(), house->getTiles().size(),
-				house->getBedCount(), house->getId()));
+			    "UPDATE `houses` SET `owner` = {:d}, `paid` = {:d}, `warnings` = {:d}, `name` = {:s}, `town_id` = {:d}, `rent` = {:d}, `size` = {:d}, `beds` = {:d} WHERE `id` = {:d}",
+			    house->getOwner(), house->getPaidUntil(), house->getPayRentWarnings(),
+			    db.escapeString(house->getName()), house->getTownId(), house->getRent(), house->getTiles().size(),
+			    house->getBedCount(), house->getId()));
 		} else {
 			db.executeQuery(fmt::format(
-				"INSERT INTO `houses` (`id`, `owner`, `paid`, `warnings`, `name`, `town_id`, `rent`, `size`, `beds`) VALUES ({:d}, {:d}, {:d}, {:d}, {:s}, {:d}, {:d}, {:d}, {:d})",
-				house->getId(), house->getOwner(), house->getPaidUntil(), house->getPayRentWarnings(),
-				db.escapeString(house->getName()), house->getTownId(), house->getRent(), house->getTiles().size(),
-				house->getBedCount()));
+			    "INSERT INTO `houses` (`id`, `owner`, `paid`, `warnings`, `name`, `town_id`, `rent`, `size`, `beds`) VALUES ({:d}, {:d}, {:d}, {:d}, {:s}, {:d}, {:d}, {:d}, {:d})",
+			    house->getId(), house->getOwner(), house->getPaidUntil(), house->getPayRentWarnings(),
+			    db.escapeString(house->getName()), house->getTownId(), house->getRent(), house->getTiles().size(),
+			    house->getBedCount()));
 		}
 	}
 
@@ -553,7 +558,8 @@ bool IOMap::saveHouseDatabaseInformation()
 
 		std::string listText;
 		if (house->getAccessList(GUEST_LIST, listText) && !listText.empty()) {
-			if (!stmt.addRow(fmt::format("{:d}, {}, {:s}", house->getId(), tvp::to_underlying(GUEST_LIST), db.escapeString(listText)))) {
+			if (!stmt.addRow(fmt::format("{:d}, {}, {:s}", house->getId(), tvp::to_underlying(GUEST_LIST),
+			                             db.escapeString(listText)))) {
 				return false;
 			}
 
@@ -561,7 +567,8 @@ bool IOMap::saveHouseDatabaseInformation()
 		}
 
 		if (house->getAccessList(SUBOWNER_LIST, listText) && !listText.empty()) {
-			if (!stmt.addRow(fmt::format("{:d}, {}, {:s}", house->getId(), tvp::to_underlying(SUBOWNER_LIST), db.escapeString(listText)))) {
+			if (!stmt.addRow(fmt::format("{:d}, {}, {:s}", house->getId(), tvp::to_underlying(SUBOWNER_LIST),
+			                             db.escapeString(listText)))) {
 				return false;
 			}
 
@@ -570,7 +577,8 @@ bool IOMap::saveHouseDatabaseInformation()
 
 		for (Door* door : house->getDoors()) {
 			if (door->getAccessList(listText) && !listText.empty()) {
-				if (!stmt.addRow(fmt::format("{:d}, {:d}, {:s}", house->getId(), door->getDoorId(), db.escapeString(listText)))) {
+				if (!stmt.addRow(fmt::format("{:d}, {:d}, {:s}", house->getId(), door->getDoorId(),
+				                             db.escapeString(listText)))) {
 					return false;
 				}
 
@@ -812,18 +820,19 @@ bool IOMap::parseTileArea(OTB::Loader& loader, const OTB::Node& tileAreaNode, Ma
 
 			house = map.houses.addHouse(houseId);
 			if (!house) {
-				setLastErrorString(fmt::format("[x:{:d}, y:{:d}, z:{:d}] Could not create house id: {:d}", x, y, z, houseId));
+				setLastErrorString(
+				    fmt::format("[x:{:d}, y:{:d}, z:{:d}] Could not create house id: {:d}", x, y, z, houseId));
 				return false;
 			}
 
-			tile = new Tile (x, y, z);
+			tile = new Tile(x, y, z);
 			tile->setHouse(house);
 			house->addTile(tile);
 			isHouseTile = true;
 		}
 
 		uint8_t attribute;
-		//read tile attributes
+		// read tile attributes
 		while (propStream.read<uint8_t>(attribute)) {
 			switch (attribute) {
 				case OTBM_ATTR_TILE_FLAGS: {
@@ -835,15 +844,15 @@ bool IOMap::parseTileArea(OTB::Loader& loader, const OTB::Node& tileAreaNode, Ma
 
 					if ((flags & OTBM_TILEFLAG_PROTECTIONZONE) != 0) {
 						tileflags |= TILESTATE_PROTECTIONZONE;
-					} 
-					
+					}
+
 					// cannot be both
 					if ((flags & OTBM_TILEFLAG_NOPVPZONE) != 0) {
 						tileflags |= TILESTATE_NOPVPZONE;
 					} else if ((flags & OTBM_TILEFLAG_PVPZONE) != 0) {
 						tileflags |= TILESTATE_PVPZONE;
-					} 
-					
+					}
+
 					if ((flags & OTBM_TILEFLAG_REFRESH) != 0) {
 						tileflags |= TILESTATE_REFRESH;
 					}
@@ -907,7 +916,8 @@ bool IOMap::parseTileArea(OTB::Loader& loader, const OTB::Node& tileAreaNode, Ma
 			}
 
 			if (!item->unserializeItemNode(loader, itemNode, stream)) {
-				setLastErrorString(fmt::format("[x:{:d}, y:{:d}, z:{:d}] Failed to load item {:d}.", x, y, z, item->getID()));
+				setLastErrorString(
+				    fmt::format("[x:{:d}, y:{:d}, z:{:d}] Failed to load item {:d}.", x, y, z, item->getID()));
 				delete item;
 				return false;
 			}

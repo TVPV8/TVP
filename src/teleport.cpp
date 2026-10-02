@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -20,7 +20,8 @@ Item* Teleport::clone() const
 Attr_ReadValue Teleport::readAttr(AttrTypes_t attr, PropStream& propStream)
 {
 	if (attr == ATTR_TELE_DEST) {
-		if (!propStream.read<uint16_t>(destPos.x) || !propStream.read<uint16_t>(destPos.y) || !propStream.read<uint8_t>(destPos.z)) {
+		if (!propStream.read<uint16_t>(destPos.x) || !propStream.read<uint16_t>(destPos.y) ||
+		    !propStream.read<uint8_t>(destPos.z)) {
 			return ATTR_READ_ERROR;
 		}
 		return ATTR_READ_CONTINUE;
@@ -53,15 +54,9 @@ ReturnValue Teleport::queryRemove(const Thing&, uint32_t, uint32_t, Creature* /*
 	return RETURNVALUE_NOERROR;
 }
 
-Cylinder* Teleport::queryDestination(int32_t&, const Thing&, Item**, uint32_t&)
-{
-	return this;
-}
+Cylinder* Teleport::queryDestination(int32_t&, const Thing&, Item**, uint32_t&) { return this; }
 
-void Teleport::addThing(Thing* thing)
-{
-	return addThing(0, thing);
-}
+void Teleport::addThing(Thing* thing) { return addThing(0, thing); }
 
 void Teleport::addThing(int32_t, Thing* thing)
 {
@@ -73,7 +68,7 @@ void Teleport::addThing(int32_t, Thing* thing)
 	// Prevent infinite loop
 	Teleport* destTeleport = destTile->getTeleportItem();
 	if (destTeleport) {
-		std::vector<Position> lastPositions = { getPosition() };
+		std::vector<Position> lastPositions = {getPosition()};
 
 		while (true) {
 			const Position& nextPos = destTeleport->getDestPos();
@@ -111,7 +106,8 @@ void Teleport::addThing(int32_t, Thing* thing)
 			g_game.addMagicEffect(destTile->getPosition(), effect);
 			g_game.addMagicEffect(item->getPosition(), effect);
 		}
-		g_game.internalMoveItem(getTile(), destTile, INDEX_WHEREEVER, item, item->getItemCount(), nullptr, FLAG_NOLIMIT);
+		g_game.internalMoveItem(getTile(), destTile, INDEX_WHEREEVER, item, item->getItemCount(), nullptr,
+		                        FLAG_NOLIMIT);
 	}
 }
 

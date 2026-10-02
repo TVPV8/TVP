@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -10,11 +10,7 @@
 
 #include <set>
 
-Events::Events() :
-	scriptInterface("Event Interface")
-{
-	scriptInterface.initState();
-}
+Events::Events() : scriptInterface("Event Interface") { scriptInterface.initState(); }
 
 bool Events::load()
 {
@@ -83,7 +79,7 @@ bool Events::load()
 			} else if (methodName == "onTradeCompleted") {
 				info.playerOnTradeCompleted = event;
 			} else if (methodName == "onUseItem") {
-				info.playerOnUseItem = event;			
+				info.playerOnUseItem = event;
 			} else if (methodName == "onMoveItem") {
 				info.playerOnMoveItem = event;
 			} else if (methodName == "onItemMoved") {
@@ -402,7 +398,8 @@ void Events::eventPartyOnShareExperience(Party* party, uint64_t& exp)
 }
 
 // Player
-void Events::eventPlayerOnLook(Player* player, const Position& position, Thing* thing, uint8_t stackpos, int32_t lookDistance)
+void Events::eventPlayerOnLook(Player* player, const Position& position, Thing* thing, uint8_t stackpos,
+                               int32_t lookDistance)
 {
 	// Player:onLook(thing, position, distance) or Player.onLook(self, thing, position, distance)
 	if (info.playerOnLook == -1) {
@@ -441,7 +438,8 @@ void Events::eventPlayerOnLook(Player* player, const Position& position, Thing* 
 
 void Events::eventPlayerOnLookInBattleList(Player* player, Creature* creature, int32_t lookDistance)
 {
-	// Player:onLookInBattleList(creature, position, distance) or Player.onLookInBattleList(self, creature, position, distance)
+	// Player:onLookInBattleList(creature, position, distance) or Player.onLookInBattleList(self, creature, position,
+	// distance)
 	if (info.playerOnLookInBattleList == -1) {
 		return;
 	}
@@ -527,9 +525,11 @@ bool Events::eventPlayerOnUseItem(Player* player, Item* item)
 	return scriptInterface.callFunction(2);
 }
 
-ReturnValue Events::eventPlayerOnMoveItem(Player* player, Item* item, uint16_t count, const Position& fromPosition, const Position& toPosition, Cylinder* fromCylinder, Cylinder* toCylinder)
+ReturnValue Events::eventPlayerOnMoveItem(Player* player, Item* item, uint16_t count, const Position& fromPosition,
+                                          const Position& toPosition, Cylinder* fromCylinder, Cylinder* toCylinder)
 {
-	// Player:onMoveItem(item, count, fromPosition, toPosition) or Player.onMoveItem(self, item, count, fromPosition, toPosition, fromCylinder, toCylinder)
+	// Player:onMoveItem(item, count, fromPosition, toPosition) or Player.onMoveItem(self, item, count, fromPosition,
+	// toPosition, fromCylinder, toCylinder)
 	if (info.playerOnMoveItem == -1) {
 		return RETURNVALUE_NOERROR;
 	}
@@ -562,8 +562,7 @@ ReturnValue Events::eventPlayerOnMoveItem(Player* player, Item* item, uint16_t c
 	if (scriptInterface.protectedCall(L, 7, 1) != 0) {
 		returnValue = RETURNVALUE_NOTPOSSIBLE;
 		LuaScriptInterface::reportError(nullptr, LuaScriptInterface::popString(L));
-	}
-	else {
+	} else {
 		returnValue = LuaScriptInterface::getNumber<ReturnValue>(L, -1);
 		lua_pop(L, 1);
 	}
@@ -572,9 +571,11 @@ ReturnValue Events::eventPlayerOnMoveItem(Player* player, Item* item, uint16_t c
 	return returnValue;
 }
 
-void Events::eventPlayerOnItemMoved(Player* player, Item* item, uint16_t count, const Position& fromPosition, const Position& toPosition, Cylinder* fromCylinder, Cylinder* toCylinder)
+void Events::eventPlayerOnItemMoved(Player* player, Item* item, uint16_t count, const Position& fromPosition,
+                                    const Position& toPosition, Cylinder* fromCylinder, Cylinder* toCylinder)
 {
-	// Player:onItemMoved(item, count, fromPosition, toPosition) or Player.onItemMoved(self, item, count, fromPosition, toPosition, fromCylinder, toCylinder)
+	// Player:onItemMoved(item, count, fromPosition, toPosition) or Player.onItemMoved(self, item, count, fromPosition,
+	// toPosition, fromCylinder, toCylinder)
 	if (info.playerOnItemMoved == -1) {
 		return;
 	}
@@ -606,9 +607,11 @@ void Events::eventPlayerOnItemMoved(Player* player, Item* item, uint16_t count, 
 	scriptInterface.callVoidFunction(7);
 }
 
-bool Events::eventPlayerOnMoveCreature(Player* player, Creature* creature, const Position& fromPosition, const Position& toPosition)
+bool Events::eventPlayerOnMoveCreature(Player* player, Creature* creature, const Position& fromPosition,
+                                       const Position& toPosition)
 {
-	// Player:onMoveCreature(creature, fromPosition, toPosition) or Player.onMoveCreature(self, creature, fromPosition, toPosition)
+	// Player:onMoveCreature(creature, fromPosition, toPosition) or Player.onMoveCreature(self, creature, fromPosition,
+	// toPosition)
 	if (info.playerOnMoveCreature == -1) {
 		return true;
 	}
@@ -944,4 +947,3 @@ void Events::eventMonsterOnDropLoot(Monster* monster, Container* corpse)
 
 	return scriptInterface.callVoidFunction(2);
 }
-

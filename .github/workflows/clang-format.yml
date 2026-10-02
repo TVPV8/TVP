@@ -1,0 +1,33 @@
+name: Check code style
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .clang-format
+      - .github/workflows/clang-format.yml
+      - src/**
+  pull_request:
+    paths:
+      - .clang-format
+      - .github/workflows/clang-format.yml
+      - src/**
+  workflow_dispatch:
+
+jobs:
+  check-format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install clang-format
+        run: pip install clang-format==21.1.7
+
+      - name: Check code style
+        run: clang-format -n -style=file --Werror src/*.{cpp,h}

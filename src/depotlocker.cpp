@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -7,8 +7,7 @@
 
 #include <fmt/format.h>
 
-DepotLocker::DepotLocker(uint16_t type) :
-	Container(type, 30), depotId(0), maxDepotItems(2000) {}
+DepotLocker::DepotLocker(uint16_t type) : Container(type, 30), depotId(0), maxDepotItems(2000) {}
 
 Item* DepotLocker::clone() const
 {
@@ -32,13 +31,13 @@ Attr_ReadValue DepotLocker::readAttr(AttrTypes_t attr, PropStream& propStream)
 void DepotLocker::serializeAttr(PropWriteStream& propWriteStream) const
 {
 	Item::serializeAttr(propWriteStream);
-	
+
 	propWriteStream.write<uint8_t>(ATTR_DEPOT_ID);
 	propWriteStream.write<uint16_t>(depotId);
 }
 
-ReturnValue DepotLocker::queryAdd(int32_t index, const Thing& thing, uint32_t count,
-	uint32_t flags, Creature* actor/* = nullptr*/) const
+ReturnValue DepotLocker::queryAdd(int32_t index, const Thing& thing, uint32_t count, uint32_t flags,
+                                  Creature* actor /* = nullptr*/) const
 {
 	const Item* item = thing.getItem();
 	if (item == nullptr) {
@@ -57,15 +56,14 @@ ReturnValue DepotLocker::queryAdd(int32_t index, const Thing& thing, uint32_t co
 		}
 
 		bool movingToStack = false;
-		if (item->isStackable()){
+		if (item->isStackable()) {
 			const Item* itemAtIndex = getItemByIndex(index);
 			if (itemAtIndex && itemAtIndex->equals(item) && itemAtIndex->getItemCount() < 100) {
 				if (depotBeyondFull && isInsideDepotLocker || !depotBeyondFull) {
-					addCount = 0; 
+					addCount = 0;
 				}
 			}
 		}
-
 
 		if (isInsideDepotLocker) {
 			if (!item->isStackable() || item->getItemCount() == count) {

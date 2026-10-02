@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 #include <csignal>
@@ -45,7 +45,7 @@ namespace {
 
 void sigbreakHandler()
 {
-	//Dispatcher thread
+	// Dispatcher thread
 	std::cout << "SIGBREAK received, shutting game server down..." << std::endl;
 	g_game.changeAllowMapSave(false);
 	g_game.setGameState(GAME_STATE_SHUTDOWN);
@@ -53,21 +53,21 @@ void sigbreakHandler()
 
 void sigtermHandler()
 {
-	//Dispatcher thread
+	// Dispatcher thread
 	std::cout << "SIGTERM received, shutting game server down..." << std::endl;
 	g_game.setGameState(GAME_STATE_SHUTDOWN);
 }
 
 void sigusr1Handler()
 {
-	//Dispatcher thread
+	// Dispatcher thread
 	std::cout << "SIGUSR1 received, saving the game state..." << std::endl;
 	g_game.saveGameState();
 }
 
 void sighupHandler()
 {
-	//Dispatcher thread
+	// Dispatcher thread
 	std::cout << "SIGHUP received, reloading config files..." << std::endl;
 
 	g_config.reload();
@@ -100,7 +100,7 @@ void sighupHandler()
 
 void sigintHandler()
 {
-	//Dispatcher thread
+	// Dispatcher thread
 	std::cout << "SIGINT received, shutting game server down..." << std::endl;
 	g_game.changeAllowMapSave(false);
 	g_game.setGameState(GAME_STATE_SHUTDOWN);
@@ -111,22 +111,22 @@ void sigintHandler()
 // https://github.com/otland/forgottenserver/pull/2473
 void dispatchSignalHandler(int signal)
 {
-	switch(signal) {
-		case SIGINT: //Shuts the server down
+	switch (signal) {
+		case SIGINT: // Shuts the server down
 			g_dispatcher.addTask(createTask(sigintHandler));
 			break;
-		case SIGTERM: //Shuts the server down
+		case SIGTERM: // Shuts the server down
 			g_dispatcher.addTask(createTask(sigtermHandler));
 			break;
 #ifndef _WIN32
-		case SIGHUP: //Reload config/data
+		case SIGHUP: // Reload config/data
 			g_dispatcher.addTask(createTask(sighupHandler));
 			break;
-		case SIGUSR1: //Saves game state
+		case SIGUSR1: // Saves game state
 			g_dispatcher.addTask(createTask(sigusr1Handler));
 			break;
 #else
-		case SIGBREAK: //Shuts the server down
+		case SIGBREAK: // Shuts the server down
 			g_dispatcher.addTask(createTask(sigbreakHandler));
 			// hold the thread until other threads end
 			g_scheduler.join();
@@ -142,9 +142,9 @@ void dispatchSignalHandler(int signal)
 	}
 }
 
-}
+} // namespace
 
-Signals::Signals(boost::asio::io_context& ioc): set(ioc)
+Signals::Signals(boost::asio::io_context& ioc) : set(ioc)
 {
 	set.add(SIGINT);
 	set.add(SIGTERM);
@@ -165,7 +165,7 @@ void Signals::asyncWait()
 {
 	set.async_wait([this](const boost::system::error_code& err, int signal) {
 		if (err) {
-			std::cerr << "Signal handling error: "  << err.message() << std::endl;
+			std::cerr << "Signal handling error: " << err.message() << std::endl;
 			return;
 		}
 		dispatchSignalHandler(signal);

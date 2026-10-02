@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #pragma once
 
@@ -20,7 +20,8 @@ class House;
 using CreatureVector = std::vector<Creature*>;
 using ItemVector = std::vector<Item*>;
 
-enum tileflags_t : uint32_t {
+enum tileflags_t : uint32_t
+{
 	TILESTATE_NONE = 0,
 
 	TILESTATE_FLOORCHANGE_DOWN = 1 << 0,
@@ -50,10 +51,13 @@ enum tileflags_t : uint32_t {
 	TILESTATE_SUPPORTS_HANGABLE = 1 << 24,
 	TILESTATE_SPECIALFIELDBLOCKPATH = 1 << 25,
 
-	TILESTATE_FLOORCHANGE = TILESTATE_FLOORCHANGE_DOWN | TILESTATE_FLOORCHANGE_NORTH | TILESTATE_FLOORCHANGE_SOUTH | TILESTATE_FLOORCHANGE_EAST | TILESTATE_FLOORCHANGE_WEST | TILESTATE_FLOORCHANGE_SOUTH_ALT | TILESTATE_FLOORCHANGE_EAST_ALT,
+	TILESTATE_FLOORCHANGE = TILESTATE_FLOORCHANGE_DOWN | TILESTATE_FLOORCHANGE_NORTH | TILESTATE_FLOORCHANGE_SOUTH |
+	                        TILESTATE_FLOORCHANGE_EAST | TILESTATE_FLOORCHANGE_WEST | TILESTATE_FLOORCHANGE_SOUTH_ALT |
+	                        TILESTATE_FLOORCHANGE_EAST_ALT,
 };
 
-enum ZoneType_t {
+enum ZoneType_t
+{
 	ZONE_PROTECTION,
 	ZONE_NOPVP,
 	ZONE_PVP,
@@ -64,73 +68,53 @@ enum ZoneType_t {
 
 class TileItemVector : private ItemVector
 {
-	public:
-		using ItemVector::begin;
-		using ItemVector::end;
-		using ItemVector::rbegin;
-		using ItemVector::rend;
-		using ItemVector::size;
-		using ItemVector::clear;
-		using ItemVector::at;
-		using ItemVector::insert;
-		using ItemVector::erase;
-		using ItemVector::push_back;
-		using ItemVector::value_type;
-		using ItemVector::iterator;
-		using ItemVector::const_iterator;
-		using ItemVector::reverse_iterator;
-		using ItemVector::const_reverse_iterator;
-		using ItemVector::empty;
+public:
+	using ItemVector::at;
+	using ItemVector::begin;
+	using ItemVector::clear;
+	using ItemVector::const_iterator;
+	using ItemVector::const_reverse_iterator;
+	using ItemVector::empty;
+	using ItemVector::end;
+	using ItemVector::erase;
+	using ItemVector::insert;
+	using ItemVector::iterator;
+	using ItemVector::push_back;
+	using ItemVector::rbegin;
+	using ItemVector::rend;
+	using ItemVector::reverse_iterator;
+	using ItemVector::size;
+	using ItemVector::value_type;
 
-		iterator getBeginDownItem() {
-			return begin();
-		}
-		const_iterator getBeginDownItem() const {
-			return begin();
-		}
-		iterator getEndDownItem() {
-			return begin() + downItemCount;
-		}
-		const_iterator getEndDownItem() const {
-			return begin() + downItemCount;
-		}
-		iterator getBeginTopItem() {
-			return getEndDownItem();
-		}
-		const_iterator getBeginTopItem() const {
-			return getEndDownItem();
-		}
-		iterator getEndTopItem() {
-			return end();
-		}
-		const_iterator getEndTopItem() const {
-			return end();
-		}
+	iterator getBeginDownItem() { return begin(); }
+	const_iterator getBeginDownItem() const { return begin(); }
+	iterator getEndDownItem() { return begin() + downItemCount; }
+	const_iterator getEndDownItem() const { return begin() + downItemCount; }
+	iterator getBeginTopItem() { return getEndDownItem(); }
+	const_iterator getBeginTopItem() const { return getEndDownItem(); }
+	iterator getEndTopItem() { return end(); }
+	const_iterator getEndTopItem() const { return end(); }
 
-		uint32_t getTopItemCount() const {
-			return size() - downItemCount;
+	uint32_t getTopItemCount() const { return size() - downItemCount; }
+	uint32_t getDownItemCount() const { return downItemCount; }
+	inline Item* getTopTopItem() const
+	{
+		if (getTopItemCount() == 0) {
+			return nullptr;
 		}
-		uint32_t getDownItemCount() const {
-			return downItemCount;
+		return *(getEndTopItem() - 1);
+	}
+	inline Item* getTopDownItem() const
+	{
+		if (downItemCount == 0) {
+			return nullptr;
 		}
-		inline Item* getTopTopItem() const {
-			if (getTopItemCount() == 0) {
-				return nullptr;
-			}
-			return *(getEndTopItem() - 1);
-		}
-		inline Item* getTopDownItem() const {
-			if (downItemCount == 0) {
-				return nullptr;
-			}
-			return *getBeginDownItem();
-		}
-		void addDownItemCount(int32_t increment) {
-			downItemCount += increment;
-		}
+		return *getBeginDownItem();
+	}
+	void addDownItemCount(int32_t increment) { downItemCount += increment; }
 
-	private:
-		uint16_t downItemCount = 0;
+private:
+	uint16_t downItemCount = 0;
 };
 
 class Tile : public Cylinder
@@ -140,212 +124,174 @@ class Tile : public Cylinder
 	TileItemVector items;
 	CreatureVector creatures;
 
-	public:
-		static Tile& nullptr_tile;
-		Tile(uint16_t x, uint16_t y, uint8_t z) : tilePos(x, y, z) {}
-		virtual ~Tile() {
-			delete ground;
+public:
+	static Tile& nullptr_tile;
+	Tile(uint16_t x, uint16_t y, uint8_t z) : tilePos(x, y, z) {}
+	virtual ~Tile()
+	{
+		delete ground;
 
-			for (Item* item : items) {
-				item->setParent(nullptr);
-				item->decrementReferenceCounter();
-			}
-
-			for (Item* item : refreshableItems) {
-				item->setParent(nullptr);
-				item->decrementReferenceCounter();
-			}
-		};
-
-		// non-copyable
-		Tile(const Tile&) = delete;
-		Tile& operator=(const Tile&) = delete;
-
-		TileItemVector* getItemList() {
-			return &items;
-		}
-		const TileItemVector* getItemList() const {
-			return &items;
-		}
-		TileItemVector* makeItemList() {
-			return &items;
+		for (Item* item : items) {
+			item->setParent(nullptr);
+			item->decrementReferenceCounter();
 		}
 
-		TileItemVector* getRefreshableItemList() {
-			return &refreshableItems;
+		for (Item* item : refreshableItems) {
+			item->setParent(nullptr);
+			item->decrementReferenceCounter();
 		}
+	};
 
-		CreatureVector* getCreatures() {
-			return &creatures;
+	// non-copyable
+	Tile(const Tile&) = delete;
+	Tile& operator=(const Tile&) = delete;
+
+	TileItemVector* getItemList() { return &items; }
+	const TileItemVector* getItemList() const { return &items; }
+	TileItemVector* makeItemList() { return &items; }
+
+	TileItemVector* getRefreshableItemList() { return &refreshableItems; }
+
+	CreatureVector* getCreatures() { return &creatures; }
+	const CreatureVector* getCreatures() const { return &creatures; }
+	CreatureVector* makeCreatures() { return &creatures; }
+
+	int32_t getThrowRange() const override final { return 0; }
+	bool isPushable() const override final { return false; }
+
+	Door* getDoorItem() const;
+	MagicField* getFieldItem() const;
+	Teleport* getTeleportItem() const;
+	TrashHolder* getTrashHolder() const;
+	Mailbox* getMailbox() const;
+	BedItem* getBedItem() const;
+	Item* getSplashItem() const;
+
+	Creature* getTopCreature() const;
+	const Creature* getBottomCreature() const;
+	Creature* getTopVisibleCreature(const Creature* creature) const;
+	Creature* getBottomVisibleCreature(const Creature* creature) const;
+	Item* getTopTopItem() const;
+	Item* getTopDownItem() const;
+	bool isMoveableBlocking() const;
+	Thing* getTopVisibleThing(const Creature* creature);
+	Item* getItemByTopOrder(int32_t topOrder);
+
+	size_t getThingCount() const
+	{
+		size_t thingCount = getCreatureCount() + getItemCount();
+		if (ground) {
+			thingCount++;
 		}
-		const CreatureVector* getCreatures() const {
-			return &creatures;
+		return thingCount;
+	}
+	// If these return != 0 the associated vectors are guaranteed to exists
+	size_t getCreatureCount() const;
+	size_t getItemCount() const;
+	uint32_t getTopItemCount() const;
+	uint32_t getDownItemCount() const;
+	int32_t getHeight() const;
+
+	void makeRefreshItemList();
+	void refresh();
+	void cleanItems();
+	void cleanHouseItems();
+
+	bool hasProperty(ITEMPROPERTY prop) const;
+	bool hasProperty(const Item* exclude, ITEMPROPERTY prop) const;
+
+	void setFlags(uint32_t flags) { this->flags = flags; }
+	uint32_t getFlags() const { return this->flags; }
+	bool hasFlag(uint32_t flag) const { return hasBitSet(flag, this->flags); }
+	void setFlag(uint32_t flag) { this->flags |= flag; }
+	void resetFlag(uint32_t flag) { this->flags &= ~flag; }
+
+	ZoneType_t getZone() const
+	{
+		if (hasFlag(TILESTATE_PROTECTIONZONE)) {
+			return ZONE_PROTECTION;
+		} else if (hasFlag(TILESTATE_NOPVPZONE)) {
+			return ZONE_NOPVP;
+		} else if (hasFlag(TILESTATE_PVPZONE)) {
+			return ZONE_PVP;
+		} else if (hasFlag(TILESTATE_REFRESH)) {
+			return ZONE_REFRESH;
+		} else {
+			return ZONE_NORMAL;
 		}
-		CreatureVector* makeCreatures() {
-			return &creatures;
-		}
+	}
 
-		int32_t getThrowRange() const override final {
-			return 0;
-		}
-		bool isPushable() const override final {
-			return false;
-		}
+	bool hasHeight(uint32_t n) const;
 
-		Door* getDoorItem() const;
-		MagicField* getFieldItem() const;
-		Teleport* getTeleportItem() const;
-		TrashHolder* getTrashHolder() const;
-		Mailbox* getMailbox() const;
-		BedItem* getBedItem() const;
-		Item* getSplashItem() const;
+	std::string getDescription(int32_t lookDistance) const override final;
 
-		Creature* getTopCreature() const;
-		const Creature* getBottomCreature() const;
-		Creature* getTopVisibleCreature(const Creature* creature) const;
-		Creature* getBottomVisibleCreature(const Creature* creature) const;
-		Item* getTopTopItem() const;
-		Item* getTopDownItem() const;
-		bool isMoveableBlocking() const;
-		Thing* getTopVisibleThing(const Creature* creature);
-		Item* getItemByTopOrder(int32_t topOrder);
+	int32_t getClientIndexOfCreature(const Player* player, const Creature* creature) const;
+	int32_t getStackposOfItem(const Player* player, const Item* item) const;
 
-		size_t getThingCount() const {
-			size_t thingCount = getCreatureCount() + getItemCount();
-			if (ground) {
-				thingCount++;
-			}
-			return thingCount;
-		}
-		// If these return != 0 the associated vectors are guaranteed to exists
-		size_t getCreatureCount() const;
-		size_t getItemCount() const;
-		uint32_t getTopItemCount() const;
-		uint32_t getDownItemCount() const;
-		int32_t getHeight() const;
+	void updateRefreshTime();
+	int64_t getNextRefreshTime() const { return nextRefreshTime; }
 
-		void makeRefreshItemList();
-		void refresh();
-		void cleanItems();
-		void cleanHouseItems();
+	// cylinder implementations
+	ReturnValue queryAdd(int32_t index, const Thing& thing, uint32_t count, uint32_t flags,
+	                     Creature* actor = nullptr) const override;
+	ReturnValue queryMaxCount(int32_t index, const Thing& thing, uint32_t count, uint32_t& maxQueryCount,
+	                          uint32_t flags) const override final;
+	ReturnValue queryRemove(const Thing& thing, uint32_t count, uint32_t flags,
+	                        Creature* actor = nullptr) const override;
+	Tile* queryDestination(int32_t& index, const Thing& thing, Item** destItem, uint32_t& flags) override;
 
-		bool hasProperty(ITEMPROPERTY prop) const;
-		bool hasProperty(const Item* exclude, ITEMPROPERTY prop) const;
+	void addThing(Thing* thing) override final;
+	void addThing(int32_t index, Thing* thing) override;
 
-		void setFlags(uint32_t flags) {
-			this->flags = flags;
-		}
-		uint32_t getFlags() const {
-			return this->flags;
-		}
-		bool hasFlag(uint32_t flag) const {
-			return hasBitSet(flag, this->flags);
-		}
-		void setFlag(uint32_t flag) {
-			this->flags |= flag;
-		}
-		void resetFlag(uint32_t flag) {
-			this->flags &= ~flag;
-		}
+	void updateThing(Thing* thing, uint16_t itemId, uint32_t count) override final;
+	void replaceThing(uint32_t index, Thing* thing) override final;
 
-		ZoneType_t getZone() const {
-			if (hasFlag(TILESTATE_PROTECTIONZONE)) {
-				return ZONE_PROTECTION;
-			} else if (hasFlag(TILESTATE_NOPVPZONE)) {
-				return ZONE_NOPVP;
-			} else if (hasFlag(TILESTATE_PVPZONE)) {
-				return ZONE_PVP;
-			} else if (hasFlag(TILESTATE_REFRESH)) {
-				return ZONE_REFRESH;
-			} else {
-				return ZONE_NORMAL;
-			}
-		}
+	void removeThing(Thing* thing, uint32_t count) override final;
 
-		bool hasHeight(uint32_t n) const;
+	void removeCreature(Creature* creature);
 
-		std::string getDescription(int32_t lookDistance) const override final;
+	int32_t getThingIndex(const Thing* thing) const override final;
+	size_t getFirstIndex() const override final;
+	size_t getLastIndex() const override final;
+	uint32_t getItemTypeCount(uint16_t itemId, int32_t subType = -1) const override final;
+	Thing* getThing(size_t index) const override final;
 
-		int32_t getClientIndexOfCreature(const Player* player, const Creature* creature) const;
-		int32_t getStackposOfItem(const Player* player, const Item* item) const;
+	void postAddNotification(Thing* thing, const Cylinder* oldParent, int32_t index,
+	                         cylinderlink_t link = LINK_OWNER) override final;
+	void postRemoveNotification(Thing* thing, const Cylinder* newParent, int32_t index,
+	                            cylinderlink_t link = LINK_OWNER) override final;
 
-		void updateRefreshTime();
-		int64_t getNextRefreshTime() const {
-			return nextRefreshTime;
-		}
+	void internalAddThing(Thing* thing) override final;
+	void internalAddThing(uint32_t index, Thing* thing) override;
 
-		//cylinder implementations
-		ReturnValue queryAdd(int32_t index, const Thing& thing, uint32_t count,
-				uint32_t flags, Creature* actor = nullptr) const override;
-		ReturnValue queryMaxCount(int32_t index, const Thing& thing, uint32_t count,
-				uint32_t& maxQueryCount, uint32_t flags) const override final;
-		ReturnValue queryRemove(const Thing& thing, uint32_t count, uint32_t flags, Creature* actor = nullptr) const override;
-		Tile* queryDestination(int32_t& index, const Thing& thing, Item** destItem, uint32_t& flags) override;
+	const Position& getPosition() const override final { return tilePos; }
 
-		void addThing(Thing* thing) override final;
-		void addThing(int32_t index, Thing* thing) override;
+	bool isRemoved() const override final { return false; }
 
-		void updateThing(Thing* thing, uint16_t itemId, uint32_t count) override final;
-		void replaceThing(uint32_t index, Thing* thing) override final;
+	Item* getUseItem() const;
 
-		void removeThing(Thing* thing, uint32_t count) override final;
+	Item* getGround() const { return ground; }
+	void setGround(Item* item) { ground = item; }
 
-		void removeCreature(Creature* creature);
+	const House* getHouse() const { return house; }
+	House* getHouse() { return house; }
+	void setHouse(House* newHouse) { house = newHouse; }
 
-		int32_t getThingIndex(const Thing* thing) const override final;
-		size_t getFirstIndex() const override final;
-		size_t getLastIndex() const override final;
-		uint32_t getItemTypeCount(uint16_t itemId, int32_t subType = -1) const override final;
-		Thing* getThing(size_t index) const override final;
+	void updateHouse(Item* item);
 
-		void postAddNotification(Thing* thing, const Cylinder* oldParent, int32_t index, cylinderlink_t link = LINK_OWNER) override final;
-		void postRemoveNotification(Thing* thing, const Cylinder* newParent, int32_t index, cylinderlink_t link = LINK_OWNER) override final;
+private:
+	void onAddTileItem(Item* item);
+	void onUpdateTileItem(Item* oldItem, const ItemType& oldType, Item* newItem, const ItemType& newType);
+	void onRemoveTileItem(const SpectatorVec& spectators, const std::vector<int32_t>& oldStackPosVector, Item* item);
+	void onUpdateTile(const SpectatorVec& spectators);
 
-		void internalAddThing(Thing* thing) override final;
-		void internalAddThing(uint32_t index, Thing* thing) override;
+	void setTileFlags(const Item* item);
+	void resetTileFlags(const Item* item);
 
-		const Position& getPosition() const override final {
-			return tilePos;
-		}
+	House* house = nullptr;
 
-		bool isRemoved() const override final {
-			return false;
-		}
-
-		Item* getUseItem() const;
-
-		Item* getGround() const {
-			return ground;
-		}
-		void setGround(Item* item) {
-			ground = item;
-		}
-
-		const House* getHouse() const {
-			return house;
-		}
-		House* getHouse() {
-			return house;
-		}
-		void setHouse(House* newHouse) {
-			house = newHouse;
-		}
-
-		void updateHouse(Item* item);
-
-	private:
-		void onAddTileItem(Item* item);
-		void onUpdateTileItem(Item* oldItem, const ItemType& oldType, Item* newItem, const ItemType& newType);
-		void onRemoveTileItem(const SpectatorVec& spectators, const std::vector<int32_t>& oldStackPosVector, Item* item);
-		void onUpdateTile(const SpectatorVec& spectators);
-
-		void setTileFlags(const Item* item);
-		void resetTileFlags(const Item* item);
-
-		House* house = nullptr;
-
-		Item* ground = nullptr;
-		Position tilePos;
-		uint32_t flags = 0;
-		int64_t nextRefreshTime = 0;
+	Item* ground = nullptr;
+	Position tilePos;
+	uint32_t flags = 0;
+	int64_t nextRefreshTime = 0;
 };

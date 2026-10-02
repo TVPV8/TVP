@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -11,21 +11,11 @@
 
 extern ConfigManager g_config;
 
-GlobalEvents::GlobalEvents() :
-	scriptInterface("GlobalEvent Interface")
-{
-	scriptInterface.initState();
-}
+GlobalEvents::GlobalEvents() : scriptInterface("GlobalEvent Interface") { scriptInterface.initState(); }
 
-GlobalEvents::~GlobalEvents()
-{
-	clear();
-}
+GlobalEvents::~GlobalEvents() { clear(); }
 
-void GlobalEvents::clearMap(GlobalEventMap& map)
-{
-	map.clear();
-}
+void GlobalEvents::clearMap(GlobalEventMap& map) { map.clear(); }
 
 void GlobalEvents::clear()
 {
@@ -43,12 +33,13 @@ void GlobalEvents::clear()
 
 bool GlobalEvents::registerLuaEvent(GlobalEvent* event)
 {
-	GlobalEvent_ptr globalEvent{ event };
+	GlobalEvent_ptr globalEvent{event};
 	if (globalEvent->getEventType() == GLOBALEVENT_TIMER) {
 		auto result = timerMap.emplace(globalEvent->getName(), std::move(*globalEvent));
 		if (result.second) {
 			if (timerEventId == 0) {
-				timerEventId = g_scheduler.addEvent(createSchedulerTask(SCHEDULER_MINTICKS, std::bind(&GlobalEvents::timer, this)));
+				timerEventId = g_scheduler.addEvent(
+				    createSchedulerTask(SCHEDULER_MINTICKS, std::bind(&GlobalEvents::timer, this)));
 			}
 			return true;
 		}
@@ -61,20 +52,19 @@ bool GlobalEvents::registerLuaEvent(GlobalEvent* event)
 		auto result = thinkMap.emplace(globalEvent->getName(), std::move(*globalEvent));
 		if (result.second) {
 			if (thinkEventId == 0) {
-				thinkEventId = g_scheduler.addEvent(createSchedulerTask(SCHEDULER_MINTICKS, std::bind(&GlobalEvents::think, this)));
+				thinkEventId = g_scheduler.addEvent(
+				    createSchedulerTask(SCHEDULER_MINTICKS, std::bind(&GlobalEvents::think, this)));
 			}
 			return true;
 		}
 	}
 
-	std::cout << "[Warning - GlobalEvents::configureEvent] Duplicate registered globalevent with name: " << globalEvent->getName() << std::endl;
+	std::cout << "[Warning - GlobalEvents::configureEvent] Duplicate registered globalevent with name: "
+	          << globalEvent->getName() << std::endl;
 	return false;
 }
 
-void GlobalEvents::startup() const
-{
-	execute(GLOBALEVENT_STARTUP);
-}
+void GlobalEvents::startup() const { execute(GLOBALEVENT_STARTUP); }
 
 void GlobalEvents::timer()
 {
@@ -113,7 +103,7 @@ void GlobalEvents::timer()
 
 	if (nextScheduledTime != std::numeric_limits<int64_t>::max()) {
 		timerEventId = g_scheduler.addEvent(createSchedulerTask(std::max<int64_t>(1000, nextScheduledTime * 1000),
-							                std::bind(&GlobalEvents::timer, this)));
+		                                                        std::bind(&GlobalEvents::timer, this)));
 	}
 }
 
@@ -134,7 +124,8 @@ void GlobalEvents::think()
 		}
 
 		if (!globalEvent.executeEvent()) {
-			std::cout << "[Error - GlobalEvents::think] Failed to execute event: " << globalEvent.getName() << std::endl;
+			std::cout << "[Error - GlobalEvents::think] Failed to execute event: " << globalEvent.getName()
+			          << std::endl;
 		}
 
 		nextExecutionTime = globalEvent.getInterval();
@@ -146,7 +137,8 @@ void GlobalEvents::think()
 	}
 
 	if (nextScheduledTime != std::numeric_limits<int64_t>::max()) {
-		thinkEventId = g_scheduler.addEvent(createSchedulerTask(nextScheduledTime, std::bind(&GlobalEvents::think, this)));
+		thinkEventId =
+		    g_scheduler.addEvent(createSchedulerTask(nextScheduledTime, std::bind(&GlobalEvents::think, this)));
 	}
 }
 
@@ -164,8 +156,10 @@ GlobalEventMap GlobalEvents::getEventMap(GlobalEvent_t type)
 {
 	// TODO: This should be better implemented. Maybe have a map for every type.
 	switch (type) {
-		case GLOBALEVENT_NONE: return thinkMap;
-		case GLOBALEVENT_TIMER: return timerMap;
+		case GLOBALEVENT_NONE:
+			return thinkMap;
+		case GLOBALEVENT_TIMER:
+			return timerMap;
 		case GLOBALEVENT_STARTUP:
 		case GLOBALEVENT_SHUTDOWN:
 		case GLOBALEVENT_RECORD: {
@@ -177,24 +171,30 @@ GlobalEventMap GlobalEvents::getEventMap(GlobalEvent_t type)
 			}
 			return retMap;
 		}
-		default: return GlobalEventMap();
+		default:
+			return GlobalEventMap();
 	}
 }
 
 std::string GlobalEvent::getScriptEventName() const
 {
 	switch (eventType) {
-		case GLOBALEVENT_STARTUP: return "onStartup";
-		case GLOBALEVENT_SHUTDOWN: return "onShutdown";
-		case GLOBALEVENT_RECORD: return "onRecord";
-		case GLOBALEVENT_TIMER: return "onTime";
-		default: return "onThink";
+		case GLOBALEVENT_STARTUP:
+			return "onStartup";
+		case GLOBALEVENT_SHUTDOWN:
+			return "onShutdown";
+		case GLOBALEVENT_RECORD:
+			return "onRecord";
+		case GLOBALEVENT_TIMER:
+			return "onTime";
+		default:
+			return "onThink";
 	}
 }
 
 bool GlobalEvent::executeRecord(uint32_t current, uint32_t old)
 {
-	//onRecord(current, old)
+	// onRecord(current, old)
 	if (!scriptInterface->reserveScriptEnv()) {
 		std::cout << "[Error - GlobalEvent::executeRecord] Call stack overflow" << std::endl;
 		return false;

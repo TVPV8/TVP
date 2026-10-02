@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #pragma once
 
@@ -12,43 +12,41 @@ static constexpr int32_t SCHEDULER_MINTICKS = 50;
 
 class SchedulerTask : public Task
 {
-	public:
-		void setEventId(uint32_t id) {
-			eventId = id;
-		}
-		uint32_t getEventId() const {
-			return eventId;
-		}
+public:
+	void setEventId(uint32_t id) { eventId = id; }
+	uint32_t getEventId() const { return eventId; }
 
-		uint32_t getDelay() const {
-			return delay;
-		}
-	private:
-		SchedulerTask(uint32_t delay, TaskFunc&& f, const std::string& description, const std::string& extraDescription) :
-		Task(std::move(f), description, extraDescription), delay(delay) {}
+	uint32_t getDelay() const { return delay; }
 
-		uint32_t eventId = 0;
-		uint32_t delay = 0;
+private:
+	SchedulerTask(uint32_t delay, TaskFunc&& f, const std::string& description, const std::string& extraDescription) :
+	    Task(std::move(f), description, extraDescription), delay(delay)
+	{}
 
-		friend SchedulerTask* createSchedulerTaskWithStats(uint32_t, TaskFunc&&, const std::string&, const std::string&);
+	uint32_t eventId = 0;
+	uint32_t delay = 0;
+
+	friend SchedulerTask* createSchedulerTaskWithStats(uint32_t, TaskFunc&&, const std::string&, const std::string&);
 };
 
-SchedulerTask* createSchedulerTaskWithStats(uint32_t delay, TaskFunc&& f, const std::string& description, const std::string& extraDescription);
+SchedulerTask* createSchedulerTaskWithStats(uint32_t delay, TaskFunc&& f, const std::string& description,
+                                            const std::string& extraDescription);
 
 class Scheduler : public ThreadHolder<Scheduler>
 {
-	public:
-		uint32_t addEvent(SchedulerTask* task);
-		void stopEvent(uint32_t eventId);
+public:
+	uint32_t addEvent(SchedulerTask* task);
+	void stopEvent(uint32_t eventId);
 
-		void shutdown();
+	void shutdown();
 
-		void threadMain() { io_context.run(); }
-	private:
-		std::atomic<uint32_t> lastEventId{1};
-		std::unordered_map<uint32_t, boost::asio::steady_timer> eventIdTimerMap;
-		boost::asio::io_context io_context;
-		boost::asio::executor_work_guard<boost::asio::io_context::executor_type> work{io_context.get_executor()};
+	void threadMain() { io_context.run(); }
+
+private:
+	std::atomic<uint32_t> lastEventId{1};
+	std::unordered_map<uint32_t, boost::asio::steady_timer> eventIdTimerMap;
+	boost::asio::io_context io_context;
+	boost::asio::executor_work_guard<boost::asio::io_context::executor_type> work{io_context.get_executor()};
 };
 
 extern Scheduler g_scheduler;

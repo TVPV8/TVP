@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -46,12 +46,12 @@ void ProtocolLogin::getCharacterList(uint32_t accountNumber, const std::string& 
 
 	const std::string& motd = g_config.getString(ConfigManager::MOTD);
 	if (!motd.empty()) {
-		//Add MOTD
+		// Add MOTD
 		output->addByte(0x14);
 		output->addString(fmt::format("{:d}\n{:s}", g_game.getMotdNum(), motd));
 	}
 
-	//Add char list
+	// Add char list
 	output->addByte(0x64);
 
 	uint8_t size = std::min<size_t>(std::numeric_limits<uint8_t>::max(), account.characters.size());
@@ -65,12 +65,13 @@ void ProtocolLogin::getCharacterList(uint32_t accountNumber, const std::string& 
 		output->add<uint16_t>(g_config.getNumber(ConfigManager::GAME_PORT));
 	}
 
-	//Add premium days
+	// Add premium days
 	if (g_config.getBoolean(ConfigManager::FREE_PREMIUM)) {
 		output->add<uint16_t>(std::numeric_limits<uint16_t>::max());
 	} else {
 		if (account.premiumEndsAt > std::time(nullptr)) {
-			int32_t premiumDaysLeft = std::floor<uint16_t>(std::max<int32_t>(0, account.premiumEndsAt - std::time(nullptr)) / 86400);
+			int32_t premiumDaysLeft =
+			    std::floor<uint16_t>(std::max<int32_t>(0, account.premiumEndsAt - std::time(nullptr)) / 86400);
 			output->add<uint16_t>(++premiumDaysLeft);
 		} else {
 			output->add<uint16_t>(0);
@@ -149,7 +150,8 @@ void ProtocolLogin::onRecvFirstMessage(NetworkMessage& msg)
 			banInfo.reason = "(none)";
 		}
 
-		disconnectClient(fmt::format("Your IP has been banned until {:s} by {:s}.\n\nReason specified:\n{:s}", formatDateShort(banInfo.expiresAt), banInfo.bannedBy, banInfo.reason));
+		disconnectClient(fmt::format("Your IP has been banned until {:s} by {:s}.\n\nReason specified:\n{:s}",
+		                             formatDateShort(banInfo.expiresAt), banInfo.bannedBy, banInfo.reason));
 		return;
 	}
 

@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -8,7 +8,7 @@
 #include "container.h"
 #include "creature.h"
 
-std::string NetworkMessage::getString(uint16_t stringLen/* = 0*/)
+std::string NetworkMessage::getString(uint16_t stringLen /* = 0*/)
 {
 	if (stringLen == 0) {
 		stringLen = get<uint16_t>();
@@ -18,7 +18,7 @@ std::string NetworkMessage::getString(uint16_t stringLen/* = 0*/)
 		return std::string();
 	}
 
-	char* v = reinterpret_cast<char*>(buffer) + info.position; //does not break strict aliasing
+	char* v = reinterpret_cast<char*>(buffer) + info.position; // does not break strict aliasing
 	info.position += stringLen;
 	return std::string(v, stringLen);
 }
@@ -45,10 +45,11 @@ void NetworkMessage::addString(const std::string& value)
 	info.length += stringLen;
 }
 
-void NetworkMessage::addDouble(double value, uint8_t precision/* = 2*/)
+void NetworkMessage::addDouble(double value, uint8_t precision /* = 2*/)
 {
 	addByte(precision);
-	add<uint32_t>(static_cast<uint32_t>((value * std::pow(static_cast<float>(10), precision)) + std::numeric_limits<int32_t>::max()));
+	add<uint32_t>(static_cast<uint32_t>((value * std::pow(static_cast<float>(10), precision)) +
+	                                    std::numeric_limits<int32_t>::max()));
 }
 
 void NetworkMessage::addBytes(const char* bytes, size_t size)
@@ -105,7 +106,4 @@ void NetworkMessage::addItem(const Item* item)
 	}
 }
 
-void NetworkMessage::addItemId(uint16_t itemId)
-{
-	add<uint16_t>(Item::items[itemId].clientId);
-}
+void NetworkMessage::addItemId(uint16_t itemId) { add<uint16_t>(Item::items[itemId].clientId); }

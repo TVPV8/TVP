@@ -7,10 +7,7 @@
 #include "position.h"
 #include "tools.h"
 
-ScriptWriter::~ScriptWriter()
-{
-	close();
-}
+ScriptWriter::~ScriptWriter() { close(); }
 
 bool ScriptWriter::open(const std::string& filename, bool append)
 {
@@ -43,30 +40,15 @@ void ScriptWriter::writePosition(const Position& pos)
 	buffer << '[' << pos.x << ',' << pos.y << ',' << static_cast<int32_t>(pos.z) << ']';
 }
 
-void ScriptWriter::writeNumber(int64_t number)
-{
-	buffer << number;
-}
+void ScriptWriter::writeNumber(int64_t number) { buffer << number; }
 
-void ScriptWriter::writeText(const std::string& str)
-{
-	buffer << str;
-}
+void ScriptWriter::writeText(const std::string& str) { buffer << str; }
 
-void ScriptWriter::writeString(const std::string& str)
-{
-	buffer << "\"" << str << "\"";
-}
+void ScriptWriter::writeString(const std::string& str) { buffer << "\"" << str << "\""; }
 
-void ScriptWriter::writeLine(const std::string& str)
-{
-	buffer << str << std::endl;
-}
+void ScriptWriter::writeLine(const std::string& str) { buffer << str << std::endl; }
 
-void ScriptWriter::writeLine()
-{
-	buffer << std::endl;
-}
+void ScriptWriter::writeLine() { buffer << std::endl; }
 
 std::string ScriptWriter::prepString(const std::string& str)
 {

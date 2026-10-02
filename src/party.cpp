@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -14,10 +14,7 @@ extern Game g_game;
 extern ConfigManager g_config;
 extern Events* g_events;
 
-Party::Party(Player* leader) : leader(leader)
-{
-	leader->setParty(this);
-}
+Party::Party(Player* leader) : leader(leader) { leader->setParty(this); }
 
 void Party::disband()
 {
@@ -89,7 +86,7 @@ bool Party::leaveParty(Player* player, bool forceRemove /* = false */)
 		}
 	}
 
-	//since we already passed the leadership, we remove the player from the list
+	// since we already passed the leadership, we remove the player from the list
 	auto it = std::find(memberList.begin(), memberList.end(), player);
 	if (it != memberList.end()) {
 		memberList.erase(it);
@@ -130,13 +127,14 @@ bool Party::passPartyLeadership(Player* player)
 		return false;
 	}
 
-	//Remove it before to broadcast the message correctly
+	// Remove it before to broadcast the message correctly
 	auto it = std::find(memberList.begin(), memberList.end(), player);
 	if (it != memberList.end()) {
 		memberList.erase(it);
 	}
 
-	broadcastPartyMessage(MESSAGE_INFO_DESCR, fmt::format("{:s} is now the leader of the party.", player->getName()), true);
+	broadcastPartyMessage(MESSAGE_INFO_DESCR, fmt::format("{:s} is now the leader of the party.", player->getName()),
+	                      true);
 
 	Player* oldLeader = leader;
 	leader = player;
@@ -197,7 +195,10 @@ bool Party::joinParty(Player& player)
 	updateSharedExperience();
 
 	const std::string& leaderName = leader->getName();
-	player.sendTextMessage(MESSAGE_INFO_DESCR, fmt::format("You have joined {:s}'{:s} party. Open the party channel to communicate with your companions.", leaderName, leaderName.back() == 's' ? "" : "s"));
+	player.sendTextMessage(
+	    MESSAGE_INFO_DESCR,
+	    fmt::format("You have joined {:s}'{:s} party. Open the party channel to communicate with your companions.",
+	                leaderName, leaderName.back() == 's' ? "" : "s"));
 	return true;
 }
 
@@ -222,7 +223,8 @@ bool Party::removeInvite(Player& player)
 
 void Party::revokeInvitation(Player& player)
 {
-	player.sendTextMessage(MESSAGE_INFO_DESCR, fmt::format("{:s} has revoked {:s} invitation.", leader->getName(), leader->getSex() == PLAYERSEX_FEMALE ? "her" : "his"));
+	player.sendTextMessage(MESSAGE_INFO_DESCR, fmt::format("{:s} has revoked {:s} invitation.", leader->getName(),
+	                                                       leader->getSex() == PLAYERSEX_FEMALE ? "her" : "his"));
 	leader->sendTextMessage(MESSAGE_INFO_DESCR, fmt::format("Invitation for {:s} has been revoked.", player.getName()));
 	removeInvite(player);
 }
@@ -234,7 +236,10 @@ bool Party::invitePlayer(Player& player)
 	}
 
 	if (empty()) {
-		leader->sendTextMessage(MESSAGE_INFO_DESCR, fmt::format("{:s} has been invited. Open the party channel to communicate with your members.", player.getName()));
+		leader->sendTextMessage(
+		    MESSAGE_INFO_DESCR,
+		    fmt::format("{:s} has been invited. Open the party channel to communicate with your members.",
+		                player.getName()));
 		g_game.updatePlayerShield(leader);
 		leader->sendCreatureSkull(leader);
 	} else {
@@ -246,7 +251,8 @@ bool Party::invitePlayer(Player& player)
 	leader->sendCreatureShield(&player);
 	player.sendCreatureShield(leader);
 
-	player.sendTextMessage(MESSAGE_INFO_DESCR, fmt::format("{:s} has invited you to {:s} party.", leader->getName(), leader->getSex() == PLAYERSEX_FEMALE ? "her" : "his"));
+	player.sendTextMessage(MESSAGE_INFO_DESCR, fmt::format("{:s} has invited you to {:s} party.", leader->getName(),
+	                                                       leader->getSex() == PLAYERSEX_FEMALE ? "her" : "his"));
 	return true;
 }
 
@@ -314,7 +320,9 @@ bool Party::setSharedExperience(Player* player, bool sharedExpActive)
 		if (this->sharedExpEnabled) {
 			leader->sendTextMessage(MESSAGE_INFO_DESCR, "Shared Experience is now active.");
 		} else {
-			leader->sendTextMessage(MESSAGE_INFO_DESCR, "Shared Experience has been activated, but some members of your party are inactive.");
+			leader->sendTextMessage(
+			    MESSAGE_INFO_DESCR,
+			    "Shared Experience has been activated, but some members of your party are inactive.");
 		}
 	} else {
 		leader->sendTextMessage(MESSAGE_INFO_DESCR, "Shared Experience has been deactivated.");
@@ -324,7 +332,7 @@ bool Party::setSharedExperience(Player* player, bool sharedExpActive)
 	return true;
 }
 
-void Party::shareExperience(uint64_t experience, Creature* source/* = nullptr*/)
+void Party::shareExperience(uint64_t experience, Creature* source /* = nullptr*/)
 {
 	uint64_t shareExperience = experience;
 	g_events->eventPartyOnShareExperience(this, shareExperience);
@@ -357,7 +365,7 @@ bool Party::canUseSharedExperience(const Player* player) const
 		return false;
 	}
 
-	//check if the player has healed/attacked anything recently
+	// check if the player has healed/attacked anything recently
 	auto it = ticksMap.find(player->getID());
 	if (it == ticksMap.end()) {
 		return false;

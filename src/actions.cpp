@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -19,21 +19,11 @@ extern Actions* g_actions;
 extern ConfigManager g_config;
 extern Events* g_events;
 
-Actions::Actions() :
-	scriptInterface("Action Interface")
-{
-	scriptInterface.initState();
-}
+Actions::Actions() : scriptInterface("Action Interface") { scriptInterface.initState(); }
 
-Actions::~Actions()
-{
-	clear();
-}
+Actions::~Actions() { clear(); }
 
-void Actions::clearMap(ActionUseMap& map)
-{
-	map.clear();
-}
+void Actions::clearMap(ActionUseMap& map) { map.clear(); }
 
 void Actions::clear()
 {
@@ -44,25 +34,20 @@ void Actions::clear()
 	getScriptInterface().reInitState();
 }
 
-LuaScriptInterface& Actions::getScriptInterface()
-{
-	return scriptInterface;
-}
+LuaScriptInterface& Actions::getScriptInterface() { return scriptInterface; }
 
-std::string Actions::getScriptBaseName() const
-{
-	return "actions";
-}
+std::string Actions::getScriptBaseName() const { return "actions"; }
 
 bool Actions::registerLuaEvent(Action* event)
 {
-	Action_ptr action{ event };
+	Action_ptr action{event};
 	if (!action->getItemIdRange().empty()) {
 		const auto& range = action->getItemIdRange();
 		for (auto id : range) {
 			auto result = useItemMap.emplace(id, *action);
 			if (!result.second) {
-				std::cout << "[Warning - Actions::registerLuaEvent] Duplicate registered item with id: " << id << " in range from id: " << range.front() << ", to id: " << range.back() << std::endl;
+				std::cout << "[Warning - Actions::registerLuaEvent] Duplicate registered item with id: " << id
+				          << " in range from id: " << range.front() << ", to id: " << range.back() << std::endl;
 			}
 		}
 		return true;
@@ -73,7 +58,8 @@ bool Actions::registerLuaEvent(Action* event)
 		for (auto id : range) {
 			auto result = uniqueItemMap.emplace(id, *action);
 			if (!result.second) {
-				std::cout << "[Warning - Actions::registerLuaEvent] Duplicate registered item with uid: " << id << " in range from uid: " << range.front() << ", to uid: " << range.back() << std::endl;
+				std::cout << "[Warning - Actions::registerLuaEvent] Duplicate registered item with uid: " << id
+				          << " in range from uid: " << range.front() << ", to uid: " << range.back() << std::endl;
 			}
 		}
 		return true;
@@ -84,7 +70,8 @@ bool Actions::registerLuaEvent(Action* event)
 		for (auto id : range) {
 			auto result = actionItemMap.emplace(id, *action);
 			if (!result.second) {
-				std::cout << "[Warning - Actions::registerLuaEvent] Duplicate registered item with aid: " << id << " in range from aid: " << range.front() << ", to aid: " << range.back() << std::endl;
+				std::cout << "[Warning - Actions::registerLuaEvent] Duplicate registered item with aid: " << id
+				          << " in range from aid: " << range.front() << ", to aid: " << range.back() << std::endl;
 			}
 		}
 		return true;
@@ -118,7 +105,8 @@ ReturnValue Actions::canUse(const Player* player, const Position& pos, const Ite
 	return RETURNVALUE_NOERROR;
 }
 
-ReturnValue Actions::canUseFar(const Creature* creature, const Position& toPos, bool checkLineOfSight, bool checkFloor, bool isRune)
+ReturnValue Actions::canUseFar(const Creature* creature, const Position& toPos, bool checkLineOfSight, bool checkFloor,
+                               bool isRune)
 {
 	if (toPos.x == 0xFFFF) {
 		return RETURNVALUE_NOERROR;
@@ -167,7 +155,7 @@ Action* Actions::getAction(const Item* item)
 		return &it->second;
 	}
 
-	//rune items
+	// rune items
 	return g_spells->getRuneSpell(item->getID());
 }
 
@@ -231,10 +219,10 @@ ReturnValue Actions::internalUseItem(Player* player, const Position& pos, uint8_
 
 		/*uint32_t corpseOwner = container->getCorpseOwner();
 		if (corpseOwner != 0 && !player->canOpenCorpse(corpseOwner)) {
-			return RETURNVALUE_YOUARENOTTHEOWNER;
+		    return RETURNVALUE_YOUARENOTTHEOWNER;
 		}*/
 
-		//open/close container
+		// open/close container
 		int32_t oldContainerId = player->getContainerID(openContainer);
 		if (oldContainerId == -1) {
 			player->addContainer(index, openContainer);
@@ -287,8 +275,8 @@ bool Actions::useItem(Player* player, const Position& pos, uint8_t index, Item* 
 	return true;
 }
 
-bool Actions::useItemEx(Player* player, const Position& fromPos, const Position& toPos,
-                        uint8_t toStackPos, uint16_t toSpriteId, Item* item, Creature* creature/* = nullptr*/)
+bool Actions::useItemEx(Player* player, const Position& fromPos, const Position& toPos, uint8_t toStackPos,
+                        uint16_t toSpriteId, Item* item, Creature* creature /* = nullptr*/)
 {
 	Action* action = getAction(item);
 	if (!action) {
@@ -329,7 +317,7 @@ bool Actions::useItemEx(Player* player, const Position& fromPos, const Position&
 			}
 		}
 	}
-	
+
 	if (g_config.getBoolean(ConfigManager::ONLY_INVITED_CAN_MOVE_HOUSE_ITEMS)) {
 		if (const House* house = item->getTile()->getHouse()) {
 			if (!item->getTopParent()->getCreature() && !house->isInvited(player)) {
@@ -351,27 +339,27 @@ bool Actions::useItemEx(Player* player, const Position& fromPos, const Position&
 }
 
 Action::Action(LuaScriptInterface* interface) :
-	ScriptEvent(interface), allowFarUse(false), checkFloor(true), checkLineOfSight(true) {}
+    ScriptEvent(interface), allowFarUse(false), checkFloor(true), checkLineOfSight(true)
+{}
 
-std::string Action::getScriptEventName() const
-{
-	return "onUse";
-}
+std::string Action::getScriptEventName() const { return "onUse"; }
 
 ReturnValue Action::canExecuteAction(const Player* player, const Position& toPos)
 {
 	if (allowFarUse) {
-		return g_actions->canUseFar(player, toPos, checkLineOfSight, checkFloor, dynamic_cast<RuneSpell*>(this) != nullptr);
+		return g_actions->canUseFar(player, toPos, checkLineOfSight, checkFloor,
+		                            dynamic_cast<RuneSpell*>(this) != nullptr);
 	}
 	return g_actions->canUse(player, toPos);
 }
 
-Thing* Action::getTarget(Player* player, Creature* targetCreature, const Position& toPosition, uint8_t toStackPos, uint16_t spriteId) const
+Thing* Action::getTarget(Player* player, Creature* targetCreature, const Position& toPosition, uint8_t toStackPos,
+                         uint16_t spriteId) const
 {
 	if (targetCreature) {
 		return targetCreature;
 	}
-	
+
 	Thing* thing = g_game.internalGetThing(player, toPosition, toStackPos, spriteId, STACKPOS_USETARGET);
 	if (thing) {
 		if (Item* item = thing->getItem()) {
@@ -387,9 +375,10 @@ Thing* Action::getTarget(Player* player, Creature* targetCreature, const Positio
 	return thing;
 }
 
-bool Action::executeUse(Player* player, Item* item, const Position& fromPosition, Thing* target, const Position& toPosition)
+bool Action::executeUse(Player* player, Item* item, const Position& fromPosition, Thing* target,
+                        const Position& toPosition)
 {
-	//onUse(player, item, fromPosition, target, toPosition)
+	// onUse(player, item, fromPosition, target, toPosition)
 	if (!scriptInterface->reserveScriptEnv()) {
 		std::cout << "[Error - Action::executeUse] Call stack overflow" << std::endl;
 		return false;

@@ -1,5 +1,5 @@
-// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+// Copyright 2023 The Forgotten Server Authors and Alejandro Mujica for many specific source code changes, All rights
+// reserved. Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
 
 #include "otpch.h"
 
@@ -14,174 +14,153 @@ extern MoveEvents* g_moveEvents;
 extern Weapons* g_weapons;
 
 const std::unordered_map<std::string, ItemParseAttributes_t> ItemParseAttributesMap = {
-	{"type", ITEM_PARSE_TYPE},
-	{"description", ITEM_PARSE_DESCRIPTION},
-	{"runespellname", ITEM_PARSE_RUNESPELLNAME},
-	{"weight", ITEM_PARSE_WEIGHT},
-	{"showcount", ITEM_PARSE_SHOWCOUNT},
-	{"armor", ITEM_PARSE_ARMOR},
-	{"defense", ITEM_PARSE_DEFENSE},
-	{"extradef", ITEM_PARSE_EXTRADEF},
-	{"attack", ITEM_PARSE_ATTACK},
-	{"attackspeed", ITEM_PARSE_ATTACK_SPEED},
-	{"rotateto", ITEM_PARSE_ROTATETO},
-	{"moveable", ITEM_PARSE_MOVEABLE},
-	{"movable", ITEM_PARSE_MOVEABLE},
-	{"blockprojectile", ITEM_PARSE_BLOCKPROJECTILE},
-	{"unlay", ITEM_PARSE_UNLAY},
-	{"allowpickupable", ITEM_PARSE_PICKUPABLE},
-	{"pickupable", ITEM_PARSE_PICKUPABLE},
-	{"forceserialize", ITEM_PARSE_FORCESERIALIZE},
-	{"forcesave", ITEM_PARSE_FORCESERIALIZE},
-	{"floorchange", ITEM_PARSE_FLOORCHANGE},
-	{"corpsetype", ITEM_PARSE_CORPSETYPE},
-	{"containersize", ITEM_PARSE_CONTAINERSIZE},
-	{"fluidsource", ITEM_PARSE_FLUIDSOURCE},
-	{"readable", ITEM_PARSE_READABLE},
-	{"writeable", ITEM_PARSE_WRITEABLE},
-	{"maxtextlen", ITEM_PARSE_MAXTEXTLEN},
-	{"writeonceitemid", ITEM_PARSE_WRITEONCEITEMID},
-	{"weapontype", ITEM_PARSE_WEAPONTYPE},
-	{"slottype", ITEM_PARSE_SLOTTYPE},
-	{"ammotype", ITEM_PARSE_AMMOTYPE},
-	{"shoottype", ITEM_PARSE_SHOOTTYPE},
-	{"effect", ITEM_PARSE_EFFECT},
-	{"range", ITEM_PARSE_RANGE},
-	{"stopduration", ITEM_PARSE_STOPDURATION},
-	{"decayto", ITEM_PARSE_DECAYTO},
-	{"transformequipto", ITEM_PARSE_TRANSFORMEQUIPTO},
-	{"transformdeequipto", ITEM_PARSE_TRANSFORMDEEQUIPTO},
-	{"duration", ITEM_PARSE_DURATION},
-	{"showduration", ITEM_PARSE_SHOWDURATION},
-	{"charges", ITEM_PARSE_CHARGES},
-	{"showcharges", ITEM_PARSE_SHOWCHARGES},
-	{"showattributes", ITEM_PARSE_SHOWATTRIBUTES},
-	{"hitchance", ITEM_PARSE_HITCHANCE},
-	{"invisible", ITEM_PARSE_INVISIBLE},
-	{"speed", ITEM_PARSE_SPEED},
-	{"healthgain", ITEM_PARSE_HEALTHGAIN},
-	{"healthticks", ITEM_PARSE_HEALTHTICKS},
-	{"managain", ITEM_PARSE_MANAGAIN},
-	{"manaticks", ITEM_PARSE_MANATICKS},
-	{"manashield", ITEM_PARSE_MANASHIELD},
-	{"skillsword", ITEM_PARSE_SKILLSWORD},
-	{"skillaxe", ITEM_PARSE_SKILLAXE},
-	{"skillclub", ITEM_PARSE_SKILLCLUB},
-	{"skilldist", ITEM_PARSE_SKILLDIST},
-	{"skillfish", ITEM_PARSE_SKILLFISH},
-	{"skillshield", ITEM_PARSE_SKILLSHIELD},
-	{"skillfist", ITEM_PARSE_SKILLFIST},
-	{"maxhitpoints", ITEM_PARSE_MAXHITPOINTS},
-	{"maxhitpointspercent", ITEM_PARSE_MAXHITPOINTSPERCENT},
-	{"maxmanapoints", ITEM_PARSE_MAXMANAPOINTS},
-	{"maxmanapointspercent", ITEM_PARSE_MAXMANAPOINTSPERCENT},
-	{"magicpoints", ITEM_PARSE_MAGICPOINTS},
-	{"magiclevelpoints", ITEM_PARSE_MAGICPOINTS},
-	{"magicpointspercent", ITEM_PARSE_MAGICPOINTSPERCENT},
-	{"criticalhitchance", ITEM_PARSE_CRITICALHITCHANCE},
-	{"criticalhitamount", ITEM_PARSE_CRITICALHITAMOUNT},
-	{"lifeleechchance", ITEM_PARSE_LIFELEECHCHANCE},
-	{"lifeleechamount", ITEM_PARSE_LIFELEECHAMOUNT},
-	{"manaleechchance", ITEM_PARSE_MANALEECHCHANCE},
-	{"manaleechamount", ITEM_PARSE_MANALEECHAMOUNT},
-	{"fieldabsorbpercentenergy", ITEM_PARSE_FIELDABSORBPERCENTENERGY},
-	{"fieldabsorbpercentfire", ITEM_PARSE_FIELDABSORBPERCENTFIRE},
-	{"fieldabsorbpercentpoison", ITEM_PARSE_FIELDABSORBPERCENTPOISON},
-	{"fieldabsorbpercentearth", ITEM_PARSE_FIELDABSORBPERCENTPOISON},
-	{"absorbpercentall", ITEM_PARSE_ABSORBPERCENTALL},
-	{"absorbpercentallelements", ITEM_PARSE_ABSORBPERCENTALL},
-	{"absorbpercentelements", ITEM_PARSE_ABSORBPERCENTELEMENTS},
-	{"absorbpercentmagic", ITEM_PARSE_ABSORBPERCENTMAGIC},
-	{"absorbpercentenergy", ITEM_PARSE_ABSORBPERCENTENERGY},
-	{"absorbpercentfire", ITEM_PARSE_ABSORBPERCENTFIRE},
-	{"absorbpercentpoison", ITEM_PARSE_ABSORBPERCENTPOISON},
-	{"absorbpercentearth", ITEM_PARSE_ABSORBPERCENTPOISON},
-	{"absorbpercentlifedrain", ITEM_PARSE_ABSORBPERCENTLIFEDRAIN},
-	{"absorbpercentmanadrain", ITEM_PARSE_ABSORBPERCENTMANADRAIN},
-	{"absorbpercentphysical", ITEM_PARSE_ABSORBPERCENTPHYSICAL},
-	{"absorbpercenthealing", ITEM_PARSE_ABSORBPERCENTHEALING},
-	{"absorbpercentundefined", ITEM_PARSE_ABSORBPERCENTUNDEFINED},
-	{"suppressdrunk", ITEM_PARSE_SUPPRESSDRUNK},
-	{"suppressenergy", ITEM_PARSE_SUPPRESSENERGY},
-	{"suppressfire", ITEM_PARSE_SUPPRESSFIRE},
-	{"suppresspoison", ITEM_PARSE_SUPPRESSPOISON},
-	{"suppressphysical", ITEM_PARSE_SUPPRESSPHYSICAL},
-	{"field", ITEM_PARSE_FIELD},
-	{"replaceable", ITEM_PARSE_REPLACEABLE},
-	{"partnerdirection", ITEM_PARSE_PARTNERDIRECTION},
-	{"leveldoor", ITEM_PARSE_LEVELDOOR},
-	{"maletransformto", ITEM_PARSE_MALETRANSFORMTO},
-	{"malesleeper", ITEM_PARSE_MALETRANSFORMTO},
-	{"femaletransformto", ITEM_PARSE_FEMALETRANSFORMTO},
-	{"femalesleeper", ITEM_PARSE_FEMALETRANSFORMTO},
-	{"transformto", ITEM_PARSE_TRANSFORMTO},
-	{"destroyto", ITEM_PARSE_DESTROYTO},
-	{"elementearth", ITEM_PARSE_ELEMENTEARTH},
-	{"elementfire", ITEM_PARSE_ELEMENTFIRE},
-	{"elementenergy", ITEM_PARSE_ELEMENTENERGY},
-	{"blocking", ITEM_PARSE_BLOCKING},
-	{"allowdistread", ITEM_PARSE_ALLOWDISTREAD},
-	{"forceuse", ITEM_PARSE_FORCEUSE},
-	{"poisondamagecycles", ITEM_PARSE_POISONDAMAGECYCLES},
-	{"replacemagicfields", ITEM_PARSE_REPLACEMAGICFIELDS},
-	{"blockpathfind", ITEM_PARSE_BLOCKPATHFIND },
-	{"specialfieldblockpath", ITEM_PARSE_SPECIALFIELDBLOCKPATH },
+    {"type", ITEM_PARSE_TYPE},
+    {"description", ITEM_PARSE_DESCRIPTION},
+    {"runespellname", ITEM_PARSE_RUNESPELLNAME},
+    {"weight", ITEM_PARSE_WEIGHT},
+    {"showcount", ITEM_PARSE_SHOWCOUNT},
+    {"armor", ITEM_PARSE_ARMOR},
+    {"defense", ITEM_PARSE_DEFENSE},
+    {"extradef", ITEM_PARSE_EXTRADEF},
+    {"attack", ITEM_PARSE_ATTACK},
+    {"attackspeed", ITEM_PARSE_ATTACK_SPEED},
+    {"rotateto", ITEM_PARSE_ROTATETO},
+    {"moveable", ITEM_PARSE_MOVEABLE},
+    {"movable", ITEM_PARSE_MOVEABLE},
+    {"blockprojectile", ITEM_PARSE_BLOCKPROJECTILE},
+    {"unlay", ITEM_PARSE_UNLAY},
+    {"allowpickupable", ITEM_PARSE_PICKUPABLE},
+    {"pickupable", ITEM_PARSE_PICKUPABLE},
+    {"forceserialize", ITEM_PARSE_FORCESERIALIZE},
+    {"forcesave", ITEM_PARSE_FORCESERIALIZE},
+    {"floorchange", ITEM_PARSE_FLOORCHANGE},
+    {"corpsetype", ITEM_PARSE_CORPSETYPE},
+    {"containersize", ITEM_PARSE_CONTAINERSIZE},
+    {"fluidsource", ITEM_PARSE_FLUIDSOURCE},
+    {"readable", ITEM_PARSE_READABLE},
+    {"writeable", ITEM_PARSE_WRITEABLE},
+    {"maxtextlen", ITEM_PARSE_MAXTEXTLEN},
+    {"writeonceitemid", ITEM_PARSE_WRITEONCEITEMID},
+    {"weapontype", ITEM_PARSE_WEAPONTYPE},
+    {"slottype", ITEM_PARSE_SLOTTYPE},
+    {"ammotype", ITEM_PARSE_AMMOTYPE},
+    {"shoottype", ITEM_PARSE_SHOOTTYPE},
+    {"effect", ITEM_PARSE_EFFECT},
+    {"range", ITEM_PARSE_RANGE},
+    {"stopduration", ITEM_PARSE_STOPDURATION},
+    {"decayto", ITEM_PARSE_DECAYTO},
+    {"transformequipto", ITEM_PARSE_TRANSFORMEQUIPTO},
+    {"transformdeequipto", ITEM_PARSE_TRANSFORMDEEQUIPTO},
+    {"duration", ITEM_PARSE_DURATION},
+    {"showduration", ITEM_PARSE_SHOWDURATION},
+    {"charges", ITEM_PARSE_CHARGES},
+    {"showcharges", ITEM_PARSE_SHOWCHARGES},
+    {"showattributes", ITEM_PARSE_SHOWATTRIBUTES},
+    {"hitchance", ITEM_PARSE_HITCHANCE},
+    {"invisible", ITEM_PARSE_INVISIBLE},
+    {"speed", ITEM_PARSE_SPEED},
+    {"healthgain", ITEM_PARSE_HEALTHGAIN},
+    {"healthticks", ITEM_PARSE_HEALTHTICKS},
+    {"managain", ITEM_PARSE_MANAGAIN},
+    {"manaticks", ITEM_PARSE_MANATICKS},
+    {"manashield", ITEM_PARSE_MANASHIELD},
+    {"skillsword", ITEM_PARSE_SKILLSWORD},
+    {"skillaxe", ITEM_PARSE_SKILLAXE},
+    {"skillclub", ITEM_PARSE_SKILLCLUB},
+    {"skilldist", ITEM_PARSE_SKILLDIST},
+    {"skillfish", ITEM_PARSE_SKILLFISH},
+    {"skillshield", ITEM_PARSE_SKILLSHIELD},
+    {"skillfist", ITEM_PARSE_SKILLFIST},
+    {"maxhitpoints", ITEM_PARSE_MAXHITPOINTS},
+    {"maxhitpointspercent", ITEM_PARSE_MAXHITPOINTSPERCENT},
+    {"maxmanapoints", ITEM_PARSE_MAXMANAPOINTS},
+    {"maxmanapointspercent", ITEM_PARSE_MAXMANAPOINTSPERCENT},
+    {"magicpoints", ITEM_PARSE_MAGICPOINTS},
+    {"magiclevelpoints", ITEM_PARSE_MAGICPOINTS},
+    {"magicpointspercent", ITEM_PARSE_MAGICPOINTSPERCENT},
+    {"criticalhitchance", ITEM_PARSE_CRITICALHITCHANCE},
+    {"criticalhitamount", ITEM_PARSE_CRITICALHITAMOUNT},
+    {"lifeleechchance", ITEM_PARSE_LIFELEECHCHANCE},
+    {"lifeleechamount", ITEM_PARSE_LIFELEECHAMOUNT},
+    {"manaleechchance", ITEM_PARSE_MANALEECHCHANCE},
+    {"manaleechamount", ITEM_PARSE_MANALEECHAMOUNT},
+    {"fieldabsorbpercentenergy", ITEM_PARSE_FIELDABSORBPERCENTENERGY},
+    {"fieldabsorbpercentfire", ITEM_PARSE_FIELDABSORBPERCENTFIRE},
+    {"fieldabsorbpercentpoison", ITEM_PARSE_FIELDABSORBPERCENTPOISON},
+    {"fieldabsorbpercentearth", ITEM_PARSE_FIELDABSORBPERCENTPOISON},
+    {"absorbpercentall", ITEM_PARSE_ABSORBPERCENTALL},
+    {"absorbpercentallelements", ITEM_PARSE_ABSORBPERCENTALL},
+    {"absorbpercentelements", ITEM_PARSE_ABSORBPERCENTELEMENTS},
+    {"absorbpercentmagic", ITEM_PARSE_ABSORBPERCENTMAGIC},
+    {"absorbpercentenergy", ITEM_PARSE_ABSORBPERCENTENERGY},
+    {"absorbpercentfire", ITEM_PARSE_ABSORBPERCENTFIRE},
+    {"absorbpercentpoison", ITEM_PARSE_ABSORBPERCENTPOISON},
+    {"absorbpercentearth", ITEM_PARSE_ABSORBPERCENTPOISON},
+    {"absorbpercentlifedrain", ITEM_PARSE_ABSORBPERCENTLIFEDRAIN},
+    {"absorbpercentmanadrain", ITEM_PARSE_ABSORBPERCENTMANADRAIN},
+    {"absorbpercentphysical", ITEM_PARSE_ABSORBPERCENTPHYSICAL},
+    {"absorbpercenthealing", ITEM_PARSE_ABSORBPERCENTHEALING},
+    {"absorbpercentundefined", ITEM_PARSE_ABSORBPERCENTUNDEFINED},
+    {"suppressdrunk", ITEM_PARSE_SUPPRESSDRUNK},
+    {"suppressenergy", ITEM_PARSE_SUPPRESSENERGY},
+    {"suppressfire", ITEM_PARSE_SUPPRESSFIRE},
+    {"suppresspoison", ITEM_PARSE_SUPPRESSPOISON},
+    {"suppressphysical", ITEM_PARSE_SUPPRESSPHYSICAL},
+    {"field", ITEM_PARSE_FIELD},
+    {"replaceable", ITEM_PARSE_REPLACEABLE},
+    {"partnerdirection", ITEM_PARSE_PARTNERDIRECTION},
+    {"leveldoor", ITEM_PARSE_LEVELDOOR},
+    {"maletransformto", ITEM_PARSE_MALETRANSFORMTO},
+    {"malesleeper", ITEM_PARSE_MALETRANSFORMTO},
+    {"femaletransformto", ITEM_PARSE_FEMALETRANSFORMTO},
+    {"femalesleeper", ITEM_PARSE_FEMALETRANSFORMTO},
+    {"transformto", ITEM_PARSE_TRANSFORMTO},
+    {"destroyto", ITEM_PARSE_DESTROYTO},
+    {"elementearth", ITEM_PARSE_ELEMENTEARTH},
+    {"elementfire", ITEM_PARSE_ELEMENTFIRE},
+    {"elementenergy", ITEM_PARSE_ELEMENTENERGY},
+    {"blocking", ITEM_PARSE_BLOCKING},
+    {"allowdistread", ITEM_PARSE_ALLOWDISTREAD},
+    {"forceuse", ITEM_PARSE_FORCEUSE},
+    {"poisondamagecycles", ITEM_PARSE_POISONDAMAGECYCLES},
+    {"replacemagicfields", ITEM_PARSE_REPLACEMAGICFIELDS},
+    {"blockpathfind", ITEM_PARSE_BLOCKPATHFIND},
+    {"specialfieldblockpath", ITEM_PARSE_SPECIALFIELDBLOCKPATH},
 };
 
 const std::unordered_map<std::string, ItemTypes_t> ItemTypesMap = {
-	{"key", ITEM_TYPE_KEY},
-	{"magicfield", ITEM_TYPE_MAGICFIELD},
-	{"container", ITEM_TYPE_CONTAINER},
-	{"depot", ITEM_TYPE_DEPOT},
-	{"mailbox", ITEM_TYPE_MAILBOX},
-	{"trashholder", ITEM_TYPE_TRASHHOLDER},
-	{"teleport", ITEM_TYPE_TELEPORT},
-	{"door", ITEM_TYPE_DOOR},
-	{"bed", ITEM_TYPE_BED},
-	{"rune", ITEM_TYPE_RUNE},
+    {"key", ITEM_TYPE_KEY},
+    {"magicfield", ITEM_TYPE_MAGICFIELD},
+    {"container", ITEM_TYPE_CONTAINER},
+    {"depot", ITEM_TYPE_DEPOT},
+    {"mailbox", ITEM_TYPE_MAILBOX},
+    {"trashholder", ITEM_TYPE_TRASHHOLDER},
+    {"teleport", ITEM_TYPE_TELEPORT},
+    {"door", ITEM_TYPE_DOOR},
+    {"bed", ITEM_TYPE_BED},
+    {"rune", ITEM_TYPE_RUNE},
 };
 
 const std::unordered_map<std::string, tileflags_t> TileStatesMap = {
-	{"down", TILESTATE_FLOORCHANGE_DOWN},
-	{"north", TILESTATE_FLOORCHANGE_NORTH},
-	{"south", TILESTATE_FLOORCHANGE_SOUTH},
-	{"southalt", TILESTATE_FLOORCHANGE_SOUTH_ALT},
-	{"west", TILESTATE_FLOORCHANGE_WEST},
-	{"east", TILESTATE_FLOORCHANGE_EAST},
-	{"eastalt", TILESTATE_FLOORCHANGE_EAST_ALT},
+    {"down", TILESTATE_FLOORCHANGE_DOWN},        {"north", TILESTATE_FLOORCHANGE_NORTH},
+    {"south", TILESTATE_FLOORCHANGE_SOUTH},      {"southalt", TILESTATE_FLOORCHANGE_SOUTH_ALT},
+    {"west", TILESTATE_FLOORCHANGE_WEST},        {"east", TILESTATE_FLOORCHANGE_EAST},
+    {"eastalt", TILESTATE_FLOORCHANGE_EAST_ALT},
 };
 
 const std::unordered_map<std::string, RaceType_t> RaceTypesMap = {
-	{"venom", RACE_VENOM},
-	{"blood", RACE_BLOOD},
-	{"undead", RACE_UNDEAD},
-	{"fire", RACE_FIRE},
-	{"energy", RACE_ENERGY},
+    {"venom", RACE_VENOM}, {"blood", RACE_BLOOD}, {"undead", RACE_UNDEAD}, {"fire", RACE_FIRE}, {"energy", RACE_ENERGY},
 };
 
 const std::unordered_map<std::string, WeaponType_t> WeaponTypesMap = {
-	{"sword", WEAPON_SWORD},
-	{"club", WEAPON_CLUB},
-	{"axe", WEAPON_AXE},
-	{"shield", WEAPON_SHIELD},
-	{"distance", WEAPON_DISTANCE},
-	{"wand", WEAPON_WAND},
-	{"ammunition", WEAPON_AMMO},
+    {"sword", WEAPON_SWORD},       {"club", WEAPON_CLUB}, {"axe", WEAPON_AXE},         {"shield", WEAPON_SHIELD},
+    {"distance", WEAPON_DISTANCE}, {"wand", WEAPON_WAND}, {"ammunition", WEAPON_AMMO},
 };
 
 const std::unordered_map<std::string, FluidTypes_t> FluidTypesMap = {
-	{"water", FLUID_WATER},
-	{"blood", FLUID_BLOOD},
-	{"beer", FLUID_BEER},
-	{"slime", FLUID_SLIME},
-	{"lemonade", FLUID_LEMONADE},
-	{"milk", FLUID_MILK},
-	{"mana", FLUID_MANAFLUID},
-	{"life", FLUID_LIFEFLUID},
-	{"oil", FLUID_OIL},
-	{"urine", FLUID_URINE},
-	{"wine", FLUID_WINE},
-	{"mud", FLUID_MUD},
+    {"water", FLUID_WATER},       {"blood", FLUID_BLOOD}, {"beer", FLUID_BEER},      {"slime", FLUID_SLIME},
+    {"lemonade", FLUID_LEMONADE}, {"milk", FLUID_MILK},   {"mana", FLUID_MANAFLUID}, {"life", FLUID_LIFEFLUID},
+    {"oil", FLUID_OIL},           {"urine", FLUID_URINE}, {"wine", FLUID_WINE},      {"mud", FLUID_MUD},
 };
 
 Items::Items()
@@ -210,7 +189,7 @@ bool Items::reload()
 	return true;
 }
 
-constexpr auto OTBI = OTB::Identifier{{'O','T', 'B', 'I'}};
+constexpr auto OTBI = OTB::Identifier{{'O', 'T', 'B', 'I'}};
 
 bool Items::loadFromOtb(const std::string& file)
 {
@@ -220,9 +199,9 @@ bool Items::loadFromOtb(const std::string& file)
 
 	PropStream props;
 	if (loader.getProps(root, props)) {
-		//4 byte flags
-		//attributes
-		//0x01 = version data
+		// 4 byte flags
+		// attributes
+		// 0x01 = version data
 		uint32_t flags;
 		if (!props.read<uint32_t>(flags)) {
 			return false;
@@ -248,9 +227,9 @@ bool Items::loadFromOtb(const std::string& file)
 				return false;
 			}
 
-			majorVersion = vi.dwMajorVersion; //items otb format file version
-			minorVersion = vi.dwMinorVersion; //client version
-			buildNumber = vi.dwBuildNumber; //revision
+			majorVersion = vi.dwMajorVersion; // items otb format file version
+			minorVersion = vi.dwMinorVersion; // client version
+			buildNumber = vi.dwBuildNumber;   // revision
 		}
 	}
 
@@ -362,7 +341,7 @@ bool Items::loadFromOtb(const std::string& file)
 				}
 
 				default: {
-					//skip unknown attributes
+					// skip unknown attributes
 					if (!stream.skip(datalen)) {
 						return false;
 					}
@@ -385,15 +364,15 @@ bool Items::loadFromOtb(const std::string& file)
 				iType.type = ITEM_TYPE_CONTAINER;
 				break;
 			case ITEM_GROUP_DOOR:
-				//not used
+				// not used
 				iType.type = ITEM_TYPE_DOOR;
 				break;
 			case ITEM_GROUP_MAGICFIELD:
-				//not used
+				// not used
 				iType.type = ITEM_TYPE_MAGICFIELD;
 				break;
 			case ITEM_GROUP_TELEPORT:
-				//not used
+				// not used
 				iType.type = ITEM_TYPE_TELEPORT;
 				break;
 			case ITEM_GROUP_NONE:
@@ -465,7 +444,8 @@ bool Items::loadFromXml()
 
 		pugi::xml_attribute toIdAttribute = itemNode.attribute("toid");
 		if (!toIdAttribute) {
-			std::cout << "[Warning - Items::loadFromXml] fromid (" << fromIdAttribute.value() << ") without toid" << std::endl;
+			std::cout << "[Warning - Items::loadFromXml] fromid (" << fromIdAttribute.value() << ") without toid"
+			          << std::endl;
 			continue;
 		}
 
@@ -483,18 +463,11 @@ bool Items::loadFromXml()
 void Items::buildInventoryList()
 {
 	inventory.reserve(items.size());
-	for (const auto& type: items) {
-		if (type.weaponType != WEAPON_NONE || type.ammoType != AMMO_NONE ||
-			type.attack != 0 || type.defense != 0 ||
-			type.extraDefense != 0 || type.armor != 0 ||
-			type.slotPosition & SLOTP_NECKLACE ||
-			type.slotPosition & SLOTP_RING ||
-			type.slotPosition & SLOTP_AMMO ||
-			type.slotPosition & SLOTP_FEET ||
-			type.slotPosition & SLOTP_HEAD ||
-			type.slotPosition & SLOTP_ARMOR ||
-			type.slotPosition & SLOTP_LEGS)
-		{
+	for (const auto& type : items) {
+		if (type.weaponType != WEAPON_NONE || type.ammoType != AMMO_NONE || type.attack != 0 || type.defense != 0 ||
+		    type.extraDefense != 0 || type.armor != 0 || type.slotPosition & SLOTP_NECKLACE ||
+		    type.slotPosition & SLOTP_RING || type.slotPosition & SLOTP_AMMO || type.slotPosition & SLOTP_FEET ||
+		    type.slotPosition & SLOTP_HEAD || type.slotPosition & SLOTP_ARMOR || type.slotPosition & SLOTP_LEGS) {
 			inventory.push_back(type.clientId);
 		}
 	}
@@ -522,7 +495,7 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 	it.name = itemNode.attribute("name").as_string();
 
 	if (nameToItems.find(asLowerCaseString(it.name)) == nameToItems.end()) {
-		nameToItems.insert({ asLowerCaseString(it.name), id });
+		nameToItems.insert({asLowerCaseString(it.name), id});
 	}
 
 	pugi::xml_attribute articleAttribute = itemNode.attribute("article");
@@ -562,7 +535,8 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 							it.group = ITEM_GROUP_CONTAINER;
 						}
 					} else {
-						std::cout << "[Warning - Items::parseItemNode] Unknown type: " << valueAttribute.as_string() << std::endl;
+						std::cout << "[Warning - Items::parseItemNode] Unknown type: " << valueAttribute.as_string()
+						          << std::endl;
 					}
 					break;
 				}
@@ -610,7 +584,8 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 				case ITEM_PARSE_ATTACK_SPEED: {
 					it.attackSpeed = pugi::cast<uint32_t>(valueAttribute.value());
 					if (it.attackSpeed > 0 && it.attackSpeed < 100) {
-						std::cout << "[Warning - Items::parseItemNode] AttackSpeed lower than 100 for item: " << it.id << std::endl;
+						std::cout << "[Warning - Items::parseItemNode] AttackSpeed lower than 100 for item: " << it.id
+						          << std::endl;
 						it.attackSpeed = 100;
 					}
 					break;
@@ -652,7 +627,8 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 					if (it2 != TileStatesMap.end()) {
 						it.floorChange |= it2->second;
 					} else {
-						std::cout << "[Warning - Items::parseItemNode] Unknown floorChange: " << valueAttribute.as_string() << std::endl;
+						std::cout << "[Warning - Items::parseItemNode] Unknown floorChange: "
+						          << valueAttribute.as_string() << std::endl;
 					}
 					break;
 				}
@@ -663,7 +639,8 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 					if (it2 != RaceTypesMap.end()) {
 						it.corpseType = it2->second;
 					} else {
-						std::cout << "[Warning - Items::parseItemNode] Unknown corpseType: " << valueAttribute.as_string() << std::endl;
+						std::cout << "[Warning - Items::parseItemNode] Unknown corpseType: "
+						          << valueAttribute.as_string() << std::endl;
 					}
 					break;
 				}
@@ -679,7 +656,8 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 					if (it2 != FluidTypesMap.end()) {
 						it.fluidSource = it2->second;
 					} else {
-						std::cout << "[Warning - Items::parseItemNode] Unknown fluidSource: " << valueAttribute.as_string() << std::endl;
+						std::cout << "[Warning - Items::parseItemNode] Unknown fluidSource: "
+						          << valueAttribute.as_string() << std::endl;
 					}
 					break;
 				}
@@ -711,7 +689,8 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 					if (it2 != WeaponTypesMap.end()) {
 						it.weaponType = it2->second;
 					} else {
-						std::cout << "[Warning - Items::parseItemNode] Unknown weaponType: " << valueAttribute.as_string() << std::endl;
+						std::cout << "[Warning - Items::parseItemNode] Unknown weaponType: "
+						          << valueAttribute.as_string() << std::endl;
 					}
 					break;
 				}
@@ -743,7 +722,8 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 					} else if (tmpStrValue == "hand") {
 						it.slotPosition |= SLOTP_HAND;
 					} else {
-						std::cout << "[Warning - Items::parseItemNode] Unknown slotType: " << valueAttribute.as_string() << std::endl;
+						std::cout << "[Warning - Items::parseItemNode] Unknown slotType: " << valueAttribute.as_string()
+						          << std::endl;
 					}
 					break;
 				}
@@ -751,7 +731,8 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 				case ITEM_PARSE_AMMOTYPE: {
 					it.ammoType = getAmmoType(asLowerCaseString(valueAttribute.as_string()));
 					if (it.ammoType == AMMO_NONE) {
-						std::cout << "[Warning - Items::parseItemNode] Unknown ammoType: " << valueAttribute.as_string() << std::endl;
+						std::cout << "[Warning - Items::parseItemNode] Unknown ammoType: " << valueAttribute.as_string()
+						          << std::endl;
 					}
 					break;
 				}
@@ -761,7 +742,8 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 					if (shoot != CONST_ANI_NONE) {
 						it.shootType = shoot;
 					} else {
-						std::cout << "[Warning - Items::parseItemNode] Unknown shootType: " << valueAttribute.as_string() << std::endl;
+						std::cout << "[Warning - Items::parseItemNode] Unknown shootType: "
+						          << valueAttribute.as_string() << std::endl;
 					}
 					break;
 				}
@@ -771,7 +753,8 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 					if (effect != CONST_ME_NONE) {
 						it.magicEffect = effect;
 					} else {
-						std::cout << "[Warning - Items::parseItemNode] Unknown effect: " << valueAttribute.as_string() << std::endl;
+						std::cout << "[Warning - Items::parseItemNode] Unknown effect: " << valueAttribute.as_string()
+						          << std::endl;
 					}
 					break;
 				}
@@ -789,7 +772,8 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 				case ITEM_PARSE_DECAYTO: {
 					it.decayTo = pugi::cast<int32_t>(valueAttribute.value());
 					if (it.decayTo == it.id) {
-						std::cout << "[Warning - Items::parseItemNode] Item is decaying to itself: " << it.decayTo << std::endl;
+						std::cout << "[Warning - Items::parseItemNode] Item is decaying to itself: " << it.decayTo
+						          << std::endl;
 					}
 					break;
 				}
@@ -830,7 +814,8 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 				}
 
 				case ITEM_PARSE_HITCHANCE: {
-					it.hitChance = std::min<int8_t>(100, std::max<int8_t>(-100, pugi::cast<int16_t>(valueAttribute.value())));
+					it.hitChance =
+					    std::min<int8_t>(100, std::max<int8_t>(-100, pugi::cast<int16_t>(valueAttribute.value())));
 					break;
 				}
 
@@ -909,12 +894,14 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 				}
 
 				case ITEM_PARSE_CRITICALHITAMOUNT: {
-					abilities.specialSkills[SPECIALSKILL_CRITICALHITAMOUNT] = pugi::cast<int32_t>(valueAttribute.value());
+					abilities.specialSkills[SPECIALSKILL_CRITICALHITAMOUNT] =
+					    pugi::cast<int32_t>(valueAttribute.value());
 					break;
 				}
 
 				case ITEM_PARSE_CRITICALHITCHANCE: {
-					abilities.specialSkills[SPECIALSKILL_CRITICALHITCHANCE] = pugi::cast<int32_t>(valueAttribute.value());
+					abilities.specialSkills[SPECIALSKILL_CRITICALHITCHANCE] =
+					    pugi::cast<int32_t>(valueAttribute.value());
 					break;
 				}
 
@@ -969,17 +956,20 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 				}
 
 				case ITEM_PARSE_FIELDABSORBPERCENTENERGY: {
-					abilities.fieldAbsorbPercent[combatTypeToIndex(COMBAT_ENERGYDAMAGE)] += pugi::cast<int16_t>(valueAttribute.value());
+					abilities.fieldAbsorbPercent[combatTypeToIndex(COMBAT_ENERGYDAMAGE)] +=
+					    pugi::cast<int16_t>(valueAttribute.value());
 					break;
 				}
 
 				case ITEM_PARSE_FIELDABSORBPERCENTFIRE: {
-					abilities.fieldAbsorbPercent[combatTypeToIndex(COMBAT_FIREDAMAGE)] += pugi::cast<int16_t>(valueAttribute.value());
+					abilities.fieldAbsorbPercent[combatTypeToIndex(COMBAT_FIREDAMAGE)] +=
+					    pugi::cast<int16_t>(valueAttribute.value());
 					break;
 				}
 
 				case ITEM_PARSE_FIELDABSORBPERCENTPOISON: {
-					abilities.fieldAbsorbPercent[combatTypeToIndex(COMBAT_EARTHDAMAGE)] += pugi::cast<int16_t>(valueAttribute.value());
+					abilities.fieldAbsorbPercent[combatTypeToIndex(COMBAT_EARTHDAMAGE)] +=
+					    pugi::cast<int16_t>(valueAttribute.value());
 					break;
 				}
 
@@ -1008,42 +998,50 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 				}
 
 				case ITEM_PARSE_ABSORBPERCENTENERGY: {
-					abilities.absorbPercent[combatTypeToIndex(COMBAT_ENERGYDAMAGE)] += pugi::cast<int16_t>(valueAttribute.value());
+					abilities.absorbPercent[combatTypeToIndex(COMBAT_ENERGYDAMAGE)] +=
+					    pugi::cast<int16_t>(valueAttribute.value());
 					break;
 				}
 
 				case ITEM_PARSE_ABSORBPERCENTFIRE: {
-					abilities.absorbPercent[combatTypeToIndex(COMBAT_FIREDAMAGE)] += pugi::cast<int16_t>(valueAttribute.value());
+					abilities.absorbPercent[combatTypeToIndex(COMBAT_FIREDAMAGE)] +=
+					    pugi::cast<int16_t>(valueAttribute.value());
 					break;
 				}
 
 				case ITEM_PARSE_ABSORBPERCENTPOISON: {
-					abilities.absorbPercent[combatTypeToIndex(COMBAT_EARTHDAMAGE)] += pugi::cast<int16_t>(valueAttribute.value());
+					abilities.absorbPercent[combatTypeToIndex(COMBAT_EARTHDAMAGE)] +=
+					    pugi::cast<int16_t>(valueAttribute.value());
 					break;
 				}
 
 				case ITEM_PARSE_ABSORBPERCENTLIFEDRAIN: {
-					abilities.absorbPercent[combatTypeToIndex(COMBAT_LIFEDRAIN)] += pugi::cast<int16_t>(valueAttribute.value());
+					abilities.absorbPercent[combatTypeToIndex(COMBAT_LIFEDRAIN)] +=
+					    pugi::cast<int16_t>(valueAttribute.value());
 					break;
 				}
 
 				case ITEM_PARSE_ABSORBPERCENTMANADRAIN: {
-					abilities.absorbPercent[combatTypeToIndex(COMBAT_MANADRAIN)] += pugi::cast<int16_t>(valueAttribute.value());
+					abilities.absorbPercent[combatTypeToIndex(COMBAT_MANADRAIN)] +=
+					    pugi::cast<int16_t>(valueAttribute.value());
 					break;
 				}
 
 				case ITEM_PARSE_ABSORBPERCENTPHYSICAL: {
-					abilities.absorbPercent[combatTypeToIndex(COMBAT_PHYSICALDAMAGE)] += pugi::cast<int16_t>(valueAttribute.value());
+					abilities.absorbPercent[combatTypeToIndex(COMBAT_PHYSICALDAMAGE)] +=
+					    pugi::cast<int16_t>(valueAttribute.value());
 					break;
 				}
 
 				case ITEM_PARSE_ABSORBPERCENTHEALING: {
-					abilities.absorbPercent[combatTypeToIndex(COMBAT_HEALING)] += pugi::cast<int16_t>(valueAttribute.value());
+					abilities.absorbPercent[combatTypeToIndex(COMBAT_HEALING)] +=
+					    pugi::cast<int16_t>(valueAttribute.value());
 					break;
 				}
 
 				case ITEM_PARSE_ABSORBPERCENTUNDEFINED: {
-					abilities.absorbPercent[combatTypeToIndex(COMBAT_UNDEFINEDDAMAGE)] += pugi::cast<int16_t>(valueAttribute.value());
+					abilities.absorbPercent[combatTypeToIndex(COMBAT_UNDEFINEDDAMAGE)] +=
+					    pugi::cast<int16_t>(valueAttribute.value());
 					break;
 				}
 
@@ -1124,7 +1122,8 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 						conditionDamage = new ConditionDamage(CONDITIONID_COMBAT, CONDITION_BLEEDING);
 						combatType = COMBAT_PHYSICALDAMAGE;
 					} else {
-						std::cout << "[Warning - Items::parseItemNode] Unknown field value: " << valueAttribute.as_string() << std::endl;
+						std::cout << "[Warning - Items::parseItemNode] Unknown field value: "
+						          << valueAttribute.as_string() << std::endl;
 					}
 
 					if (combatType != COMBAT_NONE) {
@@ -1174,13 +1173,11 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 								if (combatType == COMBAT_EARTHDAMAGE) {
 									conditionDamage->setParam(CONDITION_PARAM_COUNT, 3);
 									conditionDamage->setParam(CONDITION_PARAM_MAX_COUNT, 3);
-								}
-								else if (combatType == COMBAT_FIREDAMAGE) {
+								} else if (combatType == COMBAT_FIREDAMAGE) {
 									conditionDamage->setParam(CONDITION_PARAM_COUNT, 8);
 									conditionDamage->setParam(CONDITION_PARAM_MAX_COUNT, 8);
 									cycles /= 10;
-								}
-								else if (combatType == COMBAT_ENERGYDAMAGE) {
+								} else if (combatType == COMBAT_ENERGYDAMAGE) {
 									conditionDamage->setParam(CONDITION_PARAM_COUNT, 10);
 									conditionDamage->setParam(CONDITION_PARAM_MAX_COUNT, 10);
 									cycles /= 20;
@@ -1291,18 +1288,23 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 				}
 
 				default: {
-					// It should not ever get to here, only if you add a new key to the map and don't configure a case for it.
-					std::cout << "[Warning - Items::parseItemNode] Not configured key value: " << keyAttribute.as_string() << std::endl;
+					// It should not ever get to here, only if you add a new key to the map and don't configure a case
+					// for it.
+					std::cout << "[Warning - Items::parseItemNode] Not configured key value: "
+					          << keyAttribute.as_string() << std::endl;
 					break;
 				}
 			}
 		} else {
-			std::cout << "[Warning - Items::parseItemNode] Unknown key value: " << keyAttribute.as_string() << std::endl;
+			std::cout << "[Warning - Items::parseItemNode] Unknown key value: " << keyAttribute.as_string()
+			          << std::endl;
 		}
 	}
 
-	//check bed items
-	if ((it.transformToFree != 0 || it.transformToOnUse[PLAYERSEX_FEMALE] != 0 || it.transformToOnUse[PLAYERSEX_MALE] != 0) && it.type != ITEM_TYPE_BED) {
+	// check bed items
+	if ((it.transformToFree != 0 || it.transformToOnUse[PLAYERSEX_FEMALE] != 0 ||
+	     it.transformToOnUse[PLAYERSEX_MALE] != 0) &&
+	    it.type != ITEM_TYPE_BED) {
 		std::cout << "[Warning - Items::parseItemNode] Item " << it.id << " is not set as a bed-type" << std::endl;
 	}
 }
@@ -1337,8 +1339,7 @@ uint16_t Items::getItemIdByName(const std::string& name)
 {
 	auto result = nameToItems.find(asLowerCaseString(name));
 
-	if (result == nameToItems.end())
-		return 0;
+	if (result == nameToItems.end()) return 0;
 
 	return result->second;
 }
