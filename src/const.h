@@ -7,7 +7,7 @@ static constexpr int32_t NETWORKMESSAGE_MAXSIZE = 24590;
 
 enum MagicEffectClasses : uint8_t
 {
-	CONST_ME_NONE,
+	CONST_ME_NONE = 0,
 
 	CONST_ME_DRAWBLOOD = 1,
 	CONST_ME_LOSEENERGY = 2,
@@ -38,7 +38,7 @@ enum MagicEffectClasses : uint8_t
 
 enum ShootType_t : uint8_t
 {
-	CONST_ANI_NONE,
+	CONST_ANI_NONE = 0,
 
 	CONST_ANI_SPEAR = 1,
 	CONST_ANI_BOLT = 2,

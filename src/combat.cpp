@@ -113,15 +113,14 @@ CombatDamage Combat::getCombatDamage(Creature* creature, Creature* target) const
 				params.valueCallback->getMinMaxValues(player, damage);
 			} else if (formulaType == COMBAT_FORMULA_LEVELMAGIC) {
 				int32_t levelFormula = player->getLevel() * 2 + player->getMagicLevel() * 3;
-				damage.value = random(std::fma(levelFormula, mina, minb), std::fma(levelFormula, maxa, maxb));
+				damage.value = random(static_cast<int32_t>(std::fma(levelFormula, mina, minb)),
+				                      static_cast<int32_t>(std::fma(levelFormula, maxa, maxb)));
 			} else if (formulaType == COMBAT_FORMULA_SKILL) {
 				Item* tool = player->getWeapon();
 				const Weapon* weapon = g_weapons->getWeapon(tool);
 				if (weapon) {
-					damage.value =
-					    random(minb, std::fma(weapon->getWeaponDamage(player, target, tool, true), maxa, maxb));
-					// damage.secondary.type = weapon->getElementType();
-					// damage.secondary.value = weapon->getElementDamage(player, target, tool);
+					damage.value = random(minb, static_cast<int32_t>(std::fma(
+					                                weapon->getWeaponDamage(player, target, tool, true), maxa, maxb)));
 				} else {
 					damage.value = random(minb, maxb);
 				}

@@ -180,10 +180,10 @@ void Raids::checkRaids()
 						const uint32_t minute = std::stoul(serverSaveTimeSplitted[1]);
 
 						const time_t currentTime = std::time(nullptr);
-						const tm* timeInfo = std::localtime(&currentTime);
+						const tm timeInfo = localTime(currentTime);
 
 						const time_t serverSaveTime =
-						    currentTime - (timeInfo->tm_hour * 3600 + timeInfo->tm_min * 60 + timeInfo->tm_sec) +
+						    currentTime - (timeInfo.tm_hour * 3600 + timeInfo.tm_min * 60 + timeInfo.tm_sec) +
 						    hour * 3600 + minute * 60;
 
 						if (raid->serverSaveMargin != 0 &&

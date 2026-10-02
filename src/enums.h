@@ -56,7 +56,7 @@ enum RuleViolationRights
 
 enum itemAttrTypes : uint32_t
 {
-	ITEM_ATTRIBUTE_NONE,
+	ITEM_ATTRIBUTE_NONE = 0,
 
 	ITEM_ATTRIBUTE_ACTIONID = 1 << 0,
 	ITEM_ATTRIBUTE_UNIQUEID = 1 << 1,
@@ -310,7 +310,7 @@ enum formulaType_t
 
 enum ConditionType_t
 {
-	CONDITION_NONE,
+	CONDITION_NONE = 0,
 
 	CONDITION_POISON = 1 << 0,
 	CONDITION_FIRE = 1 << 1,

@@ -128,7 +128,7 @@ public:
 	uint32_t getOwnerAccountId() const { return ownerAccountId; }
 
 	void setGuildHall(bool gh) { guildHall = gh; }
-	const bool isGuildHall() const { return guildHall; }
+	bool isGuildHall() const { return guildHall; }
 
 	void setPaidUntil(time_t paid) { paidUntil = paid; }
 	time_t getPaidUntil() const { return paidUntil; }

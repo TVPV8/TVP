@@ -9107,8 +9107,6 @@ int LuaScriptInterface::luaPlayerAddItemEx(lua_State* L)
 		slots_t slot = getNumber<slots_t>(L, 4, CONST_SLOT_WHEREEVER);
 		returnValue = g_game.internalPlayerAddItem(player, item, true, slot);
 	} else {
-		int32_t index = getNumber<int32_t>(L, 4, INDEX_WHEREEVER);
-		uint32_t flags = getNumber<uint32_t>(L, 5, 0);
 		returnValue = g_game.internalPlayerAddItem(player, item, false, CONST_SLOT_WHEREEVER);
 	}
 
@@ -9239,9 +9237,6 @@ int LuaScriptInterface::luaPlayerShowTextDialog(lua_State* L)
 	}
 
 	item->setParent(player);
-	// player->windowTextId++;
-	// player->writeItem = item;
-	// player->maxWriteLen = length;
 	player->sendTextWindow(item, length, canWrite);
 
 	if (subtractReferenceCounter) {
@@ -13641,12 +13636,8 @@ int LuaScriptInterface::luaCreateLoot(lua_State* L)
 {
 	// Loot() will create a new loot item
 	Loot* loot = new Loot();
-	if (loot) {
-		pushUserdata<Loot>(L, loot);
-		setMetatable(L, -1, "Loot");
-	} else {
-		lua_pushnil(L);
-	}
+	pushUserdata<Loot>(L, loot);
+	setMetatable(L, -1, "Loot");
 	return 1;
 }
 
@@ -13775,12 +13766,8 @@ int LuaScriptInterface::luaCreateMonsterSpell(lua_State* L)
 {
 	// MonsterSpell() will create a new Monster Spell
 	MonsterSpell* spell = new MonsterSpell();
-	if (spell) {
-		pushUserdata<MonsterSpell>(L, spell);
-		setMetatable(L, -1, "MonsterSpell");
-	} else {
-		lua_pushnil(L);
-	}
+	pushUserdata<MonsterSpell>(L, spell);
+	setMetatable(L, -1, "MonsterSpell");
 	return 1;
 }
 
@@ -15123,12 +15110,8 @@ int LuaScriptInterface::luaCreateAction(lua_State* L)
 	}
 
 	Action* action = new Action(getScriptEnv()->getScriptInterface());
-	if (action) {
-		pushUserdata<Action>(L, action);
-		setMetatable(L, -1, "Action");
-	} else {
-		lua_pushnil(L);
-	}
+	pushUserdata<Action>(L, action);
+	setMetatable(L, -1, "Action");
 	return 1;
 }
 
@@ -15274,15 +15257,11 @@ int LuaScriptInterface::luaCreateTalkaction(lua_State* L)
 	}
 
 	TalkAction* talk = new TalkAction(getScriptEnv()->getScriptInterface());
-	if (talk) {
-		for (int i = 2; i <= lua_gettop(L); i++) {
-			talk->setWords(getString(L, i));
-		}
-		pushUserdata<TalkAction>(L, talk);
-		setMetatable(L, -1, "TalkAction");
-	} else {
-		lua_pushnil(L);
+	for (int i = 2; i <= lua_gettop(L); i++) {
+		talk->setWords(getString(L, i));
 	}
+	pushUserdata<TalkAction>(L, talk);
+	setMetatable(L, -1, "TalkAction");
 	return 1;
 }
 
@@ -15363,13 +15342,9 @@ int LuaScriptInterface::luaCreateCreatureEvent(lua_State* L)
 	}
 
 	CreatureEvent* creature = new CreatureEvent(getScriptEnv()->getScriptInterface());
-	if (creature) {
-		creature->setName(getString(L, 2));
-		pushUserdata<CreatureEvent>(L, creature);
-		setMetatable(L, -1, "CreatureEvent");
-	} else {
-		lua_pushnil(L);
-	}
+	creature->setName(getString(L, 2));
+	pushUserdata<CreatureEvent>(L, creature);
+	setMetatable(L, -1, "CreatureEvent");
 	return 1;
 }
 
@@ -15457,12 +15432,8 @@ int LuaScriptInterface::luaCreateMoveEvent(lua_State* L)
 	}
 
 	MoveEvent* moveevent = new MoveEvent(getScriptEnv()->getScriptInterface());
-	if (moveevent) {
-		pushUserdata<MoveEvent>(L, moveevent);
-		setMetatable(L, -1, "MoveEvent");
-	} else {
-		lua_pushnil(L);
-	}
+	pushUserdata<MoveEvent>(L, moveevent);
+	setMetatable(L, -1, "MoveEvent");
 	return 1;
 }
 
@@ -15775,14 +15746,10 @@ int LuaScriptInterface::luaCreateGlobalEvent(lua_State* L)
 	}
 
 	GlobalEvent* global = new GlobalEvent(getScriptEnv()->getScriptInterface());
-	if (global) {
-		global->setName(getString(L, 2));
-		global->setEventType(GLOBALEVENT_NONE);
-		pushUserdata<GlobalEvent>(L, global);
-		setMetatable(L, -1, "GlobalEvent");
-	} else {
-		lua_pushnil(L);
-	}
+	global->setName(getString(L, 2));
+	global->setEventType(GLOBALEVENT_NONE);
+	pushUserdata<GlobalEvent>(L, global);
+	setMetatable(L, -1, "GlobalEvent");
 	return 1;
 }
 
@@ -15880,12 +15847,12 @@ int LuaScriptInterface::luaGlobalEventTime(lua_State* L)
 		}
 
 		time_t current_time = time(nullptr);
-		tm* timeinfo = localtime(&current_time);
-		timeinfo->tm_hour = hour;
-		timeinfo->tm_min = min;
-		timeinfo->tm_sec = sec;
+		tm timeinfo = localTime(current_time);
+		timeinfo.tm_hour = hour;
+		timeinfo.tm_min = min;
+		timeinfo.tm_sec = sec;
 
-		time_t difference = static_cast<time_t>(difftime(mktime(timeinfo), current_time));
+		time_t difference = static_cast<time_t>(difftime(mktime(&timeinfo), current_time));
 		if (difference < 0) {
 			difference += 86400;
 		}
@@ -15929,36 +15896,24 @@ int LuaScriptInterface::luaCreateWeapon(lua_State* L)
 		case WEAPON_AXE:
 		case WEAPON_CLUB: {
 			WeaponMelee* weapon = new WeaponMelee(getScriptEnv()->getScriptInterface());
-			if (weapon) {
-				pushUserdata<WeaponMelee>(L, weapon);
-				setMetatable(L, -1, "Weapon");
-				weapon->weaponType = type;
-			} else {
-				lua_pushnil(L);
-			}
+			pushUserdata<WeaponMelee>(L, weapon);
+			setMetatable(L, -1, "Weapon");
+			weapon->weaponType = type;
 			break;
 		}
 		case WEAPON_DISTANCE:
 		case WEAPON_AMMO: {
 			WeaponDistance* weapon = new WeaponDistance(getScriptEnv()->getScriptInterface());
-			if (weapon) {
-				pushUserdata<WeaponDistance>(L, weapon);
-				setMetatable(L, -1, "Weapon");
-				weapon->weaponType = type;
-			} else {
-				lua_pushnil(L);
-			}
+			pushUserdata<WeaponDistance>(L, weapon);
+			setMetatable(L, -1, "Weapon");
+			weapon->weaponType = type;
 			break;
 		}
 		case WEAPON_WAND: {
 			WeaponWand* weapon = new WeaponWand(getScriptEnv()->getScriptInterface());
-			if (weapon) {
-				pushUserdata<WeaponWand>(L, weapon);
-				setMetatable(L, -1, "Weapon");
-				weapon->weaponType = type;
-			} else {
-				lua_pushnil(L);
-			}
+			pushUserdata<WeaponWand>(L, weapon);
+			setMetatable(L, -1, "Weapon");
+			weapon->weaponType = type;
 			break;
 		}
 		default: {
