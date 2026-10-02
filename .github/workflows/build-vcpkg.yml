@@ -23,8 +23,9 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu, macos, windows]
-        buildtype: [Debug, Release]
-        luajit: [on, off]
+        # Debug builds on pull requests, Release builds on pushes
+        buildtype: ${{ github.event_name == 'pull_request' && fromJSON('["Debug"]') || fromJSON('["Release"]') }}
+        luajit: [on]
 
     env:
       VCPKG_BUILD_TYPE: release
@@ -36,10 +37,6 @@ jobs:
         # Using 'latest' branch, the latest CMake is installed.
         uses: lukka/get-cmake@latest
 
-      - name: Enable LuaJIT
-        if: matrix.luajit == 'on'
-        run: echo "VCPKG_FEATURE_FLAGS=luajit" >> $GITHUB_ENV
-
       - name: Run vcpkg
         uses: lukka/run-vcpkg@v11
 
@@ -49,6 +46,7 @@ jobs:
           buildPreset: vcpkg
           buildPresetAdditionalArgs: "['--config', '${{ matrix.buildtype }}']"
           configurePreset: vcpkg
+          configurePresetAdditionalArgs: "['-DUSE_LUAJIT=${{ matrix.luajit }}']"
 
       - name: Upload artifact binary
         uses: actions/upload-artifact@v6
