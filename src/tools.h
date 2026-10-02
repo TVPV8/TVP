@@ -45,6 +45,10 @@ Direction getDirectionTo(const Position& from, const Position& to);
 
 std::string getFirstLine(const std::string& str);
 
+/**
+ * Thread-safe localtime replacement. Returns a zeroed tm if the conversion fails.
+ */
+tm localTime(time_t time);
 std::string formatDate(time_t time);
 std::string formatDateShort(time_t time);
 std::string convertIPToString(uint32_t ip);

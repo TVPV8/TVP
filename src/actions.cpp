@@ -295,8 +295,8 @@ bool Actions::useItemEx(Player* player, const Position& fromPos, const Position&
 		// ** OTC related fix only ** //
 		// OTC should not allow using items on splashes like classic Tibia client
 		if (Item::items.getItemIdByClientId(toSpriteId).isSplash()) {
-			if (Item* item = target->getItem()) {
-				toSpriteId = Item::items.getItemType(item->getID()).clientId;
+			if (Item* targetItem = target->getItem()) {
+				toSpriteId = Item::items.getItemType(targetItem->getID()).clientId;
 			}
 		}
 

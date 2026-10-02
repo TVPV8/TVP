@@ -4780,14 +4780,14 @@ void Game::checkLight()
 void Game::updateWorldLightLevel()
 {
 	const time_t timer = time(0);
-	const tm* localTime = localtime(&timer);
-	const int32_t timeInMinutes = localTime->tm_sec + 60 * localTime->tm_min;
+	const tm now = localTime(timer);
+	const int32_t timeInMinutes = now.tm_sec + 60 * now.tm_min;
 	const int32_t timeSegment = 2 * (timeInMinutes % 150) / 5 + 60 * (timeInMinutes / 150);
 
 	if (timeSegment <= 59 || timeSegment > 1380) {
 		lightLevel = 51;
 		lightColor = 215;
-	} else if (timeSegment <= 119 || (timeSegment > 1320 && timeSegment <= 1380)) {
+	} else if (timeSegment <= 119 || timeSegment > 1320) {
 		lightLevel = 102;
 		lightColor = 215;
 	} else if (timeSegment <= 179) {
@@ -4812,8 +4812,8 @@ void Game::updateWorldTime()
 {
 	g_scheduler.addEvent(createSchedulerTask(EVENT_WORLDTIMEINTERVAL, std::bind(&Game::updateWorldTime, this)));
 	time_t osTime = time(nullptr);
-	tm* timeInfo = localtime(&osTime);
-	worldTime = (timeInfo->tm_sec + (timeInfo->tm_min * 60)) / 2.5f;
+	const tm timeInfo = localTime(osTime);
+	worldTime = (timeInfo.tm_sec + (timeInfo.tm_min * 60)) / 2.5f;
 }
 
 void Game::shutdown()
@@ -5568,9 +5568,9 @@ bool Game::searchSpawnField(uint16_t& x, uint16_t& y, uint8_t& z, int32_t distan
 								if (inRange) {
 									inRange = j + ddy >= -distance && j + ddy <= distance;
 									if (inRange) {
-										int32_t value =
+										int32_t neighborValue =
 										    Map.entry[Map.dx * (j + ddy - Map.ymin) + (ddx + MinDistance - Map.xmin)];
-										if (value > Pass) {
+										if (neighborValue > Pass) {
 											Map.entry[Map.dx * (j + ddy - Map.ymin) + (ddx + MinDistance - Map.xmin)] =
 											    std::abs(ddy) + (Pass + std::abs(ddx));
 										}
